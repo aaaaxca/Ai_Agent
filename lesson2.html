@@ -1,8 +1,4 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>지시 설계</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
 <style>
@@ -439,12 +435,11 @@
     a{transition:background-color .15s ease, color .15s ease;}
   }
 </style>
-</head>
-<body>
+
 <div class="page-shell">
 
   <header class="masthead">
-    <a class="eyebrow" href="index.html" style="text-decoration:none;">← 그린컵 AI 에이전트 과정 · 2차시</a>
+    <a class="eyebrow" href="https://claude.ai/code/artifact/13017849-31b1-40ae-a87f-0439eb6a6825" style="text-decoration:none;">← 그린컵 AI 에이전트 과정 · 2차시</a>
     <h1>지시 설계</h1>
     <p class="lede">같은 Claude, 같은 질문인데 결과는 왜 이렇게 다를까 — 그 차이를 만드는 &ldquo;지시하는 힘&rdquo;을 오늘 기본기부터 다집니다.</p>
     <div class="meta-row">
@@ -580,15 +575,14 @@
         <p><span class="tag-good">✅</span> &ldquo;너는 그린컵의 CS팀장이다. 배송 시스템 오류로 다른 색상이 배송된 것에 대한 사과 메일. 순서: ①사과 ②원인 ③해결책(무료 재배송+5천원 쿠폰) ④재발방지. 220자, 존댓말. 아직 확정 안 된 재배송 일정은 지어내지 말고 [확인 후 안내]로 남겨줘.&rdquo; → <strong>역할이 톤을 잡고, 제약이 품질과 정직함을 동시에 지켰습니다.</strong></p>
 
         <h3 class="sub-head">⑤ 제약(가드레일) — AI가 하지 말아야 할 것을 못 박습니다</h3>
-        <p>제약 문장은 대부분 세 가지 틀 중 하나로 씁니다 — <strong>금지형</strong>(&ldquo;~하지 마&rdquo;), <strong>조건형</strong>(&ldquo;~이면 ~로 해줘&rdquo;), <strong>범위형</strong>(&ldquo;~까지만, ~는 빼고&rdquo;). 아래 표는 자주 쓰는 제약 <strong>4가지 유형</strong>을 이 틀에 담아 실제 문장으로 만든 예시입니다 — <strong>무엇을</strong> 막을지(유형)와 <strong>어떻게</strong> 문장으로 쓸지(패턴)를 한 번에 보여줍니다.</p>
         <div class="table-scroll">
           <table>
-            <thead><tr><th>유형</th><th>패턴</th><th>문장 예시</th></tr></thead>
+            <thead><tr><th>유형</th><th>예</th></tr></thead>
             <tbody>
-              <tr><td><strong>사실성 제약</strong></td><td>조건형</td><td><em>&ldquo;확실하지 않으면 [확인필요]로 표시해줘&rdquo;</em> ← 환각 방지(2개월차 미리보기)</td></tr>
-              <tr><td><strong>분량 제약</strong></td><td>금지형</td><td><em>&ldquo;300자 넘기지 마&rdquo;</em></td></tr>
-              <tr><td><strong>톤 제약</strong></td><td>금지형</td><td><em>&ldquo;전문용어 쓰지 마&rdquo;</em></td></tr>
-              <tr><td><strong>범위 제약</strong></td><td>범위형</td><td><em>&ldquo;고객에게 보낼 내용까지만, 내부 검토 메모는 빼고&rdquo;</em></td></tr>
+              <tr><td><strong>사실성 제약</strong></td><td><em>&ldquo;지어내지 마. 자료에 없으면 &lsquo;확인필요&rsquo;라고 해.&rdquo;</em> ← 환각 방지(2개월차 미리보기)</td></tr>
+              <tr><td><strong>분량 제약</strong></td><td><em>&ldquo;300자 넘기지 마&rdquo;, &ldquo;불릿 5개 이내로&rdquo;</em></td></tr>
+              <tr><td><strong>톤 제약</strong></td><td><em>&ldquo;전문용어 쓰지 마&rdquo;, &ldquo;과장 표현 금지&rdquo;</em></td></tr>
+              <tr><td><strong>범위 제약</strong></td><td><em>&ldquo;가격 얘기는 하지 마&rdquo;, &ldquo;경쟁사 이름은 언급하지 마&rdquo;</em></td></tr>
             </tbody>
           </table>
         </div>
@@ -599,15 +593,26 @@
         </div>
 
         <div class="callout callout--tip">
-          <div class="callout-label">💡 범위형은 실무에서 특히 자주 씁니다</div>
-          <p>첨부 자료 안에 <strong>외부에 보내면 안 되는 내부 코멘트</strong>가 섞여 있는 경우가 많습니다.</p>
-        </div>
-
-        <div class="callout callout--tip">
           <div class="callout-label">💡 제약은 많을수록 좋은 게 아닙니다</div>
           <p><strong>결과가 자꾸 삐끗하는 지점</strong>에 딱 필요한 것만.</p>
           <hr>
           <p>❓ <strong>빠른 점검.</strong> <em>&ldquo;우리 회사 배송 정책 안내문 써줘. 친절하게.&rdquo;</em> 이 지시에 제약을 하나 추가한다면 뭐가 가장 급할까요? → 정답은 없지만, 정책 관련 안내는 <strong>&ldquo;정책에 없는 내용은 지어내지 마&rdquo;</strong>가 가장 급합니다. 배송 정책처럼 사실이 중요한 글은 사실성 제약이 최우선입니다.</p>
+        </div>
+
+        <h3 class="sub-head">제약 문장 만드는 공식 — 패턴 3가지</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>패턴</th><th>문장 틀</th><th>적용 예</th></tr></thead>
+            <tbody>
+              <tr><td><strong>금지형</strong></td><td>&ldquo;~하지 마&rdquo;</td><td>&ldquo;가격 할인처럼 들리는 표현 쓰지 마&rdquo;</td></tr>
+              <tr><td><strong>조건형</strong></td><td>&ldquo;~이면 ~로 해줘&rdquo;</td><td>&ldquo;확실하지 않으면 [확인필요]로 표시해줘&rdquo;</td></tr>
+              <tr><td><strong>범위형</strong></td><td>&ldquo;~까지만, ~는 빼고&rdquo;</td><td>&ldquo;고객에게 보낼 내용까지만, 내부 검토 메모는 빼고&rdquo;</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout callout--tip">
+          <div class="callout-label">💡 범위형</div>
+          <p>실무에서 특히 자주 씁니다. 첨부 자료 안에 <strong>외부에 보내면 안 되는 내부 코멘트</strong>가 섞여 있는 경우가 많습니다.</p>
         </div>
 
         <div class="callout callout--practice">
@@ -873,7 +878,7 @@
         <div class="file-links">📎 준비물: <b>① 상반기 실적 원자료(Excel)</b> · <b>② 보고 브리프(Word)</b></div>
         <p>이 실습은 <strong>1단계(형식 비교: PPT vs HTML)</strong>와 <strong>2단계(제약 유무 비교: 버전 A vs 버전 B)</strong>로 나뉩니다. 순서대로 진행하세요.</p>
 
-        <p><strong>0단계 — 확인</strong> — 상반기 실적 원자료: 4개 시트로 구성된 실제 숫자 데이터. 보고 브리프: 보고 요구사항 끝에 &ldquo;숫자가 두 곳에서 다를 수 있으니 xlsx 값을 우선하라&rdquo;는 메모가 있습니다 (CAC 기준: 브리프엔 1만5천원대, xlsx엔 16,200원) — 이 메모를 눈으로 직접 확인하고 다음 단계로 넘어가세요.</p>
+        <p><strong>0. 확인</strong> — 상반기 실적 원자료: 4개 시트로 구성된 실제 숫자 데이터. 보고 브리프: 보고 요구사항 끝에 &ldquo;숫자가 두 곳에서 다를 수 있으니 xlsx 값을 우선하라&rdquo;는 메모가 있습니다 (CAC 기준: 브리프엔 1만5천원대, xlsx엔 16,200원) — 이 메모를 눈으로 직접 확인하고 다음 단계로 넘어가세요.</p>
 
         <p><strong>1단계 — 형식 비교 (PPT vs HTML)</strong> — 새 대화창에 두 파일을 첨부한 뒤, 순서대로 시켜보세요.</p>
         <ol>
@@ -891,46 +896,21 @@
 1슬라이드 1메시지, 숫자는 자료의 값만, 없는 값은 지어내지 마.
 브리프 문서 끝 메모대로, 숫자가 두 문서에서 다르면 반드시 xlsx 값을 우선 적용해줘.
 CAC도 xlsx의 최신 값을 써줘."</div>
-        <div class="callout callout--question">
-          <div class="callout-label">👉 확인할 것</div>
-          <p>CAC 수치가 A·B 각각 얼마로 나왔는지(정답은 16,200원).</p>
-          <ul>
-            <li><strong>다르게 나왔다면</strong>: A가 함정(1만5천원대)에 걸렸다는 뜻 — 제약을 명시하지 않으면 이런 일이 생길 수 있다는 걸 직접 확인한 겁니다.</li>
-            <li><strong>같게 나왔다면</strong>: A도 문서 끝까지 읽고 메모를 스스로 따라갔다는 뜻으로, 이 역시 정상적인 결과입니다. 다만 이게 &ldquo;매번 보장된다&rdquo;는 뜻은 아닙니다 — 문서가 길어지거나 메모가 깊이 묻히거나, 대화가 길어지는 상황(5절 참고)에서는 놓칠 수 있습니다.</li>
-          </ul>
-          <p>어느 쪽이 나오든, 제약을 프롬프트에 직접 쓰는 습관은 유지하세요 — 안전벨트를 맨 날 사고가 안 났다고 안전벨트가 필요 없었던 게 아닌 것과 같은 이치입니다.</p>
-          <p>톤 차이도 함께 보세요 — 다만 이것도 &ldquo;제약 없는 버전 = 항상 유보적&rdquo;이라는 공식이 아니라, 그런 경향이 있다 정도로 참고하시면 됩니다.</p>
-        </div>
+        <p>👉 확인할 것: CAC 수치가 A·B 각각 얼마로 나왔는지(16,200원이 맞고, 1만5천원대가 나왔다면 A가 함정에 걸린 것), 숫자가 우연히 같게 나왔더라도 톤을 비교해보세요 — 제약 없는 버전은 &ldquo;정확한 근거는 별도 확인 필요&rdquo; 같은 유보적 표현이 많아 산만해지는 경향이, 제약을 명시한 버전은 더 단정적이고 정돈되는 경향이 있습니다.</p>
 
-        <p><strong>3단계 — 정확한 버전을 HTML로 만들어 실제로 공유하기</strong> — 2단계에서 확인한 <strong>제약을 명시한 버전(B)</strong>이 함정을 피해 정확한 CAC(16,200원)를 썼다면, 이 내용을 실제로 배포까지 해봅니다. A가 함정(1만5천원대)에 걸렸다면 B의 결과로 진행하세요 — 틀린 숫자가 담긴 자료를 그대로 배포할 순 없으니까요.</p>
-        <p>👉 <strong>대화창 B</strong>에 이어서: <em>&ldquo;방금 만든 슬라이드 내용을 하나의 HTML 파일 슬라이드로 만들어줘. 화살표 키로 넘기고, 외부 라이브러리 없이 그 파일만으로 동작하게.&rdquo;</em></p>
-
-        <div class="callout callout--practice">
-          <div class="callout-label">🚀 3단계 실습 — GitHub Pages로 무료 공유하기</div>
-          <p>완성한 HTML을 <strong>링크 하나로 누구나</strong> 보게 하려면 GitHub Pages를 씁니다. 첫 화면 파일명은 반드시 <code>index.html</code>.</p>
-          <ol style="margin-bottom:0;">
-            <li>GitHub 로그인 → New(새 Repository 생성) — owner: 소유자, repository name: 저장소 이름(green_test), description: 설명(비워둠), choose visibility: public → Create repository</li>
-            <li>quick setup(파일 업로드) → <strong>uploading an existing file</strong> 클릭 → 다운받은 html 파일 이름을 <code>index</code>로 변경 → <strong>drag and drop</strong>(파일명이 정확히 <code>index.html</code>인지 철자 확인) → <strong>Commit changes</strong></li>
-            <li>green_test 페이지 → 상단 Settings → Pages 탭 → Branch: None → Main, 폴더 → root → save</li>
-            <li>1~2분 정도의 배포 시간이 지난 후 새로고침해보면 링크가 나옵니다 → 링크 이동</li>
-            <li>404 페이지가 뜨면 아직 index.html 파일을 저장소에 올리지 않았을 가능성이 높습니다 (green_test 페이지 → Code 탭 → 파일명이 잘못되었는지 확인)</li>
-          </ol>
-          <hr>
-          <p>💡 <strong>페이지를 여러 개 만들면?</strong> 이렇게 페이지들을 계속 만들다 보면 파일명이 <code>index.html</code>로 고정돼 있어서 구분·정리가 어려워집니다 — GitHub Pages는 파일명이 <code>index.html</code>이 아니면 자동으로 안 열리기 때문입니다. 업로드하기 전에 <strong>내 컴퓨터에 폴더를 만들어 미리 정리</strong>해두세요. 예를 들어 <code>그린컵AI과정</code> 폴더 하나를 만들고, 그 안에 <code>day2</code>, <code>day3</code>&hellip;처럼 차시별 폴더를 두는 겁니다. 파일 이름은 항상 <code>index.html</code> 그대로 두고(예: <code>day2/index.html</code>, <code>day3/index.html</code>), <strong>폴더 이름으로만 구분</strong>하면 헷갈리지 않습니다. (Windows·Mac 상관없이 사용자 폴더/문서 폴더 안에 두면 됩니다 — 저장 위치보다 폴더 구조로 구분하는 게 핵심입니다.)</p>
-          <p style="margin-top:10px; margin-bottom:0;">👉 확인할 것: 배포된 링크에 들어가서 <strong>CAC가 16,200원으로</strong> 제대로 나오는지 마지막으로 한 번 더 확인하세요 — 함정에 걸린 자료가 그대로 공개 링크로 퍼지면 곤란하니까요.</p>
+        <div class="callout callout--tip">
+          <div class="callout-label">💡 A와 B의 숫자가 같게 나왔다면?</div>
+          <p>AI가 문서 끝까지 읽고 메모를 스스로 따랐다는 뜻으로, 좋은 신호입니다. 하지만 이게 <strong>매번 보장되지는 않습니다</strong> — 문서가 더 길어지거나 메모가 더 깊이 묻혀 있거나, 대화가 길어져 앞 지시를 놓치는 상황(5절 참고)에서는 놓칠 수 있습니다. 결과가 같더라도 제약을 프롬프트에 직접 쓰는 습관은 계속 유지하세요 — 안전벨트를 맨 날 사고가 안 났다고 안전벨트가 필요 없었던 게 아닌 것과 같은 이치입니다.</p>
         </div>
 
         <div class="callout callout--tip">
-          <div class="callout-label">🗑️ 저장소(repository)를 삭제하고 싶다면?</div>
-          <p>실습용으로 만들었거나 잘못 만든 저장소는 정리해도 됩니다. 다만 삭제하면 <strong>복구할 수 없으니</strong> 신중하게 진행하세요.</p>
+          <div class="callout-label">💡 실전 팁 — GitHub Pages로 무료 공유하기</div>
+          <p>완성한 HTML을 <strong>링크 하나로 누구나</strong> 보게 하려면 GitHub Pages를 씁니다. 첫 화면 파일명은 반드시 <code>index.html</code>. (자세한 방법은 강사가 별도로 안내합니다.)</p>
           <ol style="margin-bottom:0;">
-            <li>삭제할 저장소로 들어가기 (예: green_test, AI_Agent 등)</li>
-            <li>상단 <strong>Settings</strong> 탭 클릭</li>
-            <li>맨 아래로 스크롤 → <strong>Danger Zone</strong></li>
-            <li><strong>Delete this repository</strong> 클릭 → 뜨는 창에서 <strong>I want to delete this repository</strong> 클릭</li>
-            <li>경고 문구(&ldquo;Unexpected bad things will happen if you don&rsquo;t read this!&rdquo;)를 확인하고 <strong>I have read and understand these effects</strong> 클릭</li>
-            <li>확인란에 <code>사용자명/저장소명</code>(예: <code>aaaaxca/greentest</code>)을 정확히 입력</li>
-            <li>빨간색 <strong>Delete this repository</strong> 버튼 클릭 → 삭제 완료</li>
+            <li>GitHub에서 새 Repository 생성 (Public)</li>
+            <li>완성한 html 파일을 <code>index.html</code>로 이름 바꿔 업로드 → Commit</li>
+            <li>Settings → Pages → Branch를 <strong>main / root</strong>로 설정 → Save</li>
+            <li>1~2분 후 새로고침 → 생성된 링크로 확인</li>
           </ol>
         </div>
 
@@ -951,19 +931,10 @@ CAC도 xlsx의 최신 값을 써줘."</div>
           <p>가볍고, 어디서나 열리고, AI가 코드로 바로 만들고 고치는 <strong>HTML 슬라이드</strong>가 실무에서 더 빠릅니다. 앞으로 과정에서 슬라이드는 주로 HTML로 만듭니다.</p>
         </div>
 
-        <h3 class="sub-head">실습H — 한 데이터, 세 가지 독자 (역할·형식 조합 반복 적용)</h3>
+        <h3 class="sub-head">실습2 — 한 데이터, 세 가지 독자 (역할·형식 조합 반복 적용)</h3>
         <div class="file-links">📎 준비물: <b>고객 만족도 설문 결과(Excel)</b></div>
         <p>이 파일 <strong>하나만</strong> 올리고, <strong>같은 데이터로 세 번</strong> 시킵니다. 데이터는 안 바뀝니다 — <strong>역할과 형식만</strong> 바뀝니다.</p>
-        <p>🔍 시작 전 주관식 응답을 눈으로 훑어보세요 — 개인정보(전화번호·이름)가 섞인 응답이 실제로 있습니다. (파일을 올리는 순간 이미 AI로 전달되니, 실제 업무 자료라면 결과물에서 빼는 것과 별개로 업로드 전에 지우는 게 원칙입니다.)</p>
-        <div class="callout callout--tip">
-          <div class="callout-label">💡 매번 다 지우기 힘들다면</div>
-          <ul style="margin-bottom:0;">
-            <li>설정 → <strong>개인정보보호</strong> 탭에서 &ldquo;Claude 개선에 도움 주기&rdquo; 옵션이 꺼져 있는지 확인 (환경설정 탭이 아니라 개인정보보호 탭에 있습니다)</li>
-            <li>회사 업무라면 Team·Enterprise 같은 업무용 요금제 사용</li>
-            <li>전화번호·이름처럼 정해진 열은 업로드 전 자동으로 삭제</li>
-            <li>원본 데이터를 만들 때부터 개인정보 열을 빼고 내보내기</li>
-          </ul>
-        </div>
+        <p>🔍 시작 전 주관식 응답을 눈으로 훑어보세요 — 개인정보(전화번호·이름)가 섞인 응답이 실제로 있습니다.</p>
         <ol>
           <li><strong>임원 보고용</strong>: 숫자 중심, 결론부터, 해석은 &lsquo;~로 보임&rsquo;처럼 단정하지 말고.</li>
           <li><strong>CS팀 공유용</strong>: 주관식 응답에서 반복되는 불만 테마를 뽑고, 이번 주 응대 참고점 위주로.</li>
@@ -976,12 +947,27 @@ CAC도 xlsx의 최신 값을 써줘."</div>
         </div>
 
         <div class="challenge">
-          <div class="callout-label">🎓 도전 과제</div>
+          <div class="callout-label">🎓 도전 과제 — 품절 임박 안내로 직접 검증하기</div>
+          <p><strong>그린컵 여름 한정판 민트 텀블러, 재고 40개, 이번 주 금요일쯤 소진 예상 — SNS 품절 임박 안내</strong>를 소재로, 아래 두 가지를 새 대화창에서 직접 시켜보고 눈으로 비교합니다.</p>
+
+          <h3 class="sub-head first">한 줄 싸움</h3>
+          <div class="terminal">너는 그린컵 마케팅 담당자야. 여름 한정판 민트 텀블러가 재고 40개 남았고 이번 주 금요일쯤 소진될 것 같은 상황에서 SNS에 올릴 품절 임박 안내를 인스타그램 게시글용으로 3문장 이내, &lsquo;오늘 한 잔, 텀블러로 바꿔볼까요? 🌱&rsquo; 같은 친근한 톤으로 써줘. 소진 시점은 &lsquo;~쯤 소진 예상&rsquo;처럼 단정하지 말고, 결과는 게시글 본문과 해시태그 5개로만 나눠서 출력해줘</div>
+          <p>이 한 문장을 요소별로 뜯어보면:</p>
           <ul>
-            <li><strong>한 줄 싸움</strong> — 아무 작업이나 하나 고르고(예: 오늘 만든 사무실 이전 공지, 또는 자기 실제 업무), 맨 처음엔 아무 요소도 없는 막연한 지시로 한 번 시켜본 뒤, 두 번째 시도부터는 요소를 <strong>딱 하나씩만</strong> 추가해서 총 5번을 시켜보세요(예: 1번-막연히, 2번-맥락만 추가, 3번-역할만 추가, 4번-형식만 추가, 5번-제약만 추가).</li>
-            <li><strong>체이닝 vs 한 방</strong> — 오늘 한 실습 중 아무거나 하나를 골라서, 한 번은 모든 요구사항을 한 프롬프트에 다 몰아넣어 한 방에 시켜보고, 다른 한 번은 같은 작업을 2~3단계로 나눠서(예: 1단계-정보 정리, 2단계-형식 입히기, 3단계-제약 적용, 5절의 냉난방기 공지 예시처럼) 순서대로 시켜본 뒤, 결과물의 완성도와 걸린 시간을 비교(단계로 쪼개기가 항상 좋은 게 아니라는 걸 직접 검증).</li>
+            <li><strong>역할</strong> : 너는 그린컵 마케팅 담당자야</li>
+            <li><strong>맥락</strong> : 그린컵 여름 한정판 민트 텀블러가 재고 40개 남았고 이번 주 금요일쯤 소진될 것 같은 상황에서 SNS에 올릴 품절 임박 안내야</li>
+            <li><strong>형식</strong> : 인스타그램 게시글용으로, 3문장 이내로</li>
+            <li><strong>예시</strong> : &lsquo;오늘 한 잔, 텀블러로 바꿔볼까요? 🌱&rsquo; 이런 친근한 톤으로</li>
+            <li><strong>제약</strong> : 소진 시점을 확정된 것처럼 말하지 말고 &lsquo;~쯤 소진 예상&rsquo;처럼 여지를 남겨줘</li>
+            <li><strong>출력형식</strong> : 결과는 &lsquo;게시글 본문&rsquo;과 &lsquo;해시태그 5개&rsquo;로만 나눠서, 다른 설명 없이 그 두 항목만 출력해줘</li>
           </ul>
-          <p style="margin-bottom:0;">📎 더 연습하고 싶다면 <strong>프롬프트 드릴 워크시트</strong> · 막히면 <strong>현업용 치트시트</strong> · 다 했으면 <strong>모범답안</strong>과 비교.</p>
+
+          <h3 class="sub-head">체이닝</h3>
+          <p>새 대화창에서 <strong>정보 정리 → 형식 입히기 → 제약+출력형식 적용</strong> 순서로 나눠서 시켜보세요.</p>
+          <div class="terminal">1단계(정보 정리) — &ldquo;그린컵 민트 텀블러 재고 40개, 이번 주 금요일쯤 소진 예상. 이 상황을 한 문장으로 정리해줘.&rdquo;
+2단계(형식 입히기) — &ldquo;1단계 결과를 마케팅 담당자 톤으로, 인스타그램 게시글 형식(3문장 이내, &lsquo;오늘 한 잔, 텀블러로 바꿔볼까요? 🌱&rsquo; 같은 친근한 톤)으로 바꿔줘.&rdquo;
+3단계(제약+출력형식 적용) — &ldquo;2단계 결과에서 소진 시점을 &lsquo;~쯤 소진 예상&rsquo;으로 완화하고, 게시글 본문과 해시태그 5개로 나눠서 그 두 항목만 출력해줘.&rdquo;</div>
+          <p>👉 한 방(위 완성 문장을 한 번에)과 체이닝(위 3단계), 어떤 것이 완성도·걸린 시간에서 장점인지 확인하기.</p>
         </div>
       </section>
 
@@ -994,19 +980,19 @@ CAC도 xlsx의 최신 값을 써줘."</div>
         <p>오늘 실습 파일들은 실제 업무 자료처럼 <strong>일부러 함정을 심어놨습니다.</strong> 다 찾았나요?</p>
         <div class="table-scroll">
           <table>
-            <thead><tr><th>#</th><th>함정</th><th>어디에</th><th>확인 사항</th></tr></thead>
+            <thead><tr><th>#</th><th>함정</th><th>어디에</th><th>놓치면 생기는 문제</th></tr></thead>
             <tbody>
-              <tr><td>1</td><td>초안 아래 팀장 회신(요청 미반영)</td><td>2절 그린컵 실습A, 공지 초안</td><td>팀장이 요청한 주차 안내가 최종 공지에 빠졌는가</td></tr>
-              <tr><td>2</td><td>박스 신청 중복·정정 행</td><td>2절 그린컵 실습A, 박스 신청표</td><td>재신청된 최신 수량으로 확인이 되는가</td></tr>
-              <tr><td>3</td><td>고객 메일 속 CS 내부 메모</td><td>2절 그린컵 실습B, 불만 메일</td><td>내부 사정이 고객에게 노출되었는가</td></tr>
-              <tr><td>4</td><td>슬라이드 발표자 노트(사견)</td><td>3절 그린컵 실습D, 회의 PPT</td><td>미확정 의견이 회의록에 결정사항처럼 나왔는가</td></tr>
-              <tr><td>5</td><td>브리프의 오래된 숫자 vs 최신 xlsx</td><td>7절 실습G, 보고 브리프</td><td>옛날 수치로 발표자료를 만들진 않았는가</td></tr>
+              <tr><td>1</td><td>초안 아래 팀장 회신(요청 미반영)</td><td>2절 그린컵 실습A, 공지 초안</td><td>팀장이 요청한 주차 안내가 최종 공지에 빠짐</td></tr>
+              <tr><td>2</td><td>박스 신청 중복·정정 행</td><td>2절 그린컵 실습A, 박스 신청표</td><td>옛날 수량(18개)을 써서 박스가 모자람</td></tr>
+              <tr><td>3</td><td>고객 메일 속 CS 내부 메모</td><td>2절 그린컵 실습B, 불만 메일</td><td>내부 사정이 고객에게 그대로 노출</td></tr>
+              <tr><td>4</td><td>슬라이드 발표자 노트(사견)</td><td>3절 그린컵 실습D, 회의 PPT</td><td>미확정 의견이 회의록에 결정사항처럼 남음</td></tr>
+              <tr><td>5</td><td>브리프의 오래된 숫자 vs 최신 xlsx</td><td>7절 실습G, 보고 브리프</td><td>옛날 수치로 발표자료를 만들어 틀린 숫자 보고</td></tr>
             </tbody>
           </table>
         </div>
         <div class="callout callout--tip">
           <div class="callout-label">💡</div>
-          <p>방금 여러분이 한 일이 실무에서 AI에게 자료를 맡기기 전 <strong>&ldquo;이 자료, 그대로 넘겨도 되는 자료인가?&rdquo;</strong>를 점검하는 습관입니다.</p>
+          <p>5개 다 찾았다면, 방금 여러분이 한 일이 실무에서 AI에게 자료를 맡기기 전 <strong>&ldquo;이 자료, 그대로 넘겨도 되는 자료인가?&rdquo;</strong>를 점검하는 습관입니다.</p>
         </div>
       </section>
 
@@ -1017,11 +1003,17 @@ CAC도 xlsx의 최신 값을 써줘."</div>
           <h2>좋은 지시문은 버리지 말고 저장하라</h2>
         </div>
         <p>오늘 여러 번 고쳐가며 완성한 지시문은 <strong>일회용이 아닙니다.</strong> 문서 하나에 <strong>&ldquo;상황 → 잘 됐던 지시문&rdquo;</strong> 형태로 쌓아두세요.</p>
-        <div class="terminal">[상황] 사무실 이전 공지
+        <div class="terminal">[상황] 품절 임박 안내 (SNS)
 [써봤더니 좋았던 지시]
-첨부한 세 자료를 종합해 전 직원 사무실 이전 공지를 써줘. 팀장 회신에서 요청한 내용도
-반영해줘. 자료끼리 다르면 더 구체적인/최근 쪽으로 통일하고... (이하 생략)
-[마지막 사용일] 2026-07-02</div>
+너는 그린컵 마케팅 담당자야. [상품명]이 재고 [수량]개 남았고 [소진 예상 시점]인 상황에서
+SNS에 올릴 품절 임박 안내를 인스타그램 게시글용으로 3문장 이내, '오늘 한 잔, 텀블러로
+바꿔볼까요? 🌱' 같은 친근한 톤으로 써줘. 소진 시점은 '~쯤 소진 예상'처럼 단정하지 말고,
+결과는 게시글 본문과 해시태그 5개로만 나눠서 출력해줘
+[마지막 사용일] 2026-09-21</div>
+        <div class="callout callout--tip">
+          <div class="callout-label">💡</div>
+          <p>다음에 다른 제품·다른 상황에도 그대로 쓸 수 있게, <strong>매번 바뀌는 숫자·이름</strong>(상품명·재고 수량·소진 시점 등)은 <code>[ ]</code>로 남겨두고 나머지 문장(역할·톤·제약·출력형식)만 고정하세요. 다음에 쓸 때는 <code>[ ]</code> 안의 값만 채워 넣으면 됩니다.</p>
+        </div>
 
         <h3 class="sub-head">이 습관이 앞으로 어떻게 커지는지</h3>
         <div class="table-scroll">
@@ -1158,15 +1150,15 @@ CAC도 xlsx의 최신 값을 써줘."</div>
         <p>객관식·O/X는 바로 채점되고, 서술형은 모범답안을 펼쳐 비교하세요.</p>
 
         <div class="quiz-item">
-          <p class="q">1. 같은 AI인데 결과가 사람마다 다른 가장 큰 이유는? ⓐAI 성능 ⓑ지시의 구체성 차이 ⓒ운 ⓓ요금제</p>
+          <p class="q">1. 같은 AI인데 결과가 사람마다 다른 가장 큰 이유는?<br>ⓐ AI 성능<br>ⓑ 지시의 구체성 차이<br>ⓒ 운<br>ⓓ 요금제</p>
           <details><summary>정답 보기</summary><div class="ans"><p>ⓑ 지시의 구체성 차이</p></div></details>
         </div>
         <div class="quiz-item">
-          <p class="q">2. 6요소 중 &lsquo;가성비 1등&rsquo;은? ⓐ예시 ⓑ역할 ⓒ맥락 ⓓ출력형식</p>
+          <p class="q">2. 6요소 중 &lsquo;가성비 1등&rsquo;은?<br>ⓐ 예시<br>ⓑ 역할<br>ⓒ 맥락<br>ⓓ 출력형식</p>
           <details><summary>정답 보기</summary><div class="ans"><p>ⓒ 맥락</p></div></details>
         </div>
         <div class="quiz-item">
-          <p class="q">3. 환각을 줄이는 가장 직접적인 제약 한 줄은? ⓐ&lsquo;길게 써줘&rsquo; ⓑ&lsquo;지어내지 말고 없으면 [확인필요]&rsquo; ⓒ&lsquo;예쁘게&rsquo; ⓓ&lsquo;빨리&rsquo;</p>
+          <p class="q">3. 환각을 줄이는 가장 직접적인 제약 한 줄은?<br>ⓐ &lsquo;길게 써줘&rsquo;<br>ⓑ &lsquo;지어내지 말고 없으면 [확인필요]&rsquo;<br>ⓒ &lsquo;예쁘게&rsquo;<br>ⓓ &lsquo;빨리&rsquo;</p>
           <details><summary>정답 보기</summary><div class="ans"><p>ⓑ &lsquo;지어내지 말고 없으면 [확인필요]&rsquo;</p></div></details>
         </div>
         <div class="quiz-item">
@@ -1191,7 +1183,7 @@ CAC도 xlsx의 최신 값을 써줘."</div>
         </div>
       </section>
 
-      <a class="next-lesson" href="lesson3.html">
+      <a class="next-lesson" href="https://claude.ai/code/artifact/2bcd3f3f-b1dd-4332-85b9-9fde4b6f7bea">
         <div>
           <span class="label">다음 차시</span>
           <h3>Day 3 · Project</h3>
@@ -1209,5 +1201,4 @@ CAC도 xlsx의 최신 값을 써줘."</div>
 
 </div>
 
-</body>
-</html>
+</body></html>
