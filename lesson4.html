@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>문서·메일·보고 실전</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --paper:#F5F7FB;
+    --surface:#FFFFFF;
+    --surface-2:#EEF1F9;
+    --ink:#1B2333;
+    --ink-soft:#525C72;
+    --border:#DCE1EE;
+    --accent:#2954D6;
+    --accent-ink:#FFFFFF;
+    --accent-tint:#E7ECFB;
+    --amber:#8A5A10;
+    --amber-tint:#FBF0DC;
+    --amber-line:#E9CE9C;
+    --red:#B23434;
+    --red-tint:#FCE9E9;
+    --red-line:#EFC2C2;
+    --green:#1F8A5F;
+    --green-tint:#E5F5EE;
+    --shadow:0 1px 2px rgba(27,35,51,.04), 0 8px 24px -12px rgba(27,35,51,.12);
+    --term-bg:#12151E;
+    --term-ink:#DDE3F0;
+    --term-accent:#7C9BFF;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#10131B;
+      --surface:#171B26;
+      --surface-2:#1C2130;
+      --ink:#E7EAF2;
+      --ink-soft:#A7AFC2;
+      --border:#2B3143;
+      --accent:#89A6FF;
+      --accent-ink:#0B1020;
+      --accent-tint:#1E2740;
+      --amber:#E8B75D;
+      --amber-tint:#2E2716;
+      --amber-line:#4A3B1E;
+      --red:#E58888;
+      --red-tint:#3A1E1E;
+      --red-line:#4E2A2A;
+      --green:#5FD1A0;
+      --green-tint:#123326;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#10131B;
+    --surface:#171B26;
+    --surface-2:#1C2130;
+    --ink:#E7EAF2;
+    --ink-soft:#A7AFC2;
+    --border:#2B3143;
+    --accent:#89A6FF;
+    --accent-ink:#0B1020;
+    --accent-tint:#1E2740;
+    --amber:#E8B75D;
+    --amber-tint:#2E2716;
+    --amber-line:#4A3B1E;
+    --red:#E58888;
+    --red-tint:#3A1E1E;
+    --red-line:#4E2A2A;
+    --green:#5FD1A0;
+    --green-tint:#123326;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Noto Sans KR","Pretendard",sans-serif;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+    word-break:keep-all;
+    overflow-wrap:break-word;
+  }
+  h1,h2,h3{
+    font-family:"Nanum Myeongjo",serif;
+    color:var(--ink);
+    text-wrap:balance;
+    margin:0;
+  }
+  a{color:var(--accent);}
+  strong{color:var(--ink); font-weight:700;}
+  code{
+    font-family:"JetBrains Mono",monospace;
+    font-size:.9em;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:4px;
+    padding:.1em .4em;
+  }
+  p{margin:0 0 1em;}
+  ul,ol{margin:0 0 1em; padding-left:1.3em;}
+  li{margin-bottom:.45em;}
+  .page-shell{
+    max-width:860px;
+    margin:0 auto;
+    padding:0 20px 96px;
+  }
+
+  /* ---------- Masthead ---------- */
+  .masthead{
+    padding:56px 0 40px;
+    border-bottom:1px solid var(--border);
+    margin-bottom:40px;
+  }
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.78rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--accent);
+    background:var(--accent-tint);
+    border:1px solid var(--border);
+    padding:5px 12px;
+    border-radius:999px;
+    margin-bottom:20px;
+  }
+  .masthead h1{
+    font-size:clamp(2.1rem, 4.5vw, 3.1rem);
+    font-weight:800;
+    margin-bottom:10px;
+  }
+  .masthead .lede{
+    color:var(--ink-soft);
+    font-size:1.05rem;
+    max-width:60ch;
+    margin-bottom:0;
+  }
+  .masthead .meta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px 24px;
+    margin-top:24px;
+    font-size:.9rem;
+    color:var(--ink-soft);
+  }
+  .masthead .meta-row span{display:flex; align-items:center; gap:6px;}
+  .masthead .meta-row b{color:var(--ink); font-weight:700;}
+
+  main{min-width:0;}
+
+  /* ---------- Sections ---------- */
+  .lesson-section{
+    padding-bottom:44px;
+    margin-bottom:44px;
+    border-bottom:1px solid var(--border);
+    scroll-margin-top:20px;
+  }
+  .lesson-section:last-of-type{border-bottom:none;}
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    margin-bottom:20px;
+  }
+  .section-mark{
+    font-family:"JetBrains Mono",monospace;
+    font-weight:700;
+    font-size:1rem;
+    color:var(--accent-ink);
+    background:var(--accent);
+    border-radius:8px;
+    padding:3px 9px;
+    flex-shrink:0;
+  }
+  .section-head h2{
+    font-size:clamp(1.35rem,2.6vw,1.7rem);
+    font-weight:700;
+  }
+  .section-head h2 small{
+    display:block;
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:500;
+    font-size:.85rem;
+    color:var(--ink-soft);
+    margin-top:4px;
+  }
+  h3.sub-head{
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:700;
+    font-size:1.02rem;
+    color:var(--accent);
+    margin:28px 0 10px;
+  }
+  h3.sub-head.first{margin-top:0;}
+
+  .badge{
+    display:inline-block;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.72rem;
+    letter-spacing:.04em;
+    padding:2px 9px;
+    border-radius:999px;
+    background:var(--green-tint);
+    color:var(--green);
+    border:1px solid var(--green);
+    margin-bottom:14px;
+  }
+
+  /* ---------- Callouts ---------- */
+  .callout{
+    border:1px solid var(--border);
+    border-left:4px solid var(--accent);
+    background:var(--surface);
+    border-radius:10px;
+    padding:16px 18px;
+    margin:20px 0;
+    box-shadow:var(--shadow);
+  }
+  .callout p:last-child{margin-bottom:0;}
+  .callout-label{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-weight:700;
+    font-size:.92rem;
+    margin-bottom:8px;
+    color:var(--ink);
+  }
+  .callout--scenario{border-left-color:var(--accent); background:var(--accent-tint);}
+  .callout--tip{border-left-color:var(--amber); background:var(--amber-tint);}
+  .callout--tip .callout-label{color:var(--amber);}
+  .callout--warning{border-left-color:var(--red); background:var(--red-tint);}
+  .callout--warning .callout-label{color:var(--red);}
+  .callout--summary{border-left-color:var(--accent); background:var(--surface);}
+  .callout--summary .callout-label{color:var(--accent);}
+  .callout--question{border-left-color:var(--ink-soft); background:var(--surface-2);}
+  .callout--practice{border-left-color:var(--green); background:var(--green-tint);}
+  .callout--practice .callout-label{color:var(--green);}
+  .callout hr{border:none; border-top:1px dashed var(--border); margin:12px 0;}
+
+  /* ---------- Two-column compare ---------- */
+  .two-col{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    margin:20px 0;
+  }
+  @media (max-width:640px){.two-col{grid-template-columns:1fr;}}
+  .compare-card{
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:18px;
+    background:var(--surface);
+  }
+  .compare-card .compare-label{
+    font-weight:700;
+    color:var(--accent);
+    margin-bottom:8px;
+    display:block;
+  }
+  .compare-card p, .compare-card ul{margin-bottom:0;}
+
+  /* ---------- Terminal / code ---------- */
+  .terminal{
+    background:var(--term-bg);
+    color:var(--term-ink);
+    border-radius:10px;
+    padding:16px 18px;
+    margin:14px 0;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.84rem;
+    line-height:1.8;
+    overflow-x:auto;
+    white-space:pre-wrap;
+  }
+  .terminal .comment{color:#8892AC;}
+  .terminal .cmd{color:var(--term-accent);}
+
+  /* ---------- Tables ---------- */
+  .table-scroll{overflow-x:auto; margin:18px 0; border:1px solid var(--border); border-radius:12px;}
+  table{border-collapse:collapse; width:100%; min-width:480px; font-size:.92rem;}
+  th,td{
+    text-align:left;
+    padding:11px 14px;
+    border-bottom:1px solid var(--border);
+    vertical-align:top;
+  }
+  th{
+    background:var(--surface-2);
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:700;
+    color:var(--ink);
+    white-space:nowrap;
+  }
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:nth-child(even){background:var(--surface);}
+  tbody tr:nth-child(odd){background:transparent;}
+  td strong{color:var(--accent);}
+  .tag-bad{color:var(--red); font-weight:700;}
+  .tag-good{color:var(--green); font-weight:700;}
+
+  /* ---------- Lists with markers ---------- */
+  .check-list, .watch-list{list-style:none; padding-left:0;}
+  .check-list li, .watch-list li{position:relative; padding-left:28px;}
+  .check-list li::before{content:"✓"; position:absolute; left:0; top:0; color:var(--green); font-weight:700;}
+  .watch-list li::before{content:"!"; position:absolute; left:2px; top:0; color:var(--red); font-weight:700;}
+
+  .steps{padding-left:0; list-style:none; counter-reset:step;}
+  .steps li{counter-increment:step; position:relative; padding-left:36px;}
+  .steps li::before{
+    content:counter(step);
+    position:absolute; left:0; top:-1px;
+    width:24px; height:24px;
+    border-radius:50%;
+    background:var(--accent);
+    color:var(--accent-ink);
+    font-family:"JetBrains Mono",monospace;
+    font-size:.78rem;
+    font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  /* ---------- File links ---------- */
+  .file-links{
+    font-size:.88rem;
+    color:var(--ink-soft);
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:10px 14px;
+    margin:14px 0;
+  }
+  .file-links b{color:var(--ink); font-weight:600;}
+
+  /* ---------- Loop trace ---------- */
+  .loop-trace{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin:14px 0;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:14px 16px;
+    background:var(--surface);
+  }
+  .loop-trace .step{display:flex; gap:10px; font-size:.9rem;}
+  .loop-trace .step b{color:var(--accent); flex-shrink:0; min-width:88px;}
+  .loop-trace .step span{max-width:none;}
+
+  /* ---------- FAQ ---------- */
+  .faq-item{margin-bottom:20px;}
+  .faq-item .q{display:flex; gap:10px; font-weight:700; margin-bottom:6px;}
+  .faq-item .q span.tag, .faq-item .a span.tag{
+    font-family:"JetBrains Mono",monospace;
+    font-weight:700;
+    color:var(--accent);
+    flex-shrink:0;
+  }
+  .faq-item .a{display:flex; gap:10px; color:var(--ink-soft);}
+  .faq-item .a span.tag{color:var(--ink-soft);}
+  .faq-item .a p{margin-bottom:0;}
+
+  /* ---------- Next lesson ---------- */
+  .next-lesson{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:22px 26px;
+    margin-top:8px;
+    box-shadow:var(--shadow);
+    text-decoration:none;
+    color:inherit;
+  }
+  a.next-lesson:hover{border-color:var(--accent);}
+  a.next-lesson:hover .arrow{transform:translateX(4px);}
+  .next-lesson .label{
+    font-family:"JetBrains Mono",monospace;
+    font-size:.76rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+    display:block;
+  }
+  .next-lesson h3{font-size:1.2rem; font-weight:700; font-family:"Nanum Myeongjo",serif;}
+  .next-lesson .arrow{
+    font-family:"JetBrains Mono",monospace;
+    font-size:1.4rem;
+    color:var(--accent);
+    display:inline-block;
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .next-lesson .arrow{transition:transform .15s ease;}
+  }
+
+  .page-footer{
+    margin-top:60px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    color:var(--ink-soft);
+    font-size:.84rem;
+  }
+
+  @media (prefers-reduced-motion:no-preference){
+    a{transition:background-color .15s ease, color .15s ease;}
+  }
+</style>
+</head>
+<body>
+<div class="page-shell">
+
+  <header class="masthead">
+    <a class="eyebrow" href="index.html" style="text-decoration:none;">← 그린컵 AI 에이전트 과정 · 4차시</a>
+    <h1>문서·메일·보고 실전</h1>
+    <p class="lede">반복되는 보고서·메일을 템플릿화하고, 3차시에서 만든 컨텍스트로 문서 작업을 실제로 굴려봅니다.</p>
+    <div class="meta-row">
+      <span>📍 <b>오늘 배우는 것</b> — 반복 문서 찾기, Project 준비물 보강, 초안→교정→톤조절 3단계 다듬기, 템플릿으로 저장하기</span>
+    </div>
+  </header>
+
+    <main>
+
+      <div class="callout callout--scenario">
+        <div class="callout-label">🎯 오늘의 가상 문제상황</div>
+        <p>당신은 매주 똑같은 형식의 업무보고서를 씁니다. 내용만 다를 뿐 양식도, 톤도, 순서도 매번 같은데 매번 처음부터 새로 씁니다. 지난 시간(3차시)에 그린컵 Project를 만들어 회사 톤과 자료까지 넣어뒀는데, <strong>이걸 진짜 반복 업무에 어떻게 써먹어야 할까요?</strong> 오늘은 실제로 하나 골라서 끝까지 굴려봅니다 — <strong>초안 뽑기 → 교정 → 톤 조절 → 다음에도 쓸 템플릿으로 저장</strong>까지.</p>
+      </div>
+
+      <!-- 1 -->
+      <section class="lesson-section" id="sec01">
+        <div class="section-head">
+          <span class="section-mark">1</span>
+          <h2>새 Project? 아니면 이어가기?</h2>
+        </div>
+        <p>오늘 제일 먼저 답해야 할 질문입니다. 3절 Project에서 배운 기준을 그대로 다시 씁니다 — <strong>&ldquo;같은 지시문과 자료를 쓸 수 있는가?&rdquo;</strong></p>
+
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th></th><th>오늘(문서·메일·보고)</th><th>3차시(Project 처음 만들 때)</th></tr></thead>
+            <tbody>
+              <tr><td><strong>회사</strong></td><td>그린컵 (동일)</td><td>그린컵</td></tr>
+              <tr><td><strong>톤·규칙</strong></td><td>같은 브랜드 보이스 그대로 씀</td><td>지침에 이미 저장됨</td></tr>
+              <tr><td><strong>참고 자료</strong></td><td>회사소개·FAQ·정책·카탈로그 그대로 필요</td><td>이미 Project에 올려둠</td></tr>
+              <tr><td><strong>결론</strong></td><td colspan="2"><strong>새 Project 필요 없음 — 3차시 그린컵 Project를 그대로 이어갑니다.</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout--tip">
+          <div class="callout-label">💡 왜 이어가는 게 맞나</div>
+          <p>3차시에서 배웠듯 Project는 <strong>&ldquo;작업 단위&rdquo;가 아니라 &ldquo;맥락 단위&rdquo;</strong>입니다. &ldquo;보고서용 Project&rdquo;, &ldquo;메일용 Project&rdquo;처럼 문서 종류마다 새로 파면 같은 회사 자료를 여러 곳에 흩어 관리하게 됩니다. 자료·규칙이 같으면 <strong>Project는 하나, 대화만 여러 개</strong> 여는 게 원칙이었죠. 오늘은 그 원칙을 실제로 확인하는 시간이기도 합니다.</p>
+        </div>
+
+        <div class="callout callout--practice">
+          <div class="callout-label">🌱 시작하기 전 — 3차시 그린컵 Project 열기</div>
+          <p>claude.ai에서 3차시에 만든 <strong>그린컵 Project</strong>를 그대로 엽니다. 새로 만들지 마세요. 오늘 실습은 전부 이 Project 안, <strong>새 대화창</strong>에서 진행합니다 (주제가 여러 번 바뀌므로 실습마다 새 대화를 여는 걸 권장합니다 — 헷갈리면 3차시처럼 새로 여세요, Project가 자료·규칙을 기억하니 잃는 게 없습니다).</p>
+        </div>
+      </section>
+
+      <!-- 2 -->
+      <section class="lesson-section" id="sec02">
+        <div class="section-head">
+          <span class="section-mark">2</span>
+          <h2>오늘의 흐름 — 반복 문서를 굴리는 5단계</h2>
+        </div>
+        <p>오늘 하루는 이 순서로 진행됩니다. 문서 하나를 정해서 <strong>끝까지</strong> 따라가 보는 게 목표입니다.</p>
+        <div class="loop-trace">
+          <div class="step"><b>① 고르기</b><span>내가 반복해서 쓰는 문서·메일 하나를 정한다</span></div>
+          <div class="step"><b>② 준비물</b><span>그 문서를 쓸 때 늘 참고하는 자료·양식을 Project에 보강한다</span></div>
+          <div class="step"><b>③ 초안</b><span>Project 맥락 위에서 초안을 뽑는다</span></div>
+          <div class="step"><b>④ 교정</b><span>오탈자·비문·근거 없는 숫자를 걸러낸다</span></div>
+          <div class="step"><b>⑤ 톤 조절</b><span>읽는 사람에 따라 같은 내용을 다른 톤으로 바꾼다</span></div>
+        </div>
+        <p>여기에 하나를 더합니다 — 잘 나온 결과는 <strong>다음에도 쓸 수 있게 템플릿으로 저장</strong>합니다 (2차시 &ldquo;좋은 지시문은 버리지 말고 저장하라&rdquo;의 연장입니다).</p>
+      </section>
+
+      <!-- 3 -->
+      <section class="lesson-section" id="sec03">
+        <div class="section-head">
+          <span class="section-mark">3</span>
+          <h2>[실습A] Project에 준비물 보강하기</h2>
+        </div>
+        <span class="badge">실습</span>
+        <p>3차시에 올린 6개 자료(회사소개·FAQ·보이스가이드·정책·카탈로그·좋은 예시)만으로는 <strong>&ldquo;문서 하나를 통째로 완성&rdquo;</strong>하기엔 아직 부족합니다. 반복 업무에 실제로 쓰는 <strong>양식·지난 결과물</strong>을 오늘 더 채웁니다.</p>
+
+        <div class="file-links">📎 오늘 추가할 준비물: <b>① 주간 업무보고 양식(Excel)</b> · <b>② 월간 뉴스레터 지난 호(Word)</b> · <b>③ 신규 거래처 안내 메일 지난 예시(Word)</b></div>
+
+        <ol class="steps">
+          <li>그린컵 Project의 <strong>Project 컨텍스트(Context)</strong> 영역으로 이동</li>
+          <li>기존 6개 자료는 그대로 두고, 위 3개를 <strong>추가로</strong> 드래그하거나 Add content로 올리기</li>
+          <li>파일명은 알아보기 쉽게 (예: <code>주간업무보고_양식.xlsx</code>) — 3차시에서 배운 &ldquo;AI는 자료를 찾아서 읽는다&rdquo;가 오늘도 그대로 적용됩니다</li>
+        </ol>
+
+        <div class="callout callout--tip">
+          <div class="callout-label">💡 준비물을 고르는 기준</div>
+          <p>&ldquo;내가 이 문서를 쓸 때마다 옆에 켜두는 파일이 뭔가?&rdquo;가 기준입니다. 처음부터 다 모으려 하지 말고, <strong>오늘 다룰 문서 1~2종에 필요한 것만</strong> 우선 추가하세요.</p>
+        </div>
+      </section>
+
+      <!-- 4 -->
+      <section class="lesson-section" id="sec04">
+        <div class="section-head">
+          <span class="section-mark">4</span>
+          <h2>[실습B] 초안 뽑기</h2>
+        </div>
+        <span class="badge">실습</span>
+        <p>오늘은 <strong>주간 업무보고</strong>를 예시로 끝까지 따라갑니다. (다른 문서를 골랐다면 같은 순서를 그 문서에 그대로 적용하세요.)</p>
+
+        <p><strong>거친 원본 메모</strong> — 이번 주 실제로 있었을 법한, 정리 안 된 메모입니다:</p>
+        <div class="terminal">이번주 인스타 광고 초안 2개 나옴. 수민이가 인플루언서 2명 컨택중, 아직 답 안옴.
+써모라인 재고 지영이 물류팀에 확인 요청함, 결과 아직.
+다음주 화요일에 신제품 카탈로그 촬영 예정.
+할인율 관련해서는 팀장이 재무팀이랑 얘기중이라 아직 미정.</div>
+
+        <p><span class="tag-good">✅</span> 좋은 지시:</p>
+        <div class="terminal">"이번 주 업무 메모야(위 내용 붙여넣기). 우리 주간 업무보고 양식대로 정리해서 초안 써줘.
+완료된 것과 진행 중인 것을 구분하고, 아직 결정 안 된 건 '미결'로 따로 표시해줘."</div>
+
+        <div class="callout callout--tip">
+          <div class="callout-label">💡 1차시 회의록 실습과 뭐가 다른가</div>
+          <p>1차시에서는 회의록 양식조차 없이 시작했습니다. 오늘은 3차시부터 쌓아온 <strong>브랜드 톤 + 회사 자료 + 업무보고 양식</strong>이 이미 Project 안에 있는 상태에서 시작합니다. 그래서 &ldquo;양식 알려줘&rdquo;를 따로 안 해도 <strong>첫 결과부터 우리 회사 양식에 가깝게</strong> 나오는지 확인해보세요 — 이게 바로 지난 시간들 작업이 오늘 실제로 시간을 줄여주는 순간입니다.</p>
+        </div>
+      </section>
+
+      <!-- 5 -->
+      <section class="lesson-section" id="sec05">
+        <div class="section-head">
+          <span class="section-mark">5</span>
+          <h2>[실습C] 교정하기</h2>
+        </div>
+        <span class="badge">실습</span>
+        <p>초안이 나왔다고 바로 보내면 안 됩니다. AI에게 먼저 스스로 점검시키고, <strong>사람이 마지막으로 한 번 더</strong> 확인합니다.</p>
+
+        <div class="terminal">"방금 결과에서 오탈자·비문이 있는지, 그리고 내가 준 메모에 없는 내용을
+지어내서 넣은 부분이 있는지 스스로 점검하고 고쳐줘."</div>
+
+        <div class="callout callout--warning">
+          <div class="callout-label">⚠️ AI 교정도 결국 검증이 필요합니다</div>
+          <p>위 메모에서 <strong>&ldquo;할인율&rdquo;은 미정</strong>이라고 분명히 적혀 있습니다. 결과물에서 이 부분이 &ldquo;미결&rdquo;로 남아있는지, 혹시 AI가 그럴듯한 숫자(예: &ldquo;10% 할인 예정&rdquo;)를 채워 넣지는 않았는지 <strong>직접 눈으로</strong> 확인하세요. 2차시에서 배운 &ldquo;지어내지 마&rdquo; 제약이 지침에 있어도, 사람의 마지막 확인은 생략하면 안 됩니다.</p>
+        </div>
+
+        <h3 class="sub-head first">사람이 꼭 확인해야 할 3가지</h3>
+        <ul class="check-list">
+          <li><strong>숫자</strong> — 메모·자료에 실제로 있던 숫자인가</li>
+          <li><strong>완료/진행/미결 구분</strong> — 아직 안 끝난 일이 완료로 둔갑하지 않았는가</li>
+          <li><strong>담당자·마감</strong> — 실제 메모의 이름·날짜와 일치하는가</li>
+        </ul>
+      </section>
+
+      <!-- 6 -->
+      <section class="lesson-section" id="sec06">
+        <div class="section-head">
+          <span class="section-mark">6</span>
+          <h2>[실습D] 톤 조절하기</h2>
+        </div>
+        <span class="badge">실습</span>
+        <p>같은 내용이라도 <strong>누가 읽느냐</strong>에 따라 톤이 달라야 합니다. 교정까지 끝난 같은 초안을 세 가지 버전으로 바꿔봅니다 — 내용은 그대로, 톤과 형식만 바뀝니다.</p>
+
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>버전</th><th>지시</th><th>기대되는 변화</th></tr></thead>
+            <tbody>
+              <tr><td><strong>① 팀장 보고용</strong></td><td>&ldquo;이 내용을 팀장님께 보고하는 톤으로, 결론부터 간결하게 5줄 이내로 바꿔줘.&rdquo;</td><td>군더더기 없이 핵심만, 정중하지만 사무적</td></tr>
+              <tr><td><strong>② 팀 채팅 공유용</strong></td><td>&ldquo;같은 내용을 팀 단체 채팅에 공유하는 톤으로, 편하게 불릿으로 바꿔줘.&rdquo;</td><td>짧고 캐주얼, 이모지 소량 허용</td></tr>
+              <tr><td><strong>③ 거래처 안내 메일용</strong></td><td>&ldquo;신제품 카탈로그 촬영 일정 부분만 뽑아서, 거래처에 보내는 정중한 안내 메일로 바꿔줘. 내부 진행 상황(할인율 협의 등)은 빼고.&rdquo;</td><td>정중한 존댓말, 내부 사정은 제외 (범위 제약)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout--tip">
+          <div class="callout-label">💡 여기서 한 번 더 쓰이는 &lsquo;제약&rsquo;</div>
+          <p>③번은 2차시에서 배운 <strong>범위형 제약</strong>이 그대로 필요한 순간입니다. 내부 진행 상황(할인율 협의처럼 아직 확정 안 된 내부 사정)이 거래처 메일에 새어 들어가면 안 됩니다. 결과를 눈으로 확인해서 실제로 걸러졌는지 체크하세요.</p>
+        </div>
+      </section>
+
+      <!-- 7 -->
+      <section class="lesson-section" id="sec07">
+        <div class="section-head">
+          <span class="section-mark">7</span>
+          <h2>다음에도 쓸 수 있게 — 템플릿으로 저장</h2>
+        </div>
+        <p>오늘 세 버전 중 가장 마음에 들었던 지시문을 <strong>일회용으로 버리지 마세요.</strong> 2차시에서 배운 습관을 그대로 씁니다 — 일회성 숫자·이름만 빈칸으로 바꿔서 저장합니다.</p>
+
+        <div class="terminal">[상황] 주간 업무보고 → 팀장 보고용으로 변환
+[써봤더니 좋았던 지시]
+이번 주 업무 메모야([메모 붙여넣기]). 우리 주간 업무보고 양식대로 정리해서 초안 써줘.
+완료/진행 중을 구분하고, 결정 안 된 건 '미결'로 표시해줘.
+그 다음, 이 내용을 팀장님께 보고하는 톤으로 결론부터 간결하게 5줄 이내로 바꿔줘.
+[마지막 사용일] 2026-09-20</div>
+
+        <p>이 메모를 어디에 둘지는 상황에 따라 다릅니다:</p>
+        <ul>
+          <li><strong>나만 쓸 거면</strong> — 메모장이나 개인 문서에 모아두고 필요할 때 복사해서 씀</li>
+          <li><strong>이 Project에서 계속 반복될 거면</strong> — <code>주간보고_템플릿.docx</code> 같은 파일로 만들어 그린컵 Project 컨텍스트에 추가 (3절 실습A와 같은 방법)</li>
+        </ul>
+
+        <div class="callout callout--summary">
+          <div class="callout-label">💡</div>
+          <p>이렇게 쌓인 템플릿들이 나중에 <strong>작업지시서(SOP)</strong>나 <strong>CLAUDE.md</strong> 같은 형태로 커집니다(2개월차에서 다룹니다). 오늘은 &ldquo;좋은 결과가 나오면 저장한다&rdquo;는 습관만 확실히 챙기세요.</p>
+        </div>
+      </section>
+
+      <!-- 8 -->
+      <section class="lesson-section" id="sec08">
+        <div class="section-head">
+          <span class="section-mark">8</span>
+          <h2>자주 묻는 질문 <small>FAQ</small></h2>
+        </div>
+        <div class="faq-item">
+          <div class="q"><span class="tag">Q.</span>오늘 실습에 &ldquo;Cowork&rdquo;라는 이름이 붙어 있던데, 오늘 그 기능을 쓰는 건가요?</div>
+          <div class="a"><span class="tag">A.</span><p>아닙니다. 실제 Cowork 기능(폴더를 통째로 맡기는 기능)은 2개월차 14차시에서 배웁니다. 오늘은 claude.ai 대화창 안에서, 3차시에 만든 Project 맥락 위에 문서 작업을 얹어보는 시간입니다.</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="q"><span class="tag">Q.</span>부서마다 반복 문서가 다른데 오늘 실습을 어떻게 응용하나요?</div>
+          <div class="a"><span class="tag">A.</span><p>순서는 동일합니다 — 반복 문서 고르기 → 그 문서에 필요한 자료를 Project에 추가 → 초안 → 교정 → 톤 조절. 문서 종류만 바꿔서 그대로 적용하세요.</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="q"><span class="tag">Q.</span>교정을 AI에게 시켰는데도 틀린 내용이 남아있으면요?</div>
+          <div class="a"><span class="tag">A.</span><p>정상입니다. AI의 자기점검은 놓치는 게 있을 수 있어서 사람의 마지막 확인이 필요한 것입니다. 5절의 &ldquo;사람이 꼭 확인해야 할 3가지&rdquo;로 다시 훑어보세요.</p></div>
+        </div>
+      </section>
+
+      <!-- 9 -->
+      <section class="lesson-section" id="sec09">
+        <div class="section-head">
+          <span class="section-mark">9</span>
+          <h2>오늘 정리</h2>
+        </div>
+        <ul>
+          <li>오늘은 <strong>새 Project를 만들지 않고 3차시의 그린컵 Project를 그대로 이어갔다</strong> — 같은 회사, 같은 톤·자료를 쓰기 때문.</li>
+          <li>반복 문서를 실제로 굴리는 5단계: <strong>고르기 → 준비물 → 초안 → 교정 → 톤 조절.</strong></li>
+          <li>Project에 이미 톤·자료가 있으면 <strong>첫 초안부터 훨씬 우리 회사에 가깝게</strong> 나온다 — 1차시의 맨몸 실습과 비교하면 그 차이가 보인다.</li>
+          <li>AI의 자기 교정도 <strong>사람의 마지막 확인</strong>을 대신하지 못한다. 특히 숫자·완료 여부는 직접 확인.</li>
+          <li>같은 내용도 <strong>읽는 사람에 따라 톤을 바꿔야</strong> 하고, 내부 사정은 외부용 문서에서 <strong>범위 제약</strong>으로 걸러야 한다.</li>
+          <li>잘 나온 결과는 버리지 말고 <strong>템플릿으로 저장</strong> — 이후 SOP·CLAUDE.md로 이어지는 습관의 연장.</li>
+        </ul>
+      </section>
+
+      <div class="next-lesson">
+        <div>
+          <span class="label">다음 차시</span>
+          <h3>Day 5 · 이메일·캘린더 자동화</h3>
+          <p style="margin:8px 0 0; color:var(--ink-soft); font-size:.92rem; max-width:50ch;">문서를 만드는 걸 넘어, 커넥터로 실제 이메일·캘린더와 연결해봅니다.</p>
+        </div>
+        <span class="arrow">→</span>
+      </div>
+
+    </main>
+
+  <footer class="page-footer">
+    <span>그린컵 AI 에이전트 과정 · 4차시 문서·메일·보고 실전</span>
+  </footer>
+
+</div>
+
+</body>
+</html>
