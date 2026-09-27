@@ -1,595 +1,1350 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>4차시 — 보고서·회의록·메일</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>보고서</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
 <style>
-:root{
-  --bg:#ffffff; --fg:#1f2328; --muted:#6b7280; --line:#e5e7eb; --soft:#f6f7f9;
-  --accent:#2f6feb; --code-bg:#f3f4f6;
-  --tip:#eef6ff; --tip-b:#2f6feb;
-  --warn:#fff6e8; --warn-b:#e08c16;
-  --look:#f0f4ff; --look-b:#5b6ee1;
-  --goal:#f3fbf4; --goal-b:#2e9e50;
-  --sheet:#fdf3f8; --sheet-b:#c2559a;
-  --pin:#f4f4f6; --pin-b:#8a8f98;
-  --lab:#fbfbfd; --lab-b:#2f6feb;
-}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --bg:#15171a; --fg:#e6e8eb; --muted:#9aa2ad; --line:#2c3036; --soft:#1c1f23;
-    --accent:#7aa5ff; --code-bg:#22262b;
-    --tip:#16243a; --tip-b:#5b8dfb;
-    --warn:#33260f; --warn-b:#d79b32;
-    --look:#1b2140; --look-b:#7f8ff0;
-    --goal:#122a1b; --goal-b:#4cc272;
-    --sheet:#2c1726; --sheet-b:#d477b0;
-    --pin:#212429; --pin-b:#98a0ab;
-    --lab:#1a1d21; --lab-b:#5b8dfb;
+  :root{
+    --paper:#F5F7FB;
+    --surface:#FFFFFF;
+    --surface-2:#EEF1F9;
+    --ink:#1B2333;
+    --ink-soft:#525C72;
+    --border:#DCE1EE;
+    --accent:#2954D6;
+    --accent-ink:#FFFFFF;
+    --accent-tint:#E7ECFB;
+    --amber:#8A5A10;
+    --amber-tint:#FBF0DC;
+    --amber-line:#E9CE9C;
+    --red:#B23434;
+    --red-tint:#FCE9E9;
+    --red-line:#EFC2C2;
+    --green:#1F8A5F;
+    --green-tint:#E5F5EE;
+    --shadow:0 1px 2px rgba(27,35,51,.04), 0 8px 24px -12px rgba(27,35,51,.12);
+    --term-bg:#12151E;
+    --term-ink:#DDE3F0;
+    --term-accent:#7C9BFF;
   }
-}
-:root[data-theme="dark"]{
-  --bg:#15171a; --fg:#e6e8eb; --muted:#9aa2ad; --line:#2c3036; --soft:#1c1f23;
-  --accent:#7aa5ff; --code-bg:#22262b;
-  --tip:#16243a; --tip-b:#5b8dfb;
-  --warn:#33260f; --warn-b:#d79b32;
-  --look:#1b2140; --look-b:#7f8ff0;
-  --goal:#122a1b; --goal-b:#4cc272;
-  --sheet:#2c1726; --sheet-b:#d477b0;
-  --pin:#212429; --pin-b:#98a0ab;
-  --lab:#1a1d21; --lab-b:#5b8dfb;
-}
-*{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{
-  margin:0; background:var(--bg); color:var(--fg);
-  font-family:"Pretendard","Apple SD Gothic Neo","Noto Sans KR",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  font-size:16px; line-height:1.75; word-break:keep-all; overflow-wrap:anywhere;
-}
-.wrap{max-width:860px; margin:0 auto; padding:56px 16px 120px}
-h1{font-size:2rem; line-height:1.3; margin:0 0 8px; letter-spacing:-.02em}
-h2{font-size:1.45rem; line-height:1.35; margin:56px 0 14px; padding-top:18px; border-top:1px solid var(--line); letter-spacing:-.01em}
-h3{font-size:1.15rem; line-height:1.4; margin:34px 0 10px; letter-spacing:-.01em}
-h4{font-size:1rem; margin:24px 0 8px; color:var(--muted)}
-h2:first-of-type{border-top:none}
-p{margin:12px 0}
-ul,ol{margin:12px 0; padding-left:22px}
-li{margin:6px 0}
-li>ul,li>ol{margin:6px 0}
-a{color:var(--accent)}
-code{background:var(--code-bg); padding:.12em .38em; border-radius:4px; font-size:.88em;
-  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-pre{background:var(--code-bg); padding:14px 16px; border-radius:8px; overflow-x:auto; margin:14px 0}
-pre code{background:none; padding:0; font-size:.86rem; line-height:1.6}
-.lead{color:var(--muted); font-size:.95rem; margin:0 0 28px}
-hr{border:none; border-top:1px solid var(--line); margin:40px 0}
-table{border-collapse:collapse; width:100%; margin:16px 0; font-size:.92rem; display:block; overflow-x:auto}
-th,td{border:1px solid var(--line); padding:9px 12px; text-align:left; vertical-align:top}
-th{background:var(--soft); font-weight:600; white-space:nowrap}
-.box{border-left:3px solid var(--pin-b); background:var(--pin); padding:12px 16px; border-radius:0 8px 8px 0; margin:16px 0; font-size:.95rem}
-.box p{margin:6px 0}
-.box ul{margin:6px 0}
-.tip{border-color:var(--tip-b); background:var(--tip)}
-.warn{border-color:var(--warn-b); background:var(--warn)}
-.look{border-color:var(--look-b); background:var(--look)}
-.goal{border-color:var(--goal-b); background:var(--goal)}
-.sheet{border-color:var(--sheet-b); background:var(--sheet)}
-.lab{border:1px solid var(--line); border-left:4px solid var(--lab-b); background:var(--lab);
-  border-radius:0 10px 10px 0; padding:4px 20px 18px; margin:26px 0}
-.lab h3{margin-top:18px}
-.prompt{border-left:3px solid var(--accent); background:var(--soft); padding:12px 16px;
-  border-radius:0 8px 8px 0; margin:14px 0; font-style:italic; font-size:.95rem}
-.prompt strong{font-style:normal}
-.files li{margin:8px 0}
-.arrow{color:var(--muted)}
-.hero{background:var(--goal); border-left:3px solid var(--goal-b); padding:16px 20px;
-  border-radius:0 10px 10px 0; margin:24px 0 32px}
-.big{font-size:1.05rem; font-weight:600}
-.foot{margin-top:72px; padding-top:20px; border-top:1px solid var(--line);
-  color:var(--muted); font-size:.85rem}
-@media print{
-  body{font-size:11pt} .wrap{padding:0; max-width:none}
-  .lab{break-inside:avoid} table{break-inside:avoid; display:table}
-  h2{break-after:avoid} h3{break-after:avoid}
-}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#10131B;
+      --surface:#171B26;
+      --surface-2:#1C2130;
+      --ink:#E7EAF2;
+      --ink-soft:#A7AFC2;
+      --border:#2B3143;
+      --accent:#89A6FF;
+      --accent-ink:#0B1020;
+      --accent-tint:#1E2740;
+      --amber:#E8B75D;
+      --amber-tint:#2E2716;
+      --amber-line:#4A3B1E;
+      --red:#E58888;
+      --red-tint:#3A1E1E;
+      --red-line:#4E2A2A;
+      --green:#5FD1A0;
+      --green-tint:#123326;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#10131B;
+    --surface:#171B26;
+    --surface-2:#1C2130;
+    --ink:#E7EAF2;
+    --ink-soft:#A7AFC2;
+    --border:#2B3143;
+    --accent:#89A6FF;
+    --accent-ink:#0B1020;
+    --accent-tint:#1E2740;
+    --amber:#E8B75D;
+    --amber-tint:#2E2716;
+    --amber-line:#4A3B1E;
+    --red:#E58888;
+    --red-tint:#3A1E1E;
+    --red-line:#4E2A2A;
+    --green:#5FD1A0;
+    --green-tint:#123326;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Noto Sans KR","Pretendard",sans-serif;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+    word-break:keep-all;
+    overflow-wrap:break-word;
+  }
+  h1,h2,h3{
+    font-family:"Nanum Myeongjo",serif;
+    color:var(--ink);
+    text-wrap:balance;
+    margin:0;
+  }
+  a{color:var(--accent);}
+  strong{color:var(--ink); font-weight:700;}
+  em{font-style:italic;}
+  code{
+    font-family:"JetBrains Mono",monospace;
+    font-size:.9em;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:4px;
+    padding:.1em .4em;
+  }
+  p{margin:0 0 1em;}
+  ul,ol{margin:0 0 1em; padding-left:1.3em;}
+  li{margin-bottom:.45em;}
+  .page-shell{
+    max-width:860px;
+    margin:0 auto;
+    padding:0 20px 96px;
+  }
+
+  /* ---------- Masthead ---------- */
+  .masthead{
+    padding:56px 0 40px;
+    border-bottom:1px solid var(--border);
+    margin-bottom:40px;
+  }
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.78rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--accent);
+    background:var(--accent-tint);
+    border:1px solid var(--border);
+    padding:5px 12px;
+    border-radius:999px;
+    margin-bottom:20px;
+  }
+  .masthead h1{
+    font-size:clamp(2.1rem, 4.5vw, 3.1rem);
+    font-weight:800;
+    margin-bottom:10px;
+  }
+  .masthead .lede{
+    color:var(--ink-soft);
+    font-size:1.05rem;
+    max-width:60ch;
+    margin-bottom:0;
+  }
+  .masthead .meta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px 24px;
+    margin-top:24px;
+    font-size:.9rem;
+    color:var(--ink-soft);
+  }
+  .masthead .meta-row span{display:flex; align-items:center; gap:6px;}
+  .masthead .meta-row b{color:var(--ink); font-weight:700;}
+
+  main{min-width:0;}
+
+  /* ---------- Sections ---------- */
+  .lesson-section{
+    padding-bottom:44px;
+    margin-bottom:44px;
+    border-bottom:1px solid var(--border);
+    scroll-margin-top:20px;
+  }
+  .lesson-section:last-of-type{border-bottom:none;}
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    margin-bottom:20px;
+  }
+  .section-mark{
+    font-family:"JetBrains Mono",monospace;
+    font-weight:700;
+    font-size:1rem;
+    color:var(--accent-ink);
+    background:var(--accent);
+    border-radius:8px;
+    padding:3px 9px;
+    flex-shrink:0;
+  }
+  .section-head h2{
+    font-size:clamp(1.35rem,2.6vw,1.7rem);
+    font-weight:700;
+  }
+  .section-head h2 small{
+    display:block;
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:500;
+    font-size:.85rem;
+    color:var(--ink-soft);
+    margin-top:4px;
+  }
+  h3.sub-head{
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:700;
+    font-size:1.02rem;
+    color:var(--accent);
+    margin:28px 0 10px;
+  }
+  h3.sub-head.first{margin-top:0;}
+  h4.mini-head{
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:700;
+    font-size:.96rem;
+    color:var(--ink);
+    margin:20px 0 8px;
+  }
+
+  .badge{
+    display:inline-block;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.72rem;
+    letter-spacing:.04em;
+    padding:2px 9px;
+    border-radius:999px;
+    background:var(--green-tint);
+    color:var(--green);
+    border:1px solid var(--green);
+    margin-bottom:14px;
+  }
+
+  /* ---------- Callouts ---------- */
+  .callout{
+    border:1px solid var(--border);
+    border-left:4px solid var(--accent);
+    background:var(--surface);
+    border-radius:10px;
+    padding:16px 18px;
+    margin:20px 0;
+    box-shadow:var(--shadow);
+  }
+  .callout p:last-child{margin-bottom:0;}
+  .callout ul:last-child, .callout ol:last-child{margin-bottom:0;}
+  .callout-label{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-weight:700;
+    font-size:.92rem;
+    margin-bottom:8px;
+    color:var(--ink);
+  }
+  .callout--scenario{border-left-color:var(--accent); background:var(--accent-tint);}
+  .callout--tip{border-left-color:var(--amber); background:var(--amber-tint);}
+  .callout--tip .callout-label{color:var(--amber);}
+  .callout--warning{border-left-color:var(--red); background:var(--red-tint);}
+  .callout--warning .callout-label{color:var(--red);}
+  .callout--summary{border-left-color:var(--accent); background:var(--surface);}
+  .callout--summary .callout-label{color:var(--accent);}
+  .callout--question{border-left-color:var(--ink-soft); background:var(--surface-2);}
+  .callout--practice{border-left-color:var(--green); background:var(--green-tint);}
+  .callout--practice .callout-label{color:var(--green);}
+  .callout hr{border:none; border-top:1px dashed var(--border); margin:12px 0;}
+
+  /* ---------- Two-column compare ---------- */
+  .two-col{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    margin:20px 0;
+  }
+  @media (max-width:640px){.two-col{grid-template-columns:1fr;}}
+  .compare-card{
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:18px;
+    background:var(--surface);
+  }
+  .compare-card .compare-label{
+    font-weight:700;
+    color:var(--accent);
+    margin-bottom:8px;
+    display:block;
+  }
+  .compare-card p, .compare-card ul{margin-bottom:0;}
+
+  /* ---------- Terminal / code ---------- */
+  .terminal{
+    background:var(--term-bg);
+    color:var(--term-ink);
+    border-radius:10px;
+    padding:16px 18px;
+    margin:14px 0;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.84rem;
+    line-height:1.8;
+    overflow-x:auto;
+    white-space:pre-wrap;
+  }
+  .terminal .comment{color:#8892AC;}
+  .terminal .cmd{color:var(--term-accent);}
+
+  /* ---------- Prompt line ---------- */
+  .prompt{
+    background:var(--term-bg);
+    color:var(--term-ink);
+    border-radius:8px;
+    padding:10px 14px;
+    margin:10px 0;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.82rem;
+    line-height:1.8;
+    white-space:pre-wrap;
+  }
+  .prompt .note{color:#8892AC; font-family:"Noto Sans KR",sans-serif;}
+
+  /* ---------- Tables ---------- */
+  .table-scroll{overflow-x:auto; margin:18px 0; border:1px solid var(--border); border-radius:12px;}
+  table{border-collapse:collapse; width:100%; min-width:480px; font-size:.92rem;}
+  th,td{
+    text-align:left;
+    padding:11px 14px;
+    border-bottom:1px solid var(--border);
+    vertical-align:top;
+  }
+  th{
+    background:var(--surface-2);
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:700;
+    color:var(--ink);
+    white-space:nowrap;
+  }
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:nth-child(even){background:var(--surface);}
+  tbody tr:nth-child(odd){background:transparent;}
+  td strong{color:var(--accent);}
+  .tag-bad{color:var(--red); font-weight:700;}
+  .tag-good{color:var(--green); font-weight:700;}
+  .mini-check{
+    display:inline-block;
+    margin:8px 0 0;
+    padding:5px 12px;
+    font-size:13px;
+    font-weight:700;
+    color:var(--green);
+    background:var(--green-tint);
+    border-radius:6px;
+  }
+
+  /* ---------- Lists with markers ---------- */
+  .check-list, .watch-list{list-style:none; padding-left:0;}
+  .check-list li, .watch-list li{position:relative; padding-left:28px;}
+  .check-list li::before{content:"✓"; position:absolute; left:0; top:0; color:var(--green); font-weight:700;}
+  .watch-list li::before{content:"!"; position:absolute; left:2px; top:0; color:var(--red); font-weight:700;}
+
+  .steps{padding-left:0; list-style:none; counter-reset:step;}
+  .steps li{counter-increment:step; position:relative; padding-left:36px; margin-bottom:14px;}
+  .steps li::before{
+    content:counter(step);
+    position:absolute; left:0; top:-1px;
+    width:24px; height:24px;
+    border-radius:50%;
+    background:var(--accent);
+    color:var(--accent-ink);
+    font-family:"JetBrains Mono",monospace;
+    font-size:.78rem;
+    font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  /* ---------- File links ---------- */
+  .file-links{
+    font-size:.88rem;
+    color:var(--ink-soft);
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:10px 14px;
+    margin:14px 0;
+  }
+  .file-links b{color:var(--ink); font-weight:600;}
+
+  /* ---------- Pyramid ---------- */
+  .pyramid{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:16px 18px;
+    margin:14px 0;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.84rem;
+    line-height:1.9;
+    overflow-x:auto;
+    white-space:pre;
+    color:var(--ink);
+  }
+  .pyramid .note{color:var(--ink-soft);}
+
+  /* ---------- FAQ ---------- */
+  .faq-item{margin-bottom:20px;}
+  .faq-item .q{display:flex; gap:10px; font-weight:700; margin-bottom:6px;}
+  .faq-item .q span.tag, .faq-item .a span.tag{
+    font-family:"JetBrains Mono",monospace;
+    font-weight:700;
+    color:var(--accent);
+    flex-shrink:0;
+  }
+  .faq-item .a{display:flex; gap:10px; color:var(--ink-soft);}
+  .faq-item .a span.tag{color:var(--ink-soft);}
+  .faq-item .a p{margin-bottom:0;}
+
+  /* ---------- Quiz ---------- */
+  .quiz-item{
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:14px 16px;
+    margin-bottom:12px;
+    background:var(--surface);
+  }
+  .quiz-item .q{font-weight:700; margin-bottom:0;}
+  .quiz-item details{margin-top:8px;}
+  .quiz-item summary{cursor:pointer; color:var(--accent); font-weight:700; font-size:.86rem;}
+  .quiz-item .ans{margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); color:var(--ink-soft); font-size:.9rem;}
+  .quiz-item .ans p{margin-bottom:0;}
+
+  /* ---------- Next lesson ---------- */
+  .next-lesson{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:22px 26px;
+    margin-top:8px;
+    box-shadow:var(--shadow);
+    text-decoration:none;
+    color:inherit;
+  }
+  a.next-lesson:hover{border-color:var(--accent);}
+  a.next-lesson:hover .arrow{transform:translateX(4px);}
+  .next-lesson .label{
+    font-family:"JetBrains Mono",monospace;
+    font-size:.76rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+    display:block;
+  }
+  .next-lesson h3{font-size:1.2rem; font-weight:700; font-family:"Nanum Myeongjo",serif;}
+  .next-lesson .arrow{
+    font-family:"JetBrains Mono",monospace;
+    font-size:1.4rem;
+    color:var(--accent);
+    display:inline-block;
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .next-lesson .arrow{transition:transform .15s ease;}
+  }
+
+  .page-footer{
+    margin-top:60px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    color:var(--ink-soft);
+    font-size:.84rem;
+  }
+
+  @media (prefers-reduced-motion:no-preference){
+    a{transition:background-color .15s ease, color .15s ease;}
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="page-shell">
 
-<h1>4차시 — 보고서·회의록·메일</h1>
-<p class="lead">AI Agent 과정 · Day 4</p>
+  <header class="masthead">
+    <a class="eyebrow" href="index.html" style="text-decoration:none;">← 그린컵 AI 에이전트 과정 · 4차시</a>
+    <h1>보고서</h1>
+    <p class="lede">주간보고서를 쓰느라 매주 30분이 사라진다면 — 오늘 그걸 5분으로 줄입니다. 그리고 보고서 하나로 이메일·메신저 요약·경영진 한 줄까지 함께 뽑습니다.</p>
+    <div class="meta-row">
+      <span>📍 <b>오늘 배우는 것</b> — 초안·교정·톤 조절 3단계, 숫자 검수 3층, 템플릿 굳히기, 매주 5분 루틴</span>
+    </div>
+  </header>
 
-<div class="hero">
-<p><strong>🎯 오늘의 가상 문제상황</strong></p>
-<p>매주 금요일, 주간보고서를 씁니다. 매번 엑셀에서 숫자를 뽑고, 지난주 형식을 복사하고, 문장을 다듬느라 <strong>30분</strong>이 사라집니다. 내용은 매주 거의 같은데 말이죠. <strong>이걸 5분으로 줄일 수 없을까?</strong> 오늘 줄입니다. 그리고 보고서 하나로 <strong>이메일·메신저 요약·경영진 한 줄</strong>까지 함께 뽑습니다.</p>
-</div>
+  <main>
 
-<h2>📦 준비물 — 내려받기 (시작 전에 한 번에)</h2>
-<ul class="files">
-<li><strong>이번주 매출 데이터</strong> (Excel · 5개 시트) — <code>weekly_sales.xlsx</code></li>
-<li><strong>지난주 주간보고서</strong> (Word · 형식 참고) — <code>last_week_report.docx</code></li>
-<li><strong>재사용 보고 템플릿</strong> (Word · 빈칸 채우기용) — <code>report_template.docx</code></li>
-<li><strong>공유 이메일·요약 예시</strong> (Word · 독자별 톤 참고용) — <code>email_share_samples.docx</code></li>
-<li><strong>회의 메모 원본</strong> (Word · PART 2용) — <code>meeting_notes_raw.docx</code></li>
-<li><strong>받은 메일 3종</strong> (Word · PART 3용) — <code>awkward_emails.docx</code></li>
-</ul>
+    <div class="callout callout--scenario">
+      <div class="callout-label">🎯 오늘의 가상 문제상황</div>
+      <p>매주 금요일, 주간보고서를 씁니다. 매번 엑셀에서 숫자를 뽑고, 지난주 형식을 복사하고, 문장을 다듬느라 <strong>30분</strong>이 사라집니다. 내용은 매주 거의 같은데 말이죠. <strong>이걸 5분으로 줄일 수 없을까?</strong> 오늘 줄입니다. 그리고 보고서 하나로 <strong>이메일·메신저 요약·경영진 한 줄</strong>까지 함께 뽑습니다.</p>
+    </div>
 
-<div class="box sheet">
-<p>📊 이번주 매출 데이터에는 <strong>일별매출 / 전주실적 / 채널별유입 / 인기상품TOP5 / 환불사유</strong> 다섯 시트가 있습니다. 어제 만든 그린컵 쇼핑몰의 데이터예요. <strong><code>전주실적</code> 시트가 핵심</strong>입니다 — 이게 있어야 "전주 대비 증감"을 AI가 실제로 계산할 수 있고, 여러분도 <strong>검산</strong>할 수 있습니다.</p>
-</div>
+    <!-- 1 주간보고서 -->
+    <section class="lesson-section" id="sec01">
+      <div class="section-head">
+        <span class="section-mark">①</span>
+        <h2>주간보고서 <small>오늘 만들 것과, 그 재료</small></h2>
+      </div>
 
-<div class="box">
-<p>📍 <strong>오늘 실습은 전부 어제(Day 3) 만든 그린컵 Project 안에서</strong> 진행합니다. 브랜드 톤·정책이 자동으로 입혀지고, Day 3에서 배운 지식베이스가 실전에서 굴러가는 걸 체험하게 됩니다. 무료 플랜(Project 없음)이면: 매 대화에 필요한 파일을 직접 첨부하고 Day 3의 지시문을 맨 앞에 복붙하며 따라 하세요. 흐름은 같습니다.</p>
-</div>
+      <p>주간보고서를 <strong>혼자 다 쓰려니까</strong> 30분이 걸립니다.<br>오늘은 그 일을 Claude와 나눕니다. <strong>초안은 맡기고, 형식은 템플릿으로 고정하고, 사람은 숫자만 검수</strong>합니다. 그렇게 한 번 만든 보고서는 이메일·메신저 요약·경영진 한 줄로 다시 씁니다.<br><strong>30분 &rarr; 5분.</strong> 오늘 그 차이를 직접 만들어봅니다.</p>
 
-<h2>주간보고서 5분 만에 뽑기</h2>
-<p>주간보고서를 <strong>혼자 다 쓰려니까</strong> 30분이 걸립니다.</p>
-<p>오늘은 그 일을 Claude와 나눕니다. <strong>초안은 맡기고, 형식은 템플릿으로 고정하고, 사람은 숫자만 검수</strong>합니다. 그렇게 한 번 만든 보고서는 이메일·메신저 요약·경영진 한 줄로 다시 씁니다. 마지막엔 쓰기 껄끄러운 메일까지 같은 방식으로 처리합니다.</p>
-<p class="big">30분 → 5분. 오늘 그 차이를 직접 만들어봅니다.</p>
+      <h3 class="sub-head">준비물</h3>
+      <div class="file-links">
+        <b>이번주 매출 데이터(weekly_sales.xlsx)</b> : Excel · 5개 시트<br>
+        <b>지난주 주간보고서(last_week_report.docx)</b> : Word · 형식 참고<br>
+        <b>재사용 보고 템플릿(report_template.docx)</b> : Word · 빈칸 채우기용<br>
+        <b>공유 이메일·요약 예시(email_share_samples.docx)</b> : Word · 독자별 톤 참고용
+      </div>
 
-<div class="lab">
-<h3>🛠 실습 A — Project에 준비물 세팅 (최초 1회)</h3>
-<p>본격적으로 들어가기 전, 오늘 쓸 재료를 자리에 놓습니다.</p>
-<p>이전 그린컵 Project를 열고, <strong>Project 지식(Knowledge)</strong>에 다음 3개를 업로드하세요:</p>
-<ul>
-<li>지난주 보고서(<code>last_week_report.docx</code>) : 형식·톤 참고용</li>
-<li>재사용보고 템플릿(<code>report_template.docx</code>) : 빈칸 채우기용</li>
-<li>공유 메일·요약 예시(<code>email_share_samples.docx</code>) : 독자별 톤 참고용</li>
-</ul>
-<p><strong>이번주 매출데이터(<code>weekly_sales.xlsx</code>)는 올리지 마세요.</strong><br>매주 바뀌는 데이터는 그때그때 <strong>대화에 첨부</strong>하는 게 맞습니다.</p>
-<div class="box tip">
-<p>💡 Day 3에서 배운 경계의 연장입니다: <strong>변하지 않는 형식·예시 → Project에 상주. 매번 바뀌는 데이터 → 대화에 첨부.</strong> 이 구분이 매주 5분 루틴의 뼈대예요.</p>
-</div>
-</div>
+      <div class="callout callout--tip">
+        <div class="callout-label">📊 데이터 구성</div>
+        <p>이번주 매출 데이터에는 <strong>일별매출 / 전주실적 / 채널별유입 / 인기상품TOP5 / 환불사유</strong> 다섯 시트가 있습니다. 어제 만든 그린컵 쇼핑몰의 데이터예요. <strong><code>전주실적</code> 시트가 핵심</strong>입니다 — 이게 있어야 &ldquo;전주 대비 증감&rdquo;을 AI가 실제로 계산할 수 있고, 여러분도 <strong>검산</strong>할 수 있습니다.</p>
+      </div>
 
-<h2>글쓰기를 분담하라</h2>
-<p>사람들이 글쓰기를 어려워하는 이유는 <strong>세 가지 일을 동시에</strong> 하려 하기 때문입니다. Claude와 나누면 쉬워집니다. <strong>이 원리는 보고서·회의록·메일 전부에 똑같이 적용</strong>되니, 오늘의 뼈대라고 보시면 됩니다.</p>
+      <div class="callout callout--practice">
+        <div class="callout-label">🛠 실습 A — Project에 준비물 세팅 (최초 1회)</div>
+        <p><strong>지난 차시에서 만든 그린컵 Project를 엽니다.</strong> 브랜드 톤·정책이 자동으로 입혀지고, 3차시에서 배운 지식베이스가 실전에서 굴러가는 걸 체험하게 됩니다.</p>
+        <p>본격적으로 들어가기 전, 오늘 쓸 재료를 자리에 놓습니다.</p>
+        <p>이전 그린컵 Project를 열고, <strong>Project 지식(Knowledge)</strong>에 다음 3개를 업로드하세요:</p>
+        <ul>
+          <li>지난주 보고서(last_week_report.docx) : 형식·톤 참고용</li>
+          <li>재사용보고 템플릿(report_template.docx) : 빈칸 채우기용</li>
+          <li>공유 메일·요약 예시(email_share_samples.docx) : 독자별 톤 참고용</li>
+        </ul>
+        <p><strong>이번주 매출데이터(weekly_sales.xlsx)는 올리지 마세요.</strong><br>매주 바뀌는 데이터는 그때그때 <strong>대화에 첨부</strong>하는 게 맞습니다.</p>
+      </div>
 
-<table>
-<thead><tr><th>단계</th><th>누가 잘하나</th><th>시킬 말</th></tr></thead>
-<tbody>
-<tr><td>① <strong>초안</strong> (빈 화면 깨기)</td><td><strong>Claude</strong></td><td>"이 내용으로 일단 초안 써줘"</td></tr>
-<tr><td>② <strong>교정</strong> (오타·어색함)</td><td><strong>Claude</strong></td><td>"맞춤법·어색한 표현 다듬어줘"</td></tr>
-<tr><td>③ <strong>톤 조절</strong> (독자 맞춤)</td><td>사람+Claude</td><td>"팀장 보고용으로 더 간결하게"</td></tr>
-</tbody>
-</table>
+      <div class="callout callout--tip">
+        <div class="callout-label">💡 3차시에서 배운 경계의 연장입니다</div>
+        <ul>
+          <li>변하지 않는 <strong>형식·예시</strong> &rarr; Project에 상주</li>
+          <li>매번 바뀌는 <strong>데이터</strong> &rarr; 대화에 첨부</li>
+        </ul>
+        <p>이 구분이 매주 5분 루틴의 뼈대예요.</p>
+      </div>
+    </section>
 
-<div class="box tip">
-<p>💡 핵심: <strong>빈 화면을 노려보지 마세요.</strong> 글쓰기에서 가장 힘든 건 '첫 줄'입니다. Claude에게 거친 초안을 먼저 시키고, 거기서 <strong>고치는 것</strong>부터 시작하면 훨씬 빠릅니다. 0→1은 Claude, 1→100은 함께.</p>
-</div>
+    <!-- 2 분담 -->
+    <section class="lesson-section" id="sec02">
+      <div class="section-head">
+        <span class="section-mark">②</span>
+        <h2>글쓰기를 분담하라 <small>초안 — &lsquo;빈 화면 공포&rsquo;를 깨는 법</small></h2>
+      </div>
 
-<h3>① 초안 — '빈 화면 공포'를 깨는 법</h3>
-<p>막막할 땐 완성된 지시가 없어도 됩니다. 이렇게 던지세요.</p>
-<div class="prompt">"이번 주에 신제품 출시했고 매출 올랐어. 주간보고 초안 일단 대충 잡아줘."</div>
-<p><span class="arrow">→</span> 거친 초안이 나오면, 거기서부터 고치면 됩니다. <strong>0에서 시작하지 않는 것</strong>이 핵심입니다.</p>
 
-<p><strong>초안을 받는 세 가지 방법</strong> — 상황에 따라 골라 쓰세요.</p>
-<table>
-<thead><tr><th>방법</th><th>이럴 때</th><th>지시</th></tr></thead>
-<tbody>
-<tr><td><strong>바로 초안</strong></td><td>뭘 쓸지 대충 안다</td><td>"이 내용으로 초안 잡아줘"</td></tr>
-<tr><td><strong>목차 먼저</strong></td><td>내용이 많아 구조부터 잡아야 한다</td><td>"먼저 목차만 짜줘. 소제목 5개와 각 항목에 들어갈 내용 한 줄씩"</td></tr>
-<tr><td><strong>역질문</strong></td><td>뭘 써야 할지 모르겠다</td><td>"이 보고서를 쓰려면 나한테 뭘 더 물어봐야 해?"</td></tr>
-</tbody>
-</table>
+      <p>사람들이 글쓰기를 어려워하는 이유는 <strong>세 가지 일을 동시에</strong> 하려 하기 때문입니다. Claude와 나누면 쉬워집니다. <strong>이 원리는 보고서만이 아니라 메일·회의록에도 똑같이 적용</strong>되니, 오늘의 뼈대라고 보시면 됩니다. 메일은 5차시, 회의록은 10차시에서 이 뼈대를 그대로 다시 씁니다.</p>
 
-<div class="box tip">
-<p>💡 세 번째가 은근히 강력합니다. AI가 <em>"기간은 언제인가요? 독자는 누구인가요? 강조하고 싶은 성과가 있나요?"</em> 라고 되물어주면, <strong>그 질문에 답하는 것만으로 내용이 정리</strong>됩니다. Day 2의 '메타 프롬프트'를 문서 작성에 쓰는 거죠.</p>
-</div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>단계</th><th>누가 잘하나</th><th>시킬 말</th></tr></thead>
+          <tbody>
+            <tr><td>① <strong>초안</strong> (빈 화면 깨기)</td><td><strong>Claude</strong></td><td>&ldquo;이 내용으로 일단 초안 써줘&rdquo;</td></tr>
+            <tr><td>② <strong>교정</strong> (오타·어색함)</td><td><strong>Claude</strong></td><td>&ldquo;맞춤법·어색한 표현 다듬어줘&rdquo;</td></tr>
+            <tr><td>③ <strong>형식 다듬기</strong> (회사 양식에 앉히기)</td><td><strong>Claude</strong></td><td>&ldquo;지난주 보고서와 같은 항목 구성·순서로 맞춰줘&rdquo;</td></tr>
+            <tr><td>④ <strong>검수</strong> (숫자·논리)</td><td><strong>사람</strong> (＋검수표는 Claude)</td><td>&ldquo;계산 과정을 단계별로 보여줘&rdquo; ＋ 원본과 직접 대조</td></tr>
+            <tr><td>⑤ <strong>톤 조절</strong> (독자 맞춤)</td><td>사람+Claude</td><td>&ldquo;팀장 보고용으로 더 간결하게&rdquo;</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>글쓰기의 뼈대는 <strong>초안 → 교정 → 톤 조절</strong> 세 단계입니다. 보고서는 여기에 <strong>형식 다듬기</strong>와 <strong>검수</strong>가 끼어들어 <strong>다섯 단계</strong>가 됩니다 — 회사 양식이 있고, 틀리면 안 되는 숫자가 들어가니까요. 오늘 <strong>②절(초안) → ③절(교정) → ④절(형식) → ⑤절(검수) → ⑥절(톤)</strong>이 이 순서 그대로 흘러갑니다.</p>
 
-<div class="lab">
-<h3>🛠 실습 B — 빈 화면 깨보기 (①초안)</h3>
-<p>그린컵 Project 안에서 <strong>새 대화</strong>를 엽니다.<br>대화창에 <strong>파일(이번주 매출데이터)은 아무것도 첨부하지 마세요.</strong><br><strong>초안 · 목차 · 역질문</strong> 중 딱 한 줄만 던집니다.</p>
-<div class="prompt">
-"이번 주에 신제품 출시했고 매출 올랐어. 주간보고 초안 일단 대충 잡아줘."<br>
-"이번 주에 신제품 출시했고 매출 올랐어. 먼저 목차만 짜줘. 소제목 5개와 각 항목에 들어갈 내용 한 줄씩."<br>
-"이번 주에 신제품 출시했고 매출 올랐어. 이 보고서를 쓰려면 나한테 뭘 더 물어봐야 해?"
-</div>
-<p><span class="arrow">→</span> 숫자도 형식도 없는 허술한 글이 나옵니다. <strong>그게 정상이고, 그게 목적입니다.</strong></p>
-<ul>
-<li>30초 전엔 빈 화면이었는데, 지금은 <strong>고칠 글이 있습니다.</strong> 이게 <strong>0→1</strong>입니다.</li>
-<li>나온 초안에 <strong>숫자가 몇 개</strong> 들어 있나요? 아마 하나도 없을 겁니다 — 데이터를 안 줬으니까요.</li>
-</ul>
-<div class="box tip">
-<p>💡 <strong>이 대화를 닫지 마세요.</strong> 실습 C에서 여기에 데이터를 붙이고, 실습 D에서 숫자를 채우고, 실습 E에서 형식을 입힙니다. <strong>1→100은 거기서</strong> 일어납니다.</p>
-</div>
-</div>
+      <div class="callout callout--tip">
+        <div class="callout-label">💡 핵심</div>
+        <p><strong>빈 화면을 노려보지 마세요.</strong> 글쓰기에서 가장 힘든 건 &lsquo;첫 줄&rsquo;입니다. Claude에게 거친 초안을 먼저 시키고, 거기서 <strong>고치는 것</strong>부터 시작하면 훨씬 빠릅니다. 0→1은 Claude, 1→100은 함께.</p>
+      </div>
 
-<div class="lab">
-<h3>🛠 실습 C — 데이터부터 읽혀보기</h3>
-<p>이번엔 <strong>이번주 매출데이터(<code>weekly_sales.xlsx</code>)</strong> 엑셀을 첨부해 데이터를 읽힙니다.</p>
-<ul>
-<li><strong>데이터 파악</strong> — 엑셀을 첨부하고: <em>"이 주간 매출 데이터를 한눈에 보게 요약해줘. 다섯 시트를 모두 열어보고, 가장 눈에 띄는 변화 3가지를 짚어줘."</em></li>
-<li><strong>두 시트 비교 + 증감 표기법 연습</strong> — 이어서: <em>"일별매출과 전주실적을 비교해서 요일별로 어떻게 달라졌는지 표로 보여줘. 증감은 절대값과 비율 함께."</em></li>
-<li><strong>'추정' 훈련</strong> — 이어서: <em>"매출이 가장 높았던 날과 그 이유로 추정되는 걸 채널 데이터랑 엮어서 설명해줘. 추정이면 '추정'이라고 표시해."</em></li>
-<li><strong>근거 있는 제안 만들기</strong> — 이어서: <em>"환불사유 시트를 보고, 환불을 줄이려면 뭘 먼저 손봐야 할지 근거와 함께 제안해줘."</em></li>
-<li><span class="arrow">→</span> Claude가 <strong>엑셀을 직접 읽고(도구 사용)</strong> 여러 시트를 <strong>종합</strong>해 분석하는 걸 확인</li>
-</ul>
-<div class="box tip">
-<p>💡 두 번째·네 번째 지시에서 <strong>시트명을 콕 집었다</strong>는 데 주목하세요. 시트가 5개나 되면 "이 데이터"라고만 하면 일부만 볼 수 있습니다. 이게 오늘 데이터가 5시트인 이유이기도 합니다 — <strong>실무 데이터는 원래 여러 장</strong>이니까요.</p>
-</div>
-<div class="box look">
-<p>🔍 <strong>여기서 이미 검수가 시작됩니다</strong>: 네 번째 답변이 <em>"파손이 11건으로 가장 많으니 포장부터"</em> 라고 나왔나요? 그럼 데이터를 제대로 읽은 겁니다. <em>"환불 사유를 분석해보면 좋겠습니다"</em> 같은 두루뭉술한 답이면 시트를 안 본 거예요.</p>
-</div>
-<div class="box sheet">
-<p>✍️ <strong>워크시트 A</strong> : 실습 F에서 쓸 <code>report_template</code>의 목차(핵심 요약 / 주요 지표 / 채널 성과 / 이슈·계획)를 미리 훑어두세요.</p>
-<p>✍️ <strong>워크시트 B</strong> : B칸의 예시를 보고, 방금 읽힌 다섯 시트가 보고서의 어느 항목이 되는지 눈으로만 확인해두세요.</p>
-<p><strong>채우는 건 수업 끝날 때</strong>, 내 업무 데이터로 합니다.</p>
-</div>
-</div>
+      <h3 class="sub-head">① 초안 — &lsquo;빈 화면 공포&rsquo;를 깨는 법</h3>
+      <p>막막할 땐 완성된 지시가 없어도 됩니다.</p>
 
-<h2>② 교정 — 내용부터, 표현은 그다음</h2>
-<p>교정은 두 층입니다. <strong>순서가 중요합니다</strong> — 내용이 바뀌면 애써 다듬은 문장도 같이 버려집니다.</p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>방법</th><th>이럴 때</th><th>지시</th></tr></thead>
+          <tbody>
+            <tr><td><strong>바로 초안</strong></td><td>뭘 쓸지 대충 안다</td><td>&ldquo;이 내용으로 초안 잡아줘&rdquo;</td></tr>
+            <tr><td><strong>목차 먼저</strong></td><td>내용이 많아 구조부터 잡아야 한다</td><td>&ldquo;먼저 목차만 짜줘. 소제목 5개와 각 항목에 들어갈 내용 한 줄씩&rdquo;</td></tr>
+            <tr><td><strong>역질문</strong></td><td>뭘 써야 할지 모르겠다</td><td>&ldquo;이 보고서를 쓰려면 나한테 뭘 더 물어봐야 해?&rdquo;</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>초안을 받는 세 가지 방법</strong> — 상황에 따라 골라 쓰세요.</p>
 
-<h3>■ 내용 교정 — 숫자·기준·구조 (지금 합니다)</h3>
-<p>실습 B의 허술한 초안을, 방금 읽힌 데이터로 살려냅니다.<br>같은 대화에서 <strong>한 번에 하나씩</strong> 얹으며 결과가 어떻게 바뀌는지 보세요.</p>
+      <div class="callout callout--tip">
+        <div class="callout-label">💡</div>
+        <p>세 번째가 은근히 강력합니다. AI가 <em>&ldquo;기간은 언제인가요? 독자는 누구인가요? 강조하고 싶은 성과가 있나요?&rdquo;</em> 라고 되물어주면, <strong>그 질문에 답하는 것만으로 내용이 정리</strong>됩니다. 2차시의 &lsquo;메타 프롬프트&rsquo;를 문서 작성에 쓰는 거죠.</p>
+      </div>
+      <p>→ 거친 초안이 나오면, 거기서부터 고치면 됩니다. <strong>0에서 시작하지 않는 것</strong>이 핵심입니다.</p>
 
-<div class="lab">
-<h3>🛠 실습 D — 내 초안에 숫자 채우기 (①초안 → ②교정)</h3>
-<ol>
-<li><em>"아까 잡아준 초안에, 방금 읽은 데이터의 숫자를 정확히 채워 넣어줘."</em></li>
-</ol>
-<p>아래 내용들은 <strong>결과에 없는 것들만 진행</strong></p>
-<ol>
-<li><em>"금액은 원 단위 그대로 쓰고, 만원 표기는 괄호에."</em> <span class="arrow">←</span> <strong>단위 뒤섞임</strong></li>
-<li><em>"전주실적 시트와 비교해 증감을 절대값과 비율로 함께 표기해줘."</em> <span class="arrow">←</span> <strong>기준 실종</strong></li>
-<li><em>"원인을 단정한 문장을 알려주고 '추정'으로 바꿔줘."</em> <span class="arrow">←</span> <strong>'추정' 훈련</strong></li>
-</ol>
-<div class="box tip">
-<p>💡 각 지시 끝에 <strong>"바꾼 곳은 목록으로"</strong>를 붙이세요. 한 줄이 뭘 바꿨는지 눈으로 보입니다.</p>
-</div>
-</div>
+      <div class="callout callout--practice">
+        <div class="callout-label">🛠 실습 B — 빈 화면 깨보기 (①초안)</div>
+        <p>그린컵 Project 안에서 <strong>새 대화</strong>를 엽니다.<br>대화창에 <strong>파일(이번주 매출데이터)은 아무것도 첨부하지 마세요.<br>초안, 목차, 역질문 중</strong> 딱 한 줄만 던집니다.</p>
+        <div class="prompt">"이번 주에 신제품 출시했고 매출 올랐어. 주간보고 초안 일단 대충 잡아줘."
 
-<h3>■ 표현 교정 — 문장 다듬기 (필요 따라 진행)</h3>
-<ul>
-<li><em>"맞춤법·띄어쓰기만 고쳐줘. 문장은 건드리지 마."</em> — 최소 개입 (내 문체 유지)</li>
-<li><em>"번역투·어색한 표현을 자연스럽게 바꾸고, 바꾼 곳을 목록으로 보여줘."</em> — 변경 추적</li>
-<li><em>"한 문장이 두 줄을 넘으면 둘로 쪼개줘."</em> — 가독성</li>
-<li><em>"'진행하다'가 5번 나와. 중복 표현을 다양하게 바꿔줘."</em> — 단조로움 해소</li>
-</ul>
-<div class="box tip">
-<p>💡 포인트는 <strong>"바꾼 곳을 보여줘"</strong>. 뭘 고쳤는지 모르면 검토할 수 없습니다. 특히 계약·정책 문서처럼 단어 하나가 중요한 글에서 필수.</p>
-</div>
-<div class="box tip">
-<p>💡 이 실습의 목적은 <strong>어떤 지시가 어떤 개선을 만드는지 1:1로 보는 것</strong>입니다. 한꺼번에 좋은 프롬프트를 쓰면 "좋아졌다"만 알지, <strong>뭐가 뭘 고쳤는지</strong>는 모르거든요. 그걸 알아야 다음에 결과가 아쉬울 때 <strong>어느 지시를 추가할지</strong> 판단할 수 있습니다.</p>
-</div>
+"이번 주에 신제품 출시했고 매출 올랐어. 먼저 목차만 짜줘. 소제목 5개와 각 항목에 들어갈 내용 한 줄씩"
 
-<h2>보고서에도 '구조'가 있다 — 결론부터 쓰는 법</h2>
-<p>AI에게 "보고서 써줘"라고만 하면 <strong>일어난 순서대로</strong> 씁니다. 월요일에 이랬고, 화요일에 저랬고… 읽는 사람은 끝까지 읽어야 결론을 압니다. 실무 보고서는 반대로 갑니다.</p>
+"이번 주에 신제품 출시했고 매출 올랐어. 이 보고서를 쓰려면 나한테 뭘 더 물어봐야 해?"</div>
+        <p>→ 30초 전엔 빈 화면이었는데, 지금은 <strong>고칠 글이 있습니다.</strong> 이게 <strong>0→1</strong>입니다.</p>
+        <p><strong>나온 걸 보며 두 가지를 확인하세요.</strong></p>
+        <ul>
+          <li><strong>형식이 이미 잡혀 있나요?</strong> 시킨 적 없는데 &lsquo;핵심 요약 / 주요 지표 / …&rsquo; 같은 뼈대가 나왔을 겁니다. <strong>실습 A에서 Project에 올려둔 지난주 보고서</strong> 덕분이에요. 3차시에서 만든 지식베이스가 벌써 일하고 있는 겁니다.</li>
+          <li><strong>숫자는 어떻게 됐나요?</strong> 데이터를 안 줬으니 셋 중 하나일 겁니다 — ⓐ 비어 있거나 ⓑ <code>[확인필요]</code> 같은 빈칸으로 남거나 ⓒ <strong>그럴듯한 가짜 숫자가 들어 있거나.</strong></li>
+        </ul>
+      </div>
 
-<p><strong>역피라미드 — 바쁜 사람은 첫 문단만 읽는다</strong></p>
-<pre><code>[가장 중요한 결론]        ← 여기까지만 읽어도 의사결정 가능
+      <div class="callout callout--warning">
+        <div class="callout-label">⚠️ ⓒ가 나왔다면 그게 오늘의 첫 번째 교훈입니다.</div>
+        <p>주지도 않은 매출액이 적혀 있다면 <strong>AI가 지어낸 겁니다.</strong> 앞으로 보고서의 숫자를 볼 때마다 <strong>&ldquo;이거 어느 시트에서 나왔지?&rdquo;</strong>를 물어보세요. 출처를 못 대는 숫자는 가짜입니다.</p>
+        <p>반대로 ⓑ처럼 <code>[확인필요]</code>로 비워뒀다면 AI가 <strong>제대로 멈춘 것</strong>이에요. 실제로 검수할 때는 이 표시가 반가운 신호입니다.</p>
+        <p>직접 검산하는 건 ⑤절 <strong>실습 F</strong>에서 합니다. 지금은 <strong>&ldquo;데이터 없이 나온 숫자는 전부 가짜&rdquo;</strong>만 기억하세요.</p>
+      </div>
+
+      <div class="callout callout--practice">
+        <div class="callout-label">🛠 실습 C — 데이터부터 읽혀보기</div>
+        <p>이번엔 <strong>이번주 매출데이터(weekly_sales.xlsx)</strong> 엑셀을 첨부해 데이터를 읽힙니다.</p>
+        <ul>
+          <li><strong>데이터 파악</strong><br>엑셀을 첨부하고: <em>&ldquo;이 주간 매출 데이터를 한눈에 보게 요약해줘. 다섯 시트를 모두 열어보고, 가장 눈에 띄는 변화 3가지를 짚어줘.&rdquo;</em></li>
+          <li><strong>두 시트 비교</strong> — 시트를 다 여는지 확인<br>이어서: <em>&ldquo;일별매출과 전주실적을 비교해서 요일별로 어떻게 달라졌는지 표로 보여줘.&rdquo;</em><br>시트가 5개나 되면 &ldquo;이 데이터&rdquo;라고 했을 때 <strong>일부만 볼 수 있습니다.</strong><br>이게 오늘 데이터가 5시트인 이유이기도 합니다 — <strong>실무 데이터는 원래 여러 장</strong>이니까요.</li>
+          <li><strong>원인 설명 시켜보기</strong> — <strong>일부러 안 막습니다</strong><br>이어서: <em>&ldquo;매출이 가장 높았던 날과 그 이유를 채널 데이터랑 엮어서 설명해줘.&rdquo;</em><br><em>&ldquo;6/20 라이브 덕분에 주말 매출이 급증했습니다&rdquo;</em>처럼 원인을 <strong>단정했는지, 추정했는지</strong> 확인하세요.<br>데이터가 증명하는 건 &ldquo;라이브를 했다&rdquo;와 &ldquo;주말 매출이 늘었다&rdquo; <strong>두 사실뿐</strong>입니다. 단정했다면 추정으로 바꿔야 합니다.<br><strong>일부러 안 막았습니다</strong> : 이 문장을 <strong>실습 F(숫자 검수)에서 직접 고칩니다.</strong> 미리 막아버리면 AI가 얼마나 자연스럽게 상관을 인과로 바꾸는지를 못 보거든요.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 3 교정 -->
+    <section class="lesson-section" id="sec03">
+      <div class="section-head">
+        <span class="section-mark">③</span>
+        <h2>교정 <small>구조 잡고 → 내용 → 표현 순으로</small></h2>
+      </div>
+
+      <h3 class="sub-head first">보고서에도 &lsquo;구조&rsquo;가 있다 — 결론부터 쓰는 법</h3>
+
+      <p>보고서를 읽는 사람들은 결론을 먼저 보기를 원합니다.<br>위 실습에서 했던 결과들을 보면 AI가 결론을 먼저 제시한 경우가 있을수 있고, <strong>일어난 순서대로 쓰고</strong> 결론은 마지막에 쓰는 경우가 있습니다.<br>월요일에 이랬고, 화요일에 저랬고… 읽는 사람은 끝까지 읽어야 결론을 압니다.</p>
+      <p>바쁜 사람은 첫 문단만 읽기 때문에 실무 보고서는 그렇게 갑니다 → <strong>역피라미드 형식</strong></p>
+
+      <div class="callout callout--tip">
+        <div class="callout-label">💡</div>
+        <p><strong>팀장은 첫 문단만 읽고, 임원은 첫 문장만 읽습니다.</strong><br>이걸 알고 쓰면 &ldquo;위에서 아래로 중요도 순&rdquo;이 자연스럽게 나옵니다.<br>AI에게도 <em>&ldquo;결론부터, 역피라미드로&rdquo;</em> 라고 명시하세요.</p>
+      </div>
+
+      <div class="pyramid">[가장 중요한 결론]        <span class="note">← 여기까지만 읽어도 의사결정 가능</span>
   [근거가 되는 핵심 숫자]
     [세부 내역·배경]
-      [참고 자료]         ← 궁금한 사람만</code></pre>
+      [참고 자료]         <span class="note">← 궁금한 사람만</span></div>
 
-<div class="box tip">
-<p>💡 <strong>팀장은 첫 문단만 읽고, 임원은 첫 문장만 읽습니다.</strong> 이걸 알고 쓰면 "위에서 아래로 중요도 순"이 자연스럽게 나옵니다. AI에게도 <em>"결론부터, 역피라미드로"</em> 라고 명시하세요.</p>
-</div>
+      <h3 class="sub-head">상황별로 골라 쓰는 구조 3종</h3>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>구조</th><th>순서</th><th>언제 쓰나</th></tr></thead>
+          <tbody>
+            <tr><td><strong>PREP</strong></td><td>결론 → 이유 → 사례 → 결론 재확인</td><td>짧은 보고, 의견 전달. 가장 범용</td></tr>
+            <tr><td><strong>SCQA</strong></td><td>상황 → 문제 → 질문 → 답</td><td>문제를 설득해야 할 때 (예산 요청, 개선 제안)</td></tr>
+            <tr><td><strong>정기보고형</strong></td><td>요약 → 지표 → 분석 → 이슈·계획</td><td>매주·매월 반복되는 정기 보고 (오늘 실습)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>지시할 때 구조 이름을 그냥 대도 됩니다:</p>
 
-<p><strong>상황별로 골라 쓰는 구조 3종</strong></p>
-<table>
-<thead><tr><th>구조</th><th>순서</th><th>언제 쓰나</th></tr></thead>
-<tbody>
-<tr><td><strong>PREP</strong></td><td>결론 → 이유 → 사례 → 결론 재확인</td><td>짧은 보고, 의견 전달. 가장 범용</td></tr>
-<tr><td><strong>SCQA</strong></td><td>상황 → 문제 → 질문 → 답</td><td>문제를 설득해야 할 때 (예산 요청, 개선 제안)</td></tr>
-<tr><td><strong>정기보고형</strong></td><td>요약 → 지표 → 분석 → 이슈·계획</td><td>매주·매월 반복되는 정기 보고 (오늘 실습)</td></tr>
-</tbody>
-</table>
-<p>이름은 앞글자를 따온 겁니다. <strong>PREP</strong> = Point(결론)·Reason(이유)·Example(사례)·Point(결론), <strong>SCQA</strong> = Situation(상황)·Complication(문제)·Question(질문)·Answer(답).</p>
-<p>지시할 때 구조 이름을 그냥 대도 됩니다:</p>
-<div class="prompt">"이 내용을 PREP 구조로 정리해줘. 결론 먼저, 그다음 이유와 사례."</div>
-<div class="box tip">
-<p>💡 오늘 실습의 주간보고는 <strong>정기보고형</strong>입니다. <code>요약 → 지표 → 채널 → 이슈·계획</code> 순서가 바로 그거죠. 정기보고는 매번 같은 구조라 <strong>템플릿으로 굳히기 가장 좋은</strong> 유형입니다 — 실습 F에서 그걸 합니다.</p>
-</div>
+      <div class="prompt">"이 내용을 정기보고형으로 정리해줘. 요약 → 지표 → 분석 → 이슈·계획 순서로."</div>
 
-<h2>③ 형식 입히고 다듬기</h2>
-<p>내용이 정해지고 문장도 다듬어졌습니다. 마지막은 <strong>누가 읽느냐</strong>에 맞추는 일입니다.</p>
-<p>정보는 하나도 안 바뀝니다. <strong>길이와 격식만</strong> 바뀝니다. 팀 메신저엔 3줄, 팀장님껜 한 문단, 임원께는 한 줄 — 같은 사실을 옷만 갈아입혀 보내는 겁니다.</p>
-<p>그 전에 할 일이 하나 있습니다. 지금까지 고쳐온 내 글을 <strong>회사 양식에 앉히는 것</strong>.</p>
+      <p>같은 방식으로 <strong>SCQA</strong>로도 간단하게 바꿔볼 수 있습니다. 한 줄만 쳐보세요:</p>
+      <div class="prompt">"이 내용을 SCQA 구조로 정리해줘. 상황 → 문제 → 질문 → 답 순서로."</div>
 
-<div class="lab">
-<h3>🛠 실습 E — 형식 입히고 다듬기</h3>
-<div class="prompt">"Project에 올려둔 '지난주 주간보고서'와 같은 <strong>항목 구성·순서</strong>로 맞춰줘. <strong>문장은 그대로 두고 배치만</strong> 바꿔. 첨부한 '이번주 매출 데이터'로 이번주(6/16~6/22) 주간 운영 보고서를 작성해줘. 숫자는 데이터에서 정확히 뽑고, 전주 대비 증감도 언급해줘."</div>
-<p><span class="arrow">→</span> 지난주 보고서를 <strong>다시 첨부할 필요가 없다</strong>는 점에 주목. 이미 Project가 알고 있으니까요.</p>
-<div class="box look">
-<p>🔍 <strong>관찰 포인트</strong>: 실습 B에서 나왔던 내 초안 문장이 아직 남아 있나요? 지난 글을 참조시키면 문장까지 따라오는 경향이 있습니다.</p>
-<p>그리고 <strong>"결론부터 써줘"를 따로 안 시켰는데</strong> 핵심 요약이 맨 앞에 왔죠? 지난주 보고서 형식이 이미 역피라미드이기 때문입니다. <strong>형식을 빌려오면 구조가 딸려옵니다.</strong></p>
-<p>좋은 템플릿 하나를 갖고 있으면, 매주 "결론부터" "이 순서로" 같은 지시를 반복할 필요가 없습니다.</p>
-</div>
-<p><span class="arrow">→</span> 완성된 보고서를 지난주 것과 비교. <strong>형식은 같고 내용만 이번주로</strong> 바뀌었으면 성공.</p>
-</div>
+      <div class="callout callout--tip">
+        <div class="callout-label">💡 언제 어느 걸 쓰나</div>
+        <p><strong>PREP</strong>은 짧은 의견 보고, <strong>SCQA</strong>는 예산 요청처럼 설득이 필요할 때, <strong>정기보고형</strong>은 매주·매월 반복되는 보고. 셋 중 정기보고는 매번 같은 구조라 <strong>템플릿으로 굳히기 가장 좋은</strong> 유형입니다 — 실습 I에서 그걸 합니다.<br>셋을 직접 한 번씩 뽑아보는 건 <strong>실습 H 뒤 &lsquo;30초 옵션&rsquo;</strong>에서 합니다.</p>
+      </div>
 
-<div class="lab">
-<h3>🛠 실습 F — 템플릿으로 고정해 뽑기 (형식 통일)</h3>
-<div class="box warn">
-<p>⚠️ <strong>오늘 처음으로 대화를 새로 여는 지점입니다.</strong><br>앞 맥락(내 초안 문장)이 남아 있으면 "템플릿 방식이 더 일정하다"는 차이가 안 보여서요.</p>
-</div>
-<p>이번엔 <strong>Project에 올려둔 재사용보고템플릿(<code>report_template</code>)</strong>을 기준으로 시킵니다.<br><strong>새 대화</strong>를 열고 엑셀을 첨부한 뒤:</p>
-<div class="prompt">"Project에 올려둔 재사용보고템플릿의 [대괄호] 부분을, 첨부한 '이번주 매출 데이터'(6/16~6/22)로 정확히 채워줘. 숫자는 데이터에서 정확히 뽑고 전주 대비 증감도 표기해줘. 형식·순서는 그대로 두고, 없는 값은 [확인필요]로 남겨."</div>
-<p>매주 쓸 진짜 루틴은 이 방식입니다. (템플릿 방식이 깔끔합니다.)</p>
-</div>
+      <div class="callout callout--tip">
+        <div class="callout-label">💡</div>
+        <p>오늘 실습의 주간보고가 바로 <strong>정기보고형</strong>입니다.<br><code>요약 → 지표 → 채널 → 이슈·계획</code> 순서로 진행되었는지 확인하고, 문제가 있으면 <strong>다시 명령해야 합니다.</strong></p>
+        <hr>
+        <p>그런데 <strong>오늘은 이 명령을 따로 안 내려도 됩니다</strong> — 업로드한 자료 중 <strong>재사용 보고서 템플릿</strong> 덕분에 초안이 이미 이 구조로 잘 나왔고,<br>결과가 원하는 대로 나오지 않았다고 해도 바로 다음 <strong>실습 E</strong>에서 지난주 보고서 형식을 빌려오는데, 그 형식이 이미 정기보고형이라 <strong>구조가 딸려옵니다.</strong> 참조할 형식이 아예 없을 때만 위처럼 <strong>구조 이름을 직접 대면</strong> 됩니다 — <strong>내 실제 업무로 옮겨가면 대개 이 상황</strong>입니다.</p>
+      </div>
 
-<h2>④ 숫자 검수 훈련</h2>
-<p>AI는 가끔 <strong>숫자를 잘못 옮기거나 슬쩍 지어냅니다.</strong> 보고서의 핵심 숫자(매출, 증감률)는 <strong>원본 엑셀과 대조</strong>하세요. "초안은 AI, 검수는 사람" — 이 원칙은 보고서에서 특히 중요합니다.</p>
+      <div class="callout callout--summary">
+        <div class="callout-label">✍️ 보고서 자동화 워크시트(report_worksheet.docx) — 지금은 보기만, 작성은 ⑦절 뒤 &lsquo;내 업무에 붙이기&rsquo;에서</div>
+        <ul>
+          <li><strong>워크시트 A</strong> : 재사용 보고 템플릿(report_template)의 목차가 내 업무 목차의 본보기입니다 — 핵심 요약 / 주요 지표 / 채널 성과 / 이슈·계획. 오늘 만들 보고서도 이 뼈대를 따라갑니다.</li>
+          <li><strong>워크시트 B</strong> : 실습 C에서 읽힌 다섯 시트가 보고서의 어느 항목이 되는지, 그 대응 관계만 눈으로 확인하세요.</li>
+        </ul>
+      </div>
 
-<div class="box">
-<p>🤔 <strong>왜 틀리나?</strong> AI는 계산기가 아니라 <em>"그럴듯한 다음 말"을 예측</em>하는 기계입니다. 긴 표의 합계·비율처럼 '진짜 계산'이 필요한 곳에서 그럴듯한 근사값을 슬쩍 내놓곤 합니다. 그래서 <em>"계산 과정을 단계별로 보여줘"</em> 라고 시키면 정확도가 올라갑니다.</p>
-</div>
+      <h3 class="sub-head">교정은 두 층입니다</h3>
 
-<p>보고서는 결국 숫자를 문장으로 바꾸는 일입니다. 이 변환 지점에서 사고가 납니다.</p>
-<table>
-<thead><tr><th>#</th><th>사고 유형</th><th>예시</th><th>막는 지시</th></tr></thead>
-<tbody>
-<tr><td>①</td><td><strong>단위 뒤섞임</strong></td><td>18,627,000원 → "1,862만원"(O) / "186만원"(X)</td><td>"금액은 원 단위 그대로 쓰고, 만원 표기는 괄호에"</td></tr>
-<tr><td>②</td><td><strong>반올림 과잉</strong></td><td>26.1% → "약 30%"로 부풀림</td><td>"소수점 첫째 자리까지, 임의 반올림 금지"</td></tr>
-<tr><td>③</td><td><strong>기준 실종</strong></td><td>"26% 증가" — 뭐 대비?</td><td>"증감은 반드시 '전주 대비' 같은 기준을 명시"</td></tr>
-<tr><td>④</td><td><strong>상관을 인과로</strong></td><td>라이브 했고 매출 올랐다 → "라이브 <strong>때문에</strong> 올랐다"</td><td>"원인은 '추정'으로 표시, 단정 금지"</td></tr>
-</tbody>
-</table>
+      <p>교정은 두 층입니다. <strong>순서가 중요합니다</strong> — 내용이 바뀌면 애써 다듬은 문장도 같이 버려집니다.</p>
 
-<div class="box warn">
-<p>⚠️ ④가 가장 자주, 가장 조용히 일어납니다. 데이터에는 <em>"6/20 라이브"</em>와 <em>"주말 매출 급증"</em> 두 사실만 있는데, AI는 자연스럽게 <strong>인과로 이어 붙입니다.</strong> 실제로는 주말 효과일 수도, 신제품 효과일 수도 있죠. 보고서에서 이게 위험한 이유는 — <strong>읽는 사람이 그걸 근거로 다음 달 예산을 배정</strong>하기 때문입니다.</p>
-</div>
+      <h3 class="sub-head">■ 내용 교정 — 빈 초안에 숫자 넣기 (지금 합니다)</h3>
+      <p>실습 B의 허술한 초안을, 방금 읽힌 데이터로 살려냅니다. <strong>같은 대화에서</strong> 이어가세요.</p>
 
-<p><strong>증감을 표현하는 세 가지 방식</strong></p>
-<p>같은 변화도 표현에 따라 인상이 완전히 달라집니다. 왜곡이 아니라 <strong>정확하게</strong> 쓰려면 셋을 구분하세요.</p>
-<table>
-<thead><tr><th>표현</th><th>예</th><th>언제</th></tr></thead>
-<tbody>
-<tr><td><strong>절대값</strong></td><td>"매출이 385만원 늘었다"</td><td>규모 감이 필요할 때</td></tr>
-<tr><td><strong>비율</strong></td><td>"매출이 26% 늘었다"</td><td>성장률을 볼 때</td></tr>
-<tr><td><strong>절대값 + 비율</strong></td><td>"매출 1,862만원 (전주 대비 +385만, +26%)"</td><td><strong>보고서 기본</strong> — 둘 다 주는 게 안전</td></tr>
-</tbody>
-</table>
+      <div class="callout callout--practice">
+        <div class="callout-label">🛠 실습 D — 내 초안에 숫자 채우기 (①초안 → ②교정)</div>
+        <div class="prompt">"아까 잡아준 정기보고서 초안에, 방금 읽은 데이터의 숫자를 정확히 채워 넣어줘."</div>
+        <p>→ 실습 B의 허술한 초안이 <strong>숫자를 갖춘 글</strong>이 됩니다. 여기까지가 <strong>내용 교정</strong>이에요.</p>
+      </div>
 
-<div class="box tip">
-<p>💡 비율만 쓰면 <strong>작은 수의 착시</strong>가 생깁니다. 환불이 2건 → 4건이면 "환불 100% 증가!"지만 실제론 2건 차이죠. 그래서 보고서에는 <strong>절대값을 함께</strong> 쓰는 게 원칙입니다.</p>
-</div>
+      <div class="callout callout--tip">
+        <div class="callout-label">💡 숫자가 들어왔다고 맞게 들어온 게 아닙니다</div>
+        <p>단위·기준·인과 — 뭐가 잘못될 수 있는지는 <strong>⑤절</strong>에서 배우고,<br>실제로 걸러내는 건 <strong>실습 F</strong>에서 합니다. 지금은 <strong>채우는 데까지만</strong>.</p>
+      </div>
 
-<div class="lab">
-<h3>🛠 실습 G — 숫자 검수 훈련</h3>
-<p>이번엔 <strong>직접 검산</strong>합니다. 데이터에 전주실적 시트가 있으니 증감률까지 확인할 수 있습니다.</p>
+      <h3 class="sub-head">■ 표현 교정 — 문장 다듬기 (필요 따라 진행)</h3>
+      <ul>
+        <li><em>&ldquo;맞춤법·띄어쓰기만 고쳐줘. 문장은 건드리지 마.&rdquo;</em> — 최소 개입 (내 문체 유지)</li>
+        <li><em>&ldquo;번역투·어색한 표현을 자연스럽게 바꾸고, 바꾼 곳을 목록으로 보여줘.&rdquo;</em> — 변경 추적</li>
+        <li><em>&ldquo;한 문장이 두 줄을 넘으면 둘로 쪼개줘.&rdquo;</em> — 가독성</li>
+        <li><em>&ldquo;&lsquo;진행하다&rsquo;가 5번 나와. 중복 표현을 다양하게 바꿔줘.&rdquo;</em> — 단조로움 해소</li>
+      </ul>
+      <p>→ 4가지 외에도 다듬을 게 있는지 AI에게 물어보세요:</p>
+      <div class="prompt">"위 4가지 말고도 이 글에서 더 다듬을 문장이 있으면 알려줘."</div>
+      <h3 class="sub-head">■ 수정한 내용들로 해서 전체적으로 정리해줘</h3>
 
-<h4>1. 숫자층 — 직접 대조</h4>
-<table>
-<thead><tr><th>확인할 것</th><th>어떻게</th><th>정답</th></tr></thead>
-<tbody>
-<tr><td>이번 주 총매출</td><td><code>일별매출</code> 시트 매출 열 합계</td><td><strong>18,627,000원</strong></td></tr>
-<tr><td>전주 총매출</td><td><code>전주실적</code> 시트 매출 열 합계</td><td><strong>14,777,000원</strong></td></tr>
-<tr><td>매출 증감률</td><td>(18,627,000 ÷ 14,777,000 − 1) × 100</td><td><strong>약 +26.1%</strong></td></tr>
-<tr><td>총 주문 / 환불</td><td>각 시트 합계</td><td><strong>976건 / 24건 (환불률 약 2.5%)</strong></td></tr>
-</tbody>
-</table>
-<ul>
-<li>보고서에 적힌 숫자가 위와 다르면 → <strong>AI가 틀린 겁니다.</strong> 어디서 틀렸는지 찾아보세요.</li>
-<li><em>"총 매출과 증감률을 계산 과정까지 보여주면서 다시 확인해줘"</em> 라고 시켜, 스스로 고치는지 관찰.</li>
-</ul>
+      <div class="callout callout--tip">
+        <div class="callout-label">💡</div>
+        <p>포인트는 바뀐곳이 어디 인지를 알아야합니다<br>AI가 답변중 어디를 왜 고쳤는지를 확인하시고 알려주지 않았다면 <strong>&ldquo;바꾼 곳을 보여줘&rdquo;를 통해 확인<br></strong>뭘 고쳤는지 모르면 검토할 수 없습니다. 특히 계약·정책 문서처럼 단어 하나가 중요한 글에서 필수.</p>
+      </div>
 
-<h4>2. 논리층 — 단정하지 않았나</h4>
-<ul>
-<li>보고서에 <em>"라이브 때문에 매출이 올랐다"</em> 처럼 단정한 문장이 있나요? 데이터가 증명하는 건 "라이브를 했다"와 "주말 매출이 늘었다" <strong>두 사실뿐</strong>입니다.</li>
-<li><em>"원인을 단정한 문장을 찾아서 '추정' 표현으로 바꿔줘"</em> 로 교정해보세요.</li>
-<li>환불사유 시트를 보면 <strong>파손이 11건</strong>으로 절반에 가깝습니다. 보고서가 환불 증가를 언급하면서 <strong>이 원인을 짚었나요?</strong> 데이터에 답이 있는데 안 짚었다면, 그것도 검수 대상입니다.</li>
-</ul>
+      <div class="callout callout--tip">
+        <div class="callout-label">💡</div>
+        <p>이 실습의 목적은 <strong>어떤 지시가 어떤 개선을 만드는지 1:1로 보는 것</strong>입니다.<br>한꺼번에 좋은 프롬프트를 쓰면 &ldquo;좋아졌다&rdquo;만 알지, <strong>뭐가 뭘 고쳤는지</strong>는 모르거든요.<br>그걸 알아야 다음에 결과가 아쉬울 때 <strong>어느 지시를 추가할지</strong> 판단할 수 있습니다.</p>
+      </div>
+    </section>
 
-<h4>3. 톤·형식층</h4>
-<div class="box sheet">
-<p>✍️ <strong>여기서 워크시트 C를 꺼냅니다.</strong> ①숫자층 4개 → ②논리층 3개 → ③톤·형식층 3개, <strong>총 10개 항목</strong>을 위에서부터 체크하며 마무리하세요.</p>
-<p>수업 중 워크시트를 실제로 손에 쥐는 <strong>첫 번째 지점</strong>입니다. 익숙해지면 2~3분이면 다 체크됩니다.</p>
-</div>
-<div class="box tip">
-<p>💡 세 층을 다 해보면 시간이 얼마나 걸리는지 재보세요. 익숙해지면 <strong>2~3분</strong>입니다. 그 2~3분이 틀린 보고를 막습니다.</p>
-</div>
-</div>
+    <!-- 4 형식 -->
+    <section class="lesson-section" id="sec04">
+      <div class="section-head">
+        <span class="section-mark">④</span>
+        <h2>형식 입히고 다듬기</h2>
+      </div>
 
-<div class="lab">
-<h3>🛠 실습 H — 검수표 시켜보기</h3>
-<p>이번엔 검수를 <strong>AI에게 시켜서</strong> 편해지는 걸 체감합니다.</p>
-<div class="prompt">"방금 보고서의 '핵심 숫자 검수표'를 만들어줘. 열: 항목 | 보고서에 쓴 값 | 데이터 원본 시트·위치 | 계산식. 전주 대비 증감은 계산식까지 보여줘."</div>
-<ul>
-<li>나온 표로 <strong>실습 G의 1번(숫자층)</strong>을 다시 해보세요. <strong>얼마나 빨라졌나요?</strong></li>
-<li>⚠️ 단, 검수표도 AI가 만든 것입니다. <strong>총매출 하나만큼은 직접</strong> 엑셀에서 확인하세요 — 검수표가 틀렸을 가능성도 검수 대상입니다.</li>
-</ul>
-</div>
 
-<h2>⑤ 톤 조절 — 같은 문장, 독자별 3단 변신</h2>
-<p>같은 사실도 읽는 사람에 따라 길이와 격식이 달라집니다. <strong>정보는 하나도 안 바뀌고</strong> 옷만 갈아입습니다.</p>
+      <p>내용이 정해지고 문장도 다듬어졌습니다. 마지막은 <strong>누가 읽느냐</strong>에 맞추는 일입니다.</p>
+      <p>정보는 하나도 안 바뀝니다. <strong>길이와 격식만</strong> 바뀝니다. 팀 메신저엔 3줄, 팀장님껜 한 문단, 임원께는 한 줄 — 같은 사실을 옷만 갈아입혀 보내는 겁니다.</p>
+      <p>그 전에 할 일이 하나 있습니다. 지금까지 고쳐온 내 글을 <strong>회사 양식에 앉히는 것</strong>.</p>
 
-<table>
-<thead><tr><th>독자 · 분량</th><th>변환 결과</th></tr></thead>
-<tbody>
-<tr>
-<td><strong>팀 공유 이메일</strong><br>3문단</td>
-<td><strong>제목: [공유] 6월 3주차 주간실적 — 매출 +26%</strong><br><br>
-이번 주 매출은 1,862만원으로 전주 대비 26% 늘었습니다. 방문자 16,140명(+13.7%), 주문 976건(+19.0%)으로 지표 전반이 올랐습니다.<br><br>
-신제품 써모 라인이 매출의 60%를 차지하며 성장을 견인했습니다. 인스타그램 광고가 532만원, 인플루언서 협업이 392만원을 기여했고, 6/20 라이브 이후 주말 트래픽이 크게 늘었습니다(추정).<br><br>
-다만 환불이 24건(2.5%)으로 전주 19건보다 늘었습니다. 11건이 배송 파손이라 다음 주에 포장재 보강을 검토합니다.</td>
-</tr>
-<tr>
-<td><strong>사내 메신저</strong><br>3줄</td>
-<td>매출 1,862만원 (전주 대비 +26%) 🎉<br>써모 라인이 매출 60% 견인 — 6/20 라이브 효과로 주말 급증 (추정)<br>환불 24건으로 늘었어요. 파손 11건이라 포장 개선 검토 중</td>
-</tr>
-<tr>
-<td><strong>경영진</strong><br>한 줄</td>
-<td>주간 매출 1,862만원(+26%), 써모 라인 견인. 포장 파손 환불 증가 대응 검토 중.</td>
-</tr>
-</tbody>
-</table>
+      <div class="callout callout--practice">
+        <div class="callout-label">🛠 실습 E — 형식 입히고 다듬기 (③형식 다듬기)</div>
+        <p>같은 대화에서 이어갑니다. 순서가 중요해요 — <strong>형식을 지시하기 전에, 지시 없이 먼저 한 번</strong> 돌려봅니다.</p>
 
-<div class="box tip">
-<p>💡 세 버전 다 <strong>같은 얘기</strong>를 합니다 — 매출 +26%, 써모 라인 견인, 환불 증가. 바뀐 건 <strong>덜어낸 양</strong>뿐이에요. 그래서 지시할 때 <strong>"누가 읽는지"</strong>를 항상 붙입니다.</p>
-</div>
+        <h4 class="mini-head">① 형식 지시 없이 먼저</h4>
+        <p>실습 D에서 숫자까지 채운 그 글을, <strong>같은 대화에서</strong> 문서 형태로 완성시킵니다. 숫자도 증감도 이미 들어 있으니 <strong>형식 얘기는 한 마디도 하지 않습니다.</strong></p>
+        <div class="prompt">"아까 숫자까지 채운 그 초안을, 이번주(6/16~6/22) 주간 운영 보고서로 완성해줘."</div>
 
-<p><strong>독자별 정보 밀도 — 뭘 덜어낼 것인가</strong></p>
-<p>같은 사실을 전할 때, 독자가 위로 갈수록 <strong>정보를 더 덜어냅니다.</strong></p>
-<table>
-<thead><tr><th>독자</th><th>필요한 것</th><th>덜어낼 것</th><th>분량</th></tr></thead>
-<tbody>
-<tr><td><strong>실무 동료</strong></td><td>세부 수치, 작업 맥락</td><td>없음 (다 필요)</td><td>길어도 됨</td></tr>
-<tr><td><strong>팀장</strong></td><td>결론 + 근거 숫자 + 이슈</td><td>과정, 사소한 수치</td><td>1페이지</td></tr>
-<tr><td><strong>임원</strong></td><td>결론 + 판단 필요 사항</td><td>대부분의 숫자</td><td>3줄</td></tr>
-<tr><td><strong>사외(거래처)</strong></td><td>상대가 행동할 것만</td><td><strong>내부 지표 전부</strong></td><td>짧게</td></tr>
-</tbody>
-</table>
+        <h4 class="mini-head">② 지난주 보고서와 눈으로 대조</h4>
+        <ul>
+          <li>섹션 <strong>개수·순서·제목</strong>이 지난주 것과 같나요? 아마 거의 같을 겁니다.</li>
+          <li>핵심 요약이 맨 앞에 왔나요? <strong>&ldquo;결론부터 써줘&rdquo;를 안 시켰는데도</strong> 컨텍스트에 올린 자료 때문에 그렇게 나왔을 거예요.</li>
+        </ul>
 
-<div class="box warn">
-<p>⚠️ <strong>사외용에서 가장 흔한 사고</strong>: 내부 보고서를 그대로 복사해 거래처에 보내면서 <strong>매출액·환불률 같은 내부 지표가 딸려 나가는 것</strong>입니다. 재활용할 때 "이 사람이 알아도 되는 정보인가"를 반드시 한 번 거르세요. 준비물의 <code>email_share_samples.docx</code>에 사외용 예시가 있습니다.</p>
-</div>
+        <h4 class="mini-head">③ 지난주와 다르게 나왔을 때</h4>
+        <p>다르게 나왔다면 <strong>AI가 내용을 추가했을 가능성</strong>이 있습니다. 이때만 아래를 칩니다.</p>
+        <div class="prompt">"Project에 올려둔 '지난주 주간보고서'와 같은 항목 구성·순서로 맞춰줘. 문장은 그대로 두고 배치만 바꿔."</div>
+        <ul>
+          <li><strong>지난주 주간보고서</strong> : 실습 A에서 Project에 올려 둔, 변하지 않는 형식·예시</li>
+          <li><strong>이번주 매출 엑셀</strong> : 새 대화에 첨부한, 매번 바뀌는 데이터</li>
+        </ul>
+        <p>→ 완성된 보고서를 지난주 것과 비교. <strong>형식은 같고 내용만 이번주로</strong> 바뀌었으면 성공.<br>(그 형식을 만든 건 내 프롬프트가 아니라 <strong>Project 지식에 올려둔 지난주 보고서</strong>입니다. 3차시에서 올려둔 자료가 지금 일하고 있는 거예요. <strong>형식을 빌려오면 구조가 딸려옵니다.</strong>)</p>
+        <p>→ ①과 ③의 결과를 나란히 놓고, <strong>내 초안 문장이 아직 남아 있는지</strong> 비교해 보세요.</p>
+        <ul>
+          <li>지난 글을 참조시키면 <strong>문장까지 따라오는</strong> 경향이 있고, 같은 데이터인데 <strong>섹션 구성이 달랐을 수</strong> 있습니다.</li>
+        </ul>
+      </div>
 
-<div class="lab">
-<h3>🛠 실습 I — 독자별로 퍼뜨리기 (③톤 조절 확장)</h3>
-<div class="box sheet">
-<p>✍️ <strong>시작 전에 워크시트 D를 펼치세요.</strong> 몇 가지를 뽑을지, 각각 <strong>누가 읽는지</strong>를 먼저 적고 들어가면 지시가 훨씬 정확해집니다. 수업 중 워크시트를 쓰는 <strong>두 번째이자 마지막 지점</strong>입니다.</p>
-</div>
-<p><strong>실습 E의 그 대화로 돌아갑니다.</strong> 내가 던진 한 줄에서 시작해 완성된 보고서가 거기 있습니다. Project에 올려둔 <code>email_share_samples</code> 예시 톤을 참고하게 하세요.</p>
-<ul>
-<li><em>"Project의 공유 예시 톤을 참고해서, 위 보고서를 팀 전체 공유용 3문단 이메일로. 제목도 뽑아줘."</em></li>
-<li><em>"사내 메신저용 3줄 요약으로도."</em></li>
-<li><em>"경영진용 한 줄 보고로도."</em></li>
-<li><span class="arrow">→</span> 같은 내용을 <strong>독자별로</strong> 재활용하는 감 익히기. 길이·톤이 어떻게 달라지는지 관찰.</li>
-</ul>
-<div class="box warn">
-<p>⚠️ 반드시 <strong>실습 G, H의 검수를 통과한 보고서</strong>에서 시작하세요. 틀린 숫자는 그대로 복제됩니다.</p>
-</div>
-<div class="box goal">
-<p>🎯 <strong>여기서 한 번 돌아보세요.</strong> 실습 B에서 내가 던진 건 <em>"신제품 출시했고 매출 올랐어"</em> 한 줄이었습니다. 그게 지금 <strong>보고서 + 팀 공유 메일 + 메신저 요약 + 경영진 한 줄</strong> 네 가지 문서가 됐습니다. 빈 화면에서 여기까지가 오늘 배운 전부입니다.</p>
-</div>
-</div>
+      <div class="callout callout--warning">
+        <div class="callout-label">⚠️ 왜 달라질까요?</div>
+        <p>Project 지식에는 참조가 <strong>셋</strong>(지난주 보고서·재사용 템플릿·메일 예시) 들어 있습니다. 기준을 안 정해주면 그중 어느 걸 얼마나 따를지 <strong>매번 달라져요.</strong> ③의 한 줄은 구조를 <em>만드는</em> 지시가 아니라 <strong>&ldquo;셋 중 이걸 기준으로 삼아&rdquo;라고 못 박는</strong> 지시입니다. 매주 5분 루틴이 되려면 이 흔들림부터 없애야 합니다.</p>
+      </div>
+    </section>
 
-<h2>⑥ 반복 보고서는 '형식 + 데이터'로 양산한다</h2>
-<p>주간보고처럼 <strong>매번 형식은 같고 숫자만 바뀌는</strong> 문서가 자동화 효과가 가장 큽니다. 방법은 단순합니다.</p>
-<ol>
-<li><strong>지난주 보고서</strong>를 준다 → "이 형식과 톤을 따라."</li>
-<li><strong>이번주 데이터</strong>(엑셀)를 준다 → "이 숫자로 채워."</li>
-<li>Claude가 같은 모양의 초안을 만든다 → 사람은 <strong>검토·톤만</strong> 다듬어 완성.</li>
-</ol>
+    <!-- 5 숫자 검수 -->
+    <section class="lesson-section" id="sec05">
+      <div class="section-head">
+        <span class="section-mark">⑤</span>
+        <h2>숫자 검수 훈련</h2>
+      </div>
 
-<div class="box tip">
-<p>💡 한 번 잘 만든 보고서가 <strong>다음 주의 템플릿</strong>이 됩니다. 반복할수록 빨라집니다. 어제 만든 그린컵 <strong>Project 안에서</strong> 하면 회사 톤까지 자동으로 입혀집니다 (Day 3 연결).</p>
-</div>
 
-<p><strong>어떤 문서가 자동화 효과가 큰가 — 판별 3질문</strong></p>
-<p>모든 문서가 자동화 효과가 같지 않습니다. 시작하기 전에 셋만 물어보세요.</p>
-<table>
-<thead><tr><th>질문</th><th>예 →</th><th>아니오 →</th></tr></thead>
-<tbody>
-<tr><td><strong>① 형식이 매번 같은가?</strong></td><td>템플릿으로 굳힐 수 있음</td><td>매번 새로 설계해야 함 (효과 작음)</td></tr>
-<tr><td><strong>② 내용의 대부분이 데이터에서 나오나?</strong></td><td>데이터만 주면 자동 생성</td><td>판단·창작 비중이 큼 (초안 정도만)</td></tr>
-<tr><td><strong>③ 얼마나 자주 쓰나?</strong></td><td>매주·매월 → 효과 누적</td><td>1년에 한 번 → 그냥 손으로</td></tr>
-</tbody>
-</table>
-<p><strong>셋 다 '예'면 1순위</strong>입니다. 주간보고·월 마감·정기 공지가 여기 해당하죠.</p>
-<table>
-<thead><tr><th>문서</th><th>①형식</th><th>②데이터</th><th>③빈도</th><th>판정</th></tr></thead>
-<tbody>
-<tr><td>주간 실적 보고</td><td>O</td><td>O</td><td>매주</td><td>✅ <strong>최우선</strong></td></tr>
-<tr><td>월 마감 정산 요약</td><td>O</td><td>O</td><td>매월</td><td>✅ 우선</td></tr>
-<tr><td>정기 공지문</td><td>O</td><td>△</td><td>수시</td><td>🟡 템플릿만이라도</td></tr>
-<tr><td>신규 사업 제안서</td><td>X</td><td>X</td><td>가끔</td><td>❌ 초안 도움 정도</td></tr>
-<tr><td>사과 메일</td><td>△</td><td>X</td><td>수시</td><td>🟡 구조만 재사용</td></tr>
-</tbody>
-</table>
+      <p>AI는 가끔 <strong>숫자를 잘못 옮기거나 슬쩍 지어냅니다.</strong> 보고서의 핵심 숫자(매출, 증감률)는 <strong>원본 엑셀과 대조</strong>하세요. &ldquo;초안은 AI, 검수는 사람&rdquo; — 이 원칙은 보고서에서 특히 중요합니다.</p>
 
-<p><strong>템플릿 하나로 N개 찍어내기 — 양산(메일 머지)</strong></p>
-<p>템플릿의 진짜 위력은 <strong>여러 명에게 보내는 문서</strong>에서 나옵니다. 당첨 안내문 30명, 거래처 공지 20곳 — 내용은 거의 같고 <strong>이름·상품·날짜만</strong> 다르죠.</p>
-<p>공식은 단순합니다: <strong>템플릿 1개 × 데이터 N행 = 완성 문서 N개.</strong> (전통적으로 '메일 머지'라 불리던 작업 — 이제 데이터 주고 말로 시키면 끝입니다.)</p>
-<ol>
-<li><strong>템플릿</strong> — 케이스마다 바뀌는 부분을 <code>{{변수}}</code>로 표시</li>
-<li><strong>데이터</strong> — 변수 값들을 표(엑셀)로. <strong>한 행 = 한 문서</strong></li>
-<li><strong>양산</strong> — 둘을 함께 주고 <em>"각 행을 넣어서 사람마다 만들어줘"</em></li>
-</ol>
-<div class="box warn">
-<p>⚠️ <strong>양산의 검수 포인트</strong>: ① <strong>변수 매칭</strong> — 엉뚱한 사람에게 엉뚱한 상품이 가는 사고가 제일 흔함 ② <strong>케이스 누락</strong> — 데이터 행 수와 결과 수가 일치하나 ③ 외부로 나가는 문서이니 <strong>발송 전 사람이 최종 확인.</strong></p>
-</div>
+      <div class="callout callout--question">
+        <div class="callout-label">🤔 왜 틀리나?</div>
+        <p>AI는 계산기가 아니라 <em>&ldquo;그럴듯한 다음 말&rdquo;을 예측</em>하는 기계입니다. 긴 표의 합계·비율처럼 &lsquo;진짜 계산&rsquo;이 필요한 곳에서 그럴듯한 근사값을 슬쩍 내놓곤 합니다. 그래서 <em>&ldquo;계산 과정을 단계별로 보여줘&rdquo;</em> 라고 시키면 정확도가 올라갑니다.</p>
+      </div>
 
-<div class="lab">
-<h3>🛠 실습 J — 안내문 양산</h3>
-<p><strong>추가 준비물</strong></p>
-<ul class="files">
-<li><strong>안내문 템플릿</strong> (Word · 변수 포함) — <code>notice_template.docx</code></li>
-<li><strong>당첨자 케이스 데이터</strong> (Excel · 6명) — <code>winner_cases.xlsx</code></li>
-</ul>
-<p>두 파일을 함께 첨부하고:</p>
-<ul>
-<li><em>"이 안내문 템플릿의 변수를, 당첨자 데이터 각 행에 맞춰 채워서 6명 각각의 완성된 안내문을 만들어줘. 사람마다 구분되게."</em> <span class="arrow">→</span> 개인화 안내문 6개가 한 번에</li>
-<li>이어서(검수): <em>"방금 만든 안내문에서 각 사람의 당첨상품·마감일이 데이터와 정확히 일치하는지 표로 대조해줘."</em> <span class="arrow">→</span> <strong>변수 매칭 사고</strong> 거르기</li>
-<li>이어서(변형): <em>"같은 내용을 문자(SMS)용 2~3줄 짧은 버전으로도 6명분."</em> / <em>"VIP 고객(이수진)에게는 더 정중한 톤으로."</em></li>
-</ul>
-</div>
+      <p>보고서는 결국 숫자를 문장으로 바꾸는 일입니다.<br>이 변환 지점에서 사고가 납니다.<br>아래 표는 <strong>지금 칠 프롬프트가 아니라, 뭘 찾아야 하는지 목록</strong>입니다.<br>오른쪽 &lsquo;막는 지시&rsquo;를 실제로 치는 건 바로 다음 <strong>실습 F</strong>예요.</p>
 
-<h2>보고서 마무리 — 매주 굴러가게 만들기</h2>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>사고 유형</th><th>예시</th><th>막는 지시</th></tr></thead>
+          <tbody>
+            <tr><td><strong>단위 뒤섞임</strong></td><td>18,627,000원 → &ldquo;1,862만원&rdquo;<span class="tag-good">(O)</span> / &ldquo;186만원&rdquo;<span class="tag-bad">(X)</span></td><td>&ldquo;금액은 원 단위 그대로 쓰고, 만원 표기는 괄호에&rdquo;</td></tr>
+            <tr><td><strong>반올림 과잉</strong></td><td>26.1% → &ldquo;약 30%&rdquo;로 부풀림</td><td>&ldquo;소수점 첫째 자리까지, 임의 반올림 금지&rdquo;</td></tr>
+            <tr><td><strong>기준 실종</strong></td><td>&ldquo;26% 증가&rdquo; — 뭐 대비?</td><td>&ldquo;증감은 반드시 &lsquo;전주 대비&rsquo; 같은 기준을 명시&rdquo;</td></tr>
+            <tr><td><strong>상관을 인과로</strong></td><td>라이브 했고 매출 올랐다 → &ldquo;라이브 <strong>때문에</strong> 올랐다&rdquo;</td><td>&ldquo;원인은 &lsquo;추정&rsquo;으로 표시, 단정 금지&rdquo;</td></tr>
+          </tbody>
+        </table>
+      </div>
 
-<h3>⑦ 매주 5분 루틴 만들기</h3>
-<p>한 번 세팅하면, 매주 금요일 이 순서만 반복하면 됩니다.</p>
-<ol>
-<li><strong>(준비, 최초 1회)</strong> 그린컵 Project 안에 <code>report_template.docx</code>를 올려둔다. (실습 A에서 완료)</li>
-<li><strong>(매주)</strong> 이번 주 데이터 엑셀을 대화에 첨부한다.</li>
-<li><strong>(매주)</strong> 아래 '마스터 프롬프트'를 붙여넣는다.</li>
-<li>나온 초안에서 <strong>핵심 숫자만 원본과 대조</strong>하고, 톤 한두 번 다듬어 완성.</li>
-<li><em>"이걸 팀 공유 이메일/메신저 요약으로도"</em> 로 재활용까지 한 번에.</li>
-</ol>
+      <div class="callout callout--warning">
+        <div class="callout-label">⚠️ 맨 아래 &lsquo;상관을 인과로&rsquo;가 가장 자주, 가장 조용히 일어납니다</div>
+        <p>데이터에는 <em>&ldquo;6/20 라이브&rdquo;</em> 와 <em>&ldquo;주말 매출 급증&rdquo;</em> 두 사실만 있는데, AI는 자연스럽게 <strong>인과로 이어 붙입니다.</strong> 실제로는 주말 효과일 수도, 신제품 효과일 수도 있죠. 보고서에서 이게 위험한 이유는 — <strong>읽는 사람이 그걸 근거로 다음 달 예산을 배정</strong>하기 때문입니다.</p>
+      </div>
 
-<p><strong>붙여넣기용 마스터 프롬프트</strong></p>
-<pre><code>너는 우리 회사 주간보고 담당자야. 첨부한 이번 주 데이터로 보고서를 써줘.
-- 형식: 프로젝트에 올려둔 report_template 형식을 그대로 따른다.
+      <div class="callout callout--tip">
+        <div class="callout-label">🔁 이 넷을 지금 외울 필요는 없습니다</div>
+        <p>바로 아래 <strong>실습 F</strong>에서 내 보고서가 넷 중 뭘 밟았는지 찾고, <strong>걸린 것만</strong> 오른쪽 &lsquo;막는 지시&rsquo;를 골라 치면 됩니다. 그리고 매주 이걸 반복하지 않으려고, 넷을 통째로 ⑧절 <strong>마스터 프롬프트에 박아둡니다.</strong></p>
+      </div>
+
+      <h3 class="sub-head">&lsquo;기준 실종&rsquo;을 조금 더 파보면 — 절대값이냐 비율이냐</h3>
+      <p>기준을 밝혀도(전주 대비) 끝이 아닙니다. 같은 변화가 <strong>표현에 따라 인상이 완전히 달라지거든요.</strong></p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>표현</th><th>예</th><th>언제</th></tr></thead>
+          <tbody>
+            <tr><td><strong>절대값</strong></td><td>&ldquo;매출이 385만원 늘었다&rdquo;</td><td>규모 감이 필요할 때</td></tr>
+            <tr><td><strong>비율</strong></td><td>&ldquo;매출이 26% 늘었다&rdquo;</td><td>성장률을 볼 때</td></tr>
+            <tr><td><strong>절대값 + 비율</strong></td><td>&ldquo;매출 1,862만원 (전주 대비 +385만, +26%)&rdquo;</td><td><strong>보고서 기본</strong> — 둘 다 주는 게 안전</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout--tip">
+        <div class="callout-label">💡</div>
+        <p>비율만 쓰면 <strong>작은 수의 착시</strong>가 생깁니다. 환불이 2건 → 4건이면 &ldquo;환불 100% 증가!&rdquo;지만 실제론 2건 차이죠. 그래서 보고서에는 <strong>절대값을 함께</strong> 쓰는 게 원칙입니다.</p>
+      </div>
+
+      <div class="callout callout--practice">
+        <div class="callout-label">🛠 실습 F — 숫자 검수 훈련 (④검수)</div>
+        <p>보고서는 사람마다 다르게 나오지만, <strong>원본 엑셀의 숫자는 누구에게나 같습니다.</strong><br>그래서 오늘은 워크시트 C 중 <strong>① 숫자층 첫 칸 하나만 직접</strong> 해봅니다 — 보고서의 총매출을 엑셀에서 내 손으로 확인하는 것.</p>
+
+        <div class="callout callout--summary" style="margin-top:12px;">
+          <div class="callout-label">✍️ 워크시트 C를 펼치세요</div>
+          <p>① 숫자 → ② 논리 → ③ 톤 순서로 봅니다. 아래로 갈수록 눈에 안 띄지만 사고는 위쪽이 큽니다.<br>아래 항목은 워크시트 C와 이름·순서가 같습니다. <strong>🛠 표시된 칸만 직접</strong> 하고, 나머지는 <strong>읽어보며 해당하면 체크만</strong> 합니다. 고치는 건 <strong>걸린 게 있을 때만</strong>. 매주 보고서를 낼 때는 이 목록을 전부 봅니다.</p>
+        </div>
+
+        <h4 class="mini-head">① 숫자층 (가장 위험)</h4>
+        <ul>
+          <li><strong>핵심 숫자(총매출·주문수)를 원본 엑셀과 대조했나</strong> — 🛠 <strong>오늘 직접 해보는 칸 (2분)</strong>
+            <ol>
+              <li><code>일별매출</code> 시트 매출 열 아래 빈 칸에 <code>=SUM(D2:D8)</code> → 정답: <strong>18,627,000원</strong></li>
+              <li>내 보고서의 총매출과 <strong>숫자·단위</strong>까지 비교합니다.</li>
+              <li>다르면 → <strong>AI가 틀린 겁니다.</strong> <em>&ldquo;총 매출을 계산 과정까지 보여주면서 다시 확인해줘.&rdquo;</em></li>
+            </ol>
+            주문·환불(<strong>976건 / 24건, 환불률 약 2.5%</strong>)은 눈으로만 대조하세요.</li>
+          <li><strong>전주 대비 증감(%)을 직접 계산해 맞춰봤나 (전주실적 시트 기준)</strong>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th>확인할 것</th><th>어떻게</th><th>정답</th></tr></thead>
+                <tbody>
+                  <tr><td>전주 총매출</td><td><code>전주실적</code> 시트 매출 열 합계</td><td><strong>14,777,000원</strong></td></tr>
+                  <tr><td>매출 증감률</td><td>(18,627,000 ÷ 14,777,000 − 1) × 100</td><td><strong>약 +26.1%</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+            보고서의 증감률이 위와 다르면 → 역시 <strong>AI가 틀린 겁니다.</strong></li>
+          <li><strong>AI가 데이터에 없는 숫자를 지어내지 않았나</strong><br>표에 없는 숫자가 보고서에 적혀 있나요? 데이터에 없는데 나왔다면 지어낸 겁니다.</li>
+          <li><strong>단위·자릿수가 맞나 (만원 ↔ 원 혼동은 흔한 사고)</strong><br>원 ↔ 만원이 뒤섞이지 않았나요? 18,627,000원을 &ldquo;186만원&rdquo;으로 쓴 곳이 없는지 보세요.</li>
+        </ul>
+        <p>표기가 어긋난 곳이 있으면 <strong>걸린 것만</strong> 골라서 칩니다.</p>
+        <div class="prompt">"금액은 원 단위 그대로 쓰고, 만원 표기는 괄호에 넣어 다시 써줘."   <span class="note">— 단위 뒤섞임</span>
+"증감률은 소수점 첫째 자리까지, 임의 반올림 없이 다시 써줘."       <span class="note">— 반올림 과잉</span>
+"모든 증감에 '전주 대비'처럼 비교 기준을 명시해줘."              <span class="note">— 기준 실종</span></div>
+
+        <h4 class="mini-head">② 논리층</h4>
+        <ul>
+          <li><strong>원인을 &lsquo;추정&rsquo;으로 표시했나, 사실처럼 단정하지 않았나</strong><br>실습 C에서 나온 <em>&ldquo;라이브 덕분에…&rdquo;</em> 로 단정 지었으면 ⑤절 표의 막는 지시 : <em>&ldquo;원인을 단정한 문장을 찾아서 &lsquo;추정&rsquo; 표현으로 바꿔줘.&rdquo;</em></li>
+          <li><strong>데이터가 뒷받침하지 않는 주장이 섞이지 않았나</strong><br>실습 B에서 데이터 없이 나온 문장(<em>&ldquo;고객 반응이 좋았습니다&rdquo;</em> 류)이 그대로 남아 있기 쉽습니다. 근거가 될 시트를 못 대면 빼세요.</li>
+          <li><strong>이슈에 대한 다음 액션이 비어 있지 않나</strong><br>환불사유 시트를 보면 <strong>파손이 11건</strong>으로 절반에 가깝습니다. 보고서가 환불 증가를 언급하면서 이 원인을 짚고, <em>&ldquo;포장재 보강 검토&rdquo;</em> 같은 다음 액션까지 적었나요?<br>데이터에 답이 있는데 안 짚었다면, 그것도 검수 대상입니다.</li>
+        </ul>
+
+        <h4 class="mini-head">③ 톤·형식층</h4>
+        <ul>
+          <li><strong>지정한 형식/순서를 지켰나</strong><br>실습 E ②에서 눈으로 대조했던 걸 여기서 칸으로 확정합니다. 항목 제목·순서가 지난주와 다르면 다음 주 템플릿이 흔들립니다.</li>
+          <li><strong>독자(팀장/임원/팀 전체)에 맞는 길이·격식인가</strong><br>지금 이 보고서의 독자는 <strong>팀장</strong>입니다. 결론이 첫 문단에 있는지 보세요 — 팀장은 첫 문단만 읽습니다. 임원용·팀 공유용은 <strong>실습 H</strong>에서 따로 뽑으니, 여기선 팀장 기준으로만 봅니다.</li>
+          <li><strong>브랜드 금지 표현이 섞이지 않았나</strong><br>3차시 Project에 올려둔 브랜드 톤·정책 기준입니다. 같이 걸러낼 것 — 과한 접속사, <em>&ldquo;~할 수 있습니다&rdquo;</em> 반복, 결론 없이 양쪽 다 말하는 문장.<br><em>&ldquo;접속사를 줄이고 문장을 짧게, 단정할 건 단정해줘.&rdquo;</em></li>
+        </ul>
+      </div>
+
+      <div class="callout callout--tip">
+        <div class="callout-label">💡</div>
+        <p>오늘은 한 칸만 직접 했지만, 익숙해지면 세 층 전체가 <strong>2~3분</strong>입니다.<br>그 2~3분이 틀린 보고를 막습니다.</p>
+      </div>
+
+      <div class="callout callout--practice">
+        <div class="callout-label">🛠 실습 G — 검수표 시켜보기</div>
+        <p>이번엔 검수를 <strong>AI에게 시켜서</strong> 편해지는 걸 체감합니다.</p>
+        <div class="prompt">"방금 보고서의 '핵심 숫자 검수표'를 만들어줘.
+열: 항목 | 보고서에 쓴 값 | 데이터 원본 시트·위치 | 계산식.
+전주 대비 증감은 계산식까지 보여줘."</div>
+        <ul>
+          <li>나온 표로 실습 F에서 체크만 했던 <strong>① 숫자층의 나머지 칸</strong>을 확인해보세요. <strong>직접 계산하는 것보다 얼마나 빠른가요?</strong></li>
+          <li>⚠️ 단, 검수표도 AI가 만든 것입니다.<br><strong>총매출 하나만큼은 직접</strong> 엑셀에서 확인하세요(검수표가 틀렸을 가능성도 검수 대상입니다).</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 6 톤 조절 -->
+    <section class="lesson-section" id="sec06">
+      <div class="section-head">
+        <span class="section-mark">⑥</span>
+        <h2>톤 조절 <small>같은 문장, 독자별 3단 변신</small></h2>
+      </div>
+
+
+      <p>같은 사실도 읽는 사람에 따라 길이와 격식이 달라집니다. <strong>정보는 하나도 안 바뀌고</strong> 옷만 갈아입습니다.</p>
+
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>독자 · 분량</th><th>변환 결과</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>팀 공유 이메일</strong><br>3문단</td>
+              <td><strong>제목: [공유] 6월 3주차 주간실적 — 매출 +26%</strong><br><br>이번 주 매출은 1,862만원으로 전주 대비 26% 늘었습니다. 방문자 16,140명(+13.7%), 주문 976건(+19.0%)으로 지표 전반이 올랐습니다.<br><br>신제품 써모 라인이 매출의 60%를 차지하며 성장을 견인했습니다. 인스타그램 광고가 532만원, 인플루언서 협업이 392만원을 기여했고, 6/20 라이브 이후 주말 트래픽이 크게 늘었습니다(추정).<br><br>다만 환불이 24건(2.5%)으로 전주 19건보다 늘었습니다. 11건이 배송 파손이라 다음 주에 포장재 보강을 검토합니다.</td>
+            </tr>
+            <tr>
+              <td><strong>사내 메신저</strong><br>3줄</td>
+              <td>매출 1,862만원 (전주 대비 +26%) 🎉<br>써모 라인이 매출 60% 견인 — 6/20 라이브 효과로 주말 급증 (추정)<br>환불 24건으로 늘었어요. 파손 11건이라 포장 개선 검토 중</td>
+            </tr>
+            <tr>
+              <td><strong>경영진</strong><br>한 줄</td>
+              <td>주간 매출 1,862만원(+26%), 써모 라인 견인. 포장 파손 환불 증가 대응 검토 중.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout--tip">
+        <div class="callout-label">💡</div>
+        <p>세 버전 다 <strong>같은 얘기</strong>를 합니다 — 매출 +26%, 써모 라인 견인, 환불 증가. 바뀐 건 <strong>덜어낸 양</strong>뿐이에요. 그래서 지시할 때 <strong>&ldquo;누가 읽는지&rdquo;</strong>를 항상 붙입니다.</p>
+      </div>
+
+      <h3 class="sub-head">독자별 정보 밀도 — 뭘 덜어낼 것인가</h3>
+      <p>같은 사실을 전할 때, 독자가 위로 갈수록 <strong>정보를 더 덜어냅니다.</strong></p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>독자</th><th>필요한 것</th><th>덜어낼 것</th><th>분량</th></tr></thead>
+          <tbody>
+            <tr><td><strong>실무 동료</strong></td><td>세부 수치, 작업 맥락</td><td>없음 (다 필요)</td><td>길어도 됨</td></tr>
+            <tr><td><strong>팀장</strong></td><td>결론 + 근거 숫자 + 이슈</td><td>과정, 사소한 수치</td><td>1페이지</td></tr>
+            <tr><td><strong>임원</strong></td><td>결론 + 판단 필요 사항</td><td>대부분의 숫자</td><td>3줄</td></tr>
+            <tr><td><strong>사외(거래처)</strong></td><td>상대가 행동할 것만</td><td><strong>내부 지표 전부</strong></td><td>짧게</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout--warning">
+        <div class="callout-label">⚠️ 사외용에서 가장 흔한 사고</div>
+        <p>내부 보고서를 그대로 복사해 거래처에 보내면서 <strong>매출액·환불률 같은 내부 지표가 딸려 나가는 것</strong>입니다.<br>3차시에서 배운 <strong>범위형 제약</strong>(&ldquo;~까지만, ~는 빼고&rdquo;)을 여기서 씁니다:</p>
+        <div class="prompt">"거래처에 보낼 내용까지만 남기고, 매출액·환불률 같은 내부 지표는 빼고 다시 써줘."</div>
+        <p>그래도 마지막엔 <strong>&ldquo;이 사람이 알아도 되는 정보인가&rdquo;</strong>를 내 눈으로 한 번 거르세요. 준비물의 <code>email_share_samples.docx</code>에 사외용 예시가 있습니다.</p>
+      </div>
+
+      <div class="callout callout--practice">
+        <div class="callout-label">🛠 실습 H — 독자별로 퍼뜨리기 (⑤톤 조절 확장)</div>
+        <div class="callout callout--summary" style="margin-top:12px;">
+          <div class="callout-label">✍️ 시작 전에 워크시트 D를 펼치세요</div>
+          <p>몇 가지를 뽑을지, 각각 <strong>누가 읽는지</strong>를 먼저 적고 들어가면 지시가 훨씬 정확해집니다. 수업 중 워크시트를 쓰는 <strong>두 번째 지점</strong>입니다.</p>
+        </div>
+        <p><strong>실습 G까지 이어온 그 대화 그대로입니다.</strong> 내가 던진 한 줄에서 시작해 검수까지 끝난 보고서가 거기 있습니다. Project에 올려둔 <code>email_share_samples</code> 예시 톤을 참고하게 하세요.</p>
+        <div class="prompt">"Project의 공유 예시 톤을 참고해서, 위 보고서를 팀 전체 공유용 3문단 이메일로. 제목도 뽑아줘."
+"사내 메신저용 3줄 요약으로도."
+"경영진용 한 줄 보고로도."</div>
+        <p>→ 같은 내용을 <strong>독자별로</strong> 재활용하는 감 익히기. 길이·톤이 어떻게 달라지는지 관찰.</p>
+      </div>
+
+      <div class="callout callout--warning">
+        <div class="callout-label">⚠️</div>
+        <p>반드시 <strong>실습 F, G의 검수를 통과한 보고서</strong>에서 시작하세요. 틀린 숫자는 그대로 복제됩니다.</p>
+      </div>
+
+      <div class="callout callout--scenario">
+        <div class="callout-label">🎯 여기서 한 번 돌아보세요</div>
+        <p>실습 B에서 내가 던진 건 <em>&ldquo;신제품 출시했고 매출 올랐어&rdquo;</em> 한 줄이었습니다. 그게 지금 <strong>보고서 + 팀 공유 메일 + 메신저 요약 + 경영진 한 줄</strong> 네 가지 문서가 됐습니다. 빈 화면에서 여기까지가 오늘 배운 전부입니다.</p>
+      </div>
+
+      <div class="callout callout--practice">
+        <div class="callout-label">🧪 30초 옵션 — 같은 이슈, 세 구조 (빨리 끝냈다면)</div>
+        <p>구조 3종(PREP·SCQA·정기보고형)을 손으로 한 번 만져보는 자리입니다.<br>방금 완성한 보고서의 <strong>환불 이슈</strong> 하나만 갖고, 같은 대화에서 두 줄 더 쳐보세요.</p>
+        <div class="prompt">"이 보고서의 환불 증가 건을 PREP으로 3줄. 팀장이 '포장 바꿀까요?'라고 물었다고 치고."
+"같은 내용을 SCQA로. 포장재 예산 추가를 요청하는 상황."</div>
+      </div>
+
+      <div class="callout callout--tip">
+        <div class="callout-label">💡 실습 H와 나란히 놓고 보세요</div>
+        <p>실습 H는 <strong>독자</strong>가 바뀌니 <em>길이와 톤</em>이 달라졌고,<br>여기는 <strong>목적</strong>이 바뀌니 <em>순서</em>가 달라집니다. 정보는 셋 다 그대로예요.</p>
+        <hr>
+        <p>그래서 <em>&ldquo;PREP으로&rdquo;</em> 한 마디가 설명 열 줄보다 셉니다.<br>주간보고 본문은 <strong>정기보고형</strong> — 오늘 만든 게 그겁니다.</p>
+      </div>
+    </section>
+
+    <!-- 7 양산 -->
+    <section class="lesson-section" id="sec07">
+      <div class="section-head">
+        <span class="section-mark">⑦</span>
+        <h2>반복 보고서는 &lsquo;형식 + 데이터&rsquo;로 양산한다</h2>
+      </div>
+
+
+      <p>주간보고처럼 <strong>매번 형식은 같고 숫자만 바뀌는</strong> 문서가 자동화 효과가 가장 큽니다. 방법은 단순합니다.</p>
+      <ol class="steps">
+        <li><strong>지난주 보고서</strong>를 준다 → &ldquo;이 형식과 톤을 따라.&rdquo;</li>
+        <li><strong>이번주 데이터</strong>(엑셀)를 준다 → &ldquo;이 숫자로 채워.&rdquo;</li>
+        <li>Claude가 같은 모양의 초안을 만든다 → 사람은 <strong>검토·톤만</strong> 다듬어 완성.</li>
+      </ol>
+
+      <div class="callout callout--tip">
+        <div class="callout-label">💡</div>
+        <p>한 번 잘 만든 보고서가 <strong>다음 주의 템플릿</strong>이 됩니다. 반복할수록 빨라집니다. 어제 만든 그린컵 <strong>Project 안에서</strong> 하면 회사 톤까지 자동으로 입혀집니다 (3차시 연결).</p>
+      </div>
+
+      <h3 class="sub-head">어떤 문서가 자동화 효과가 큰가 — 판별 3질문</h3>
+      <p>모든 문서가 자동화 효과가 같지 않습니다. 시작하기 전에 셋만 물어보세요.</p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>질문</th><th>예 →</th><th>아니오 →</th></tr></thead>
+          <tbody>
+            <tr><td><strong>① 형식이 매번 같은가?</strong></td><td>템플릿으로 굳힐 수 있음</td><td>매번 새로 설계해야 함 (효과 작음)</td></tr>
+            <tr><td><strong>② 내용의 대부분이 데이터에서 나오나?</strong></td><td>데이터만 주면 자동 생성</td><td>판단·창작 비중이 큼 (초안 정도만)</td></tr>
+            <tr><td><strong>③ 얼마나 자주 쓰나?</strong></td><td>매주·매월 → 효과 누적</td><td>1년에 한 번 → 그냥 손으로</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>셋 다 &lsquo;예&rsquo;면 1순위</strong>입니다. 주간보고·월 마감·정기 공지가 여기 해당하죠.</p>
+
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>문서</th><th>①형식</th><th>②데이터</th><th>③빈도</th><th>판정</th></tr></thead>
+          <tbody>
+            <tr><td>주간 실적 보고</td><td>O</td><td>O</td><td>매주</td><td>✅ <strong>최우선</strong></td></tr>
+            <tr><td>월 마감 정산 요약</td><td>O</td><td>O</td><td>매월</td><td>✅ 우선</td></tr>
+            <tr><td>정기 공지문</td><td>O</td><td>△</td><td>수시</td><td>🟡 템플릿만이라도</td></tr>
+            <tr><td>신규 사업 제안서</td><td>X</td><td>X</td><td>가끔</td><td>❌ 초안 도움 정도</td></tr>
+            <tr><td>사과 메일</td><td>△</td><td>X</td><td>수시</td><td>🟡 구조만 재사용</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout--practice">
+        <div class="callout-label">🛠 실습 I — 내 보고서를 템플릿으로 굳히기</div>
+        <p>지금 손에 있는 건 <strong>검수를 통과한 이번주 보고서</strong>입니다.<br>이걸 다음 주에 다시 쓸 수 있는 물건으로 바꿉니다.</p>
+        <div class="callout callout--warning" style="margin-top:12px;">
+          <div class="callout-label">⚠️ 순서가 중요합니다 — 검수가 먼저예요</div>
+          <p>틀린 보고서에서 템플릿을 뽑으면 <strong>틀린 형식이 매주 굳습니다.</strong></p>
+        </div>
+        <p><strong>실습 H까지 끝난 그 대화에서</strong> 이어갑니다.</p>
+        <div class="prompt">"방금 만든 보고서에서 매주 바뀌는 값만 [대괄호]로 바꿔 재사용 템플릿을 만들어줘.
+숫자·날짜·상품명처럼 주마다 달라지는 건 [대괄호]로, 항목 제목과 문장 틀은 그대로 둬."</div>
+        <ul>
+          <li>준비물로 받은 재사용보고템플릿(<code>report_template</code>)과 비교해 보세요.</li>
+          <li>나온 템플릿을 저장해 <strong>Project 지식에 올립니다.</strong><br>— AI에게 &ldquo;기존 재사용보고템플릿 문서에 덮어쓰기 아니면 변경&rdquo;</li>
+          <li>📥 <strong>보고서 본체도 따로 내려받으세요.</strong> 템플릿 말고, <strong>검수를 통과한 이번주 보고서</strong> 그 자체를 Word로 저장합니다.<br><strong>5차시 실습 C·I에서 이 파일을 씁니다</strong> — 안 남겨두면 다음 시간에 재료가 없습니다.</li>
+        </ul>
+      </div>
+
+      <div class="callout callout--tip">
+        <div class="callout-label">💡</div>
+        <p>⑦절에서 <em>&ldquo;한 번 잘 만든 보고서가 다음 주의 템플릿이 된다&rdquo;</em> 고 했죠. <strong>지금 그걸 한 겁니다.</strong><br>실습 B에서 던진 한 줄이 보고서가 되고, 검수를 거쳐, 이제 <strong>매주 쓰는 자산</strong>이 됐습니다.</p>
+      </div>
+    </section>
+
+    <!-- 12 내 업무에 붙이기 -->
+    <section class="lesson-section" id="sec12">
+      <div class="section-head">
+        <span class="section-mark">＋</span>
+        <h2>내 업무에 붙이기</h2>
+      </div>
+
+
+      <h3 class="sub-head first">① 직무별로 보면</h3>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>직무</th><th>매주·매월 반복 문서</th><th>템플릿에 넣을 것</th><th>특히 주의할 검수</th></tr></thead>
+          <tbody>
+            <tr><td><strong>마케팅</strong></td><td>주간 성과 보고 (오늘 실습)</td><td>채널별 지표·캠페인 성과</td><td>상관을 인과로 단정</td></tr>
+            <tr><td><strong>영업</strong></td><td>파이프라인 현황, 견적서</td><td>단계별 건수·금액·확률</td><td>금액 단위, 확정/미확정 구분</td></tr>
+            <tr><td><strong>CS/운영</strong></td><td>VOC 주간 요약, 응대 매뉴얼</td><td>문의 유형별 건수·처리율</td><td>개별 고객 정보 노출</td></tr>
+            <tr><td><strong>인사(HR)</strong></td><td>채용 진행 현황, 월 근태</td><td>단계별 인원·기한</td><td><strong>개인정보</strong> — 실명 대신 이니셜</td></tr>
+            <tr><td><strong>재무/회계</strong></td><td>월 마감 요약, 예산 집행률</td><td>계정별 금액·집행률</td><td><strong>숫자 전부</strong> — 단위·반올림</td></tr>
+            <tr><td><strong>기획</strong></td><td>프로젝트 주간 리포트</td><td>마일스톤·리스크·다음 액션</td><td>일정 확정 여부</td></tr>
+            <tr><td><strong>개발/엔지니어링</strong></td><td>릴리스 노트, 장애 리포트</td><td>변경사항·영향 범위</td><td>기술 용어를 비개발자용으로</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout--tip">
+        <div class="callout-label">💡</div>
+        <p>표를 가로로 읽으면 패턴이 보입니다 — <strong>모든 직무가 &ldquo;정해진 형식 + 매번 바뀌는 숫자&rdquo;</strong> 구조입니다. 다른 건 <strong>어디를 특히 검수하느냐</strong>뿐이죠.</p>
+      </div>
+
+      <div class="callout callout--tip">
+        <div class="callout-label">💡 팀이 돌려 쓰는 문서라면</div>
+        <p>넷을 더 챙기세요 — ① <strong>템플릿은 한 곳에</strong>(각자 버전을 만들면 형식이 갈라짐) ② <strong>마스터 프롬프트도 팀 자산으로 공유</strong> ③ <strong>숫자층 검수 담당</strong>을 지정(&ldquo;다들 보겠지&rdquo;는 아무도 안 본다는 뜻) ④ <strong>바뀐 규칙은 구두 말고 템플릿에 반영.</strong> 넷 다 3차시 지식베이스 관리와 같은 원리예요(담당·갱신·기록).</p>
+      </div>
+
+      <h3 class="sub-head">② 내 문서로 좁히기</h3>
+      <p>1~2분, 오늘 배운 걸 내 일에 대입해 보세요.</p>
+      <ul>
+        <li>내가 <strong>매주·매월 반복해서 쓰는 문서</strong>는? (주간보고, 월 마감 요약, 정기 공지문…)</li>
+        <li>그 문서, <strong>형식이 정해져</strong> 있나? → 플레이스홀더 템플릿 후보</li>
+        <li><strong>숫자가 들어가나?</strong> → 검수표를 마스터 프롬프트에 포함</li>
+        <li>반복해 나가는 <strong>안내문·공지문</strong>은? (당첨 안내, 거래처 공지…) → <strong>5차시 양산</strong> 후보로 적어두세요</li>
+      </ul>
+
+      <div class="callout callout--summary">
+        <div class="callout-label">✍️ 워크시트 A·B를 여기서 채웁니다</div>
+        <p>A에 내 보고서 목차를, B에 &lsquo;어느 데이터가 어느 섹션으로 가는지&rsquo;를 적으세요. <strong>A·B가 채워지면 그게 곧 내 report_template의 초안</strong>입니다. 그다음 ⑧절 마스터 프롬프트의 워크시트 E칸으로 이어집니다.</p>
+        <hr>
+        <p>예: 영업팀 — 주간 파이프라인 보고. 인사팀 — 채용 진행 현황. CS팀 — VOC 주간 요약. 전부 <strong>&ldquo;같은 형식 + 새 데이터&rdquo;</strong> 구조라 오늘 방식이 그대로 먹힙니다.</p>
+      </div>
+    </section>
+
+    <!-- 8 루틴 -->
+    <section class="lesson-section" id="sec08">
+      <div class="section-head">
+        <span class="section-mark">⑧</span>
+        <h2>매주 5분 루틴 만들기 <small>보고서 마무리 — 매주 굴러가게 만들기</small></h2>
+      </div>
+
+
+      <p>한 번 세팅하면, 매주 금요일 이 순서만 반복하면 됩니다.<br><strong>지금 바로 한 바퀴 돌려봅니다</strong> — 방금 만든 템플릿으로, 오늘 쓴 그 데이터를 다시.<br>정답을 이미 아니까 <strong>루틴이 제대로 도는지</strong>를 확인할 수 있어요.</p>
+
+      <ol class="steps">
+        <li><strong>(최초 1회)</strong> 실습 I에서 나온 템플릿을 <strong>Word 파일로 저장</strong>해 그린컵 Project 지식에 기존꺼와 교체.<br>준비물로 받은 재사용 보고서 템플릿(<code>report_template.docx</code>)은 이제 안 씁니다 — <strong>내가 만든 게 기준</strong>이에요.</li>
+        <li><strong>새 대화</strong>를 엽니다. 지금까지 쓰던 대화가 아니라 <strong>새 창</strong>입니다.<br>앞 대화의 기억 없이 <strong>템플릿 + 프롬프트만으로</strong> 굴러가는지 보는 게 이 단계의 핵심이에요.</li>
+        <li><strong>이번주 매출 엑셀(weekly_sales.xlsx)을 첨부</strong>하고, 아래 마스터 프롬프트를 붙여넣습니다.</li>
+        <li><strong>실습에서 손으로 시켰던 걸 이제 매주 자동으로 받습니다.</strong><br>표 전체를 다 볼 필요는 없고, <strong>총매출 18,627,000원 / 전주 대비 +26.1%</strong> 두 개만 엑셀과 직접 맞춰보세요.</li>
+        <li><strong>톤은 손댈 데가 있을 때만</strong> 한두 줄. 없으면 안 고쳐도 됩니다.<br><em>&ldquo;문장이 긴 곳만 둘로 쪼개줘.&rdquo;</em> / <em>&ldquo;접속사를 줄이고, 단정할 건 단정해줘.&rdquo;</em> / <em>&ldquo;이슈 항목만 조금 더 조심스럽게.&rdquo;</em></li>
+        <li><strong>독자별로 퍼뜨리기 (⑤톤 조절 확장)</strong><br><em>&ldquo;이걸 팀 공유 이메일 3문단과 메신저 3줄 요약으로도 만들어줘.&rdquo;</em></li>
+      </ol>
+
+      <h3 class="sub-head">붙여넣기용 마스터 프롬프트</h3>
+      <div class="terminal">너는 우리 회사 주간보고 담당자야. 첨부한 이번 주 데이터로 보고서를 써줘.
+- 형식: 프로젝트에 올려둔 보고서 템플릿의 [대괄호]만 채운다. 항목 제목·순서는 그대로.
 - 숫자: 데이터에서 정확히 뽑고, 전주 대비 증감(%)도 계산해 표시. 없는 값은 [확인필요].
 - 해석: 원인은 '추정'이라고 표시하고 단정하지 마.
 - 톤: 팀장 보고용으로 담백하게.
-마지막에 '핵심 숫자 검수표'(항목 | 보고서 값 | 데이터 원본 값)도 붙여줘.</code></pre>
+마지막에 '핵심 숫자 검수표'(항목 | 보고서 값 | 데이터 원본 값)도 붙여줘.</div>
 
-<div class="box tip">
-<p>💡 마지막 줄이 포인트입니다. <strong>AI에게 자기 숫자를 검수표로 만들게</strong> 하면, 사람이 대조하기 훨씬 쉬워집니다.</p>
-</div>
-<div class="box sheet">
-<p>✍️ <strong>워크시트 E — 오늘의 진짜 결과물.</strong> 위 프롬프트를 <strong>내 팀 · 내 형식 · 내 톤</strong>으로 고쳐 E칸에 적어 저장하세요. 그린컵이 아니라 <strong>내 실제 업무</strong> 기준으로 씁니다. 앞으로 매주 이걸 복붙하게 됩니다.</p>
+      <h3 class="sub-head">이 프롬프트, 어디서 나왔나</h3>
+      <p>새로 만든 게 아니라 오늘 배운 걸 한 장에 모은 겁니다.</p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>프롬프트의 줄</th><th>나온 곳</th></tr></thead>
+          <tbody>
+            <tr><td>형식: 템플릿의 [대괄호]만 채운다</td><td><strong>실습 I</strong> — 내가 만든 템플릿</td></tr>
+            <tr><td>숫자: 정확히 뽑고 전주 대비 증감 표시</td><td><strong>⑤절</strong> — 1,862만원을 &ldquo;186만원&rdquo;으로 잘못 쓰거나(단위 뒤섞임), &ldquo;26% 증가&rdquo;라고만 쓰고 <em>뭐에 비해</em>인지 안 밝히는 것(기준 실종)을 막는 줄</td></tr>
+            <tr><td>없는 값은 [확인필요]</td><td><strong>⑤절</strong> — 데이터에 없는 숫자를 AI가 지어내지 못하게 막는 줄</td></tr>
+            <tr><td>해석: 원인은 &lsquo;추정&rsquo;</td><td><strong>⑤절</strong> 상관을 인과로</td></tr>
+            <tr><td>톤: 팀장 보고용</td><td><strong>⑥절</strong> 독자별 톤<br>— 정보량이 많은 팀장용</td></tr>
+            <tr><td>ㄴ 핵심 숫자 검수표</td><td><strong>실습 G</strong><br>매주 손으로 시키지 않으려고 아예 박아둠</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout--summary">
+        <div class="callout-label">✍️ 워크시트 E — 오늘의 진짜 결과물</div>
+        <p>위 프롬프트를 <strong>내 팀 · 내 형식 · 내 톤</strong>으로 고쳐 E칸에 적어 저장하세요. 그린컵이 아니라 <strong>내 실제 업무</strong> 기준으로 씁니다. 앞으로 매주 이걸 복붙하게 됩니다.</p>
+      </div>
+
+      <div class="callout callout--tip">
+        <div class="callout-label">💡 고정하는 게 둘입니다</div>
+        <p><strong>템플릿</strong>은 <em>형식</em>을 고정하고(항목 제목·순서), <strong>마스터 프롬프트</strong>는 <em>규칙</em>을 고정합니다(숫자 표기·추정 표시·톤·검수표). 서로 대체가 안 돼요 — 템플릿만 있으면 모양은 일정한데 매주 &ldquo;추정이라고 써&rdquo;, &ldquo;검수표도&rdquo;를 또 쳐야 하고, 프롬프트만 있으면 규칙은 지켜지는데 <strong>모양이 흔들립니다.</strong></p>
+      </div>
+
+      <div class="callout callout--tip">
+        <div class="callout-label">💡 핵심</div>
+        <p>사용한 마스터 프롬프트의 다섯 줄은 누구에게나 해당하는 일반 규칙이고<br>여기서 내 팀에서만 필요한 규칙들이 있다면<br><em>&ldquo;환불률은 소수점 둘째 자리까지&rdquo;</em>, <em>&ldquo;상품명은 정식 명칭으로&rdquo;</em>, <em>&ldquo;이슈는 3개 이하로&rdquo;</em> 등을<br>프롬프트에 추가하거나 변경하여 적용</p>
+        <hr>
+        <p>✍️ 워크시트 <strong>F(3주 회고)</strong><br>3주 동안 매번 추가된 내용은 마스터 프롬프트에 넣을 규칙입니다.</p>
+      </div>
+
+      <h3 class="sub-head">첫 3주가 진짜 — 루틴 정착 가이드</h3>
+      <p>한 번 해보고 &ldquo;생각보다 별로네&rdquo; 하고 그만두는 경우가 많습니다. <strong>3주만 버티면</strong> 확실히 자리 잡습니다.</p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>주차</th><th>예상 소요</th><th>이번 주에 할 일</th></tr></thead>
+          <tbody>
+            <tr><td><strong>1주차</strong></td><td>20~25분</td><td>프롬프트 다듬느라 오래 걸림. <strong>정상입니다.</strong> 이번 주 목표는 &ldquo;한 번 끝까지 해보기&rdquo;</td></tr>
+            <tr><td><strong>2주차</strong></td><td>10분</td><td>1주차에 고쳤던 부분을 <strong>마스터 프롬프트에 반영</strong>. 매번 손보던 게 줄어듦</td></tr>
+            <tr><td><strong>3주차</strong></td><td>5분</td><td>붙여넣고 검수만. 여기서부터 <strong>진짜 이득</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 9 루브릭 -->
+    <section class="lesson-section" id="sec09">
+      <div class="section-head">
+        <span class="section-mark">⑨</span>
+        <h2>내 문서, 스스로 채점하기 <small>루브릭</small></h2>
+      </div>
+
+
+      <p>&ldquo;잘 썼나?&rdquo;를 감으로 판단하지 말고 항목으로 보세요. <strong>12점 만점</strong>입니다.</p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>항목</th><th>0점</th><th>1점</th><th>2점</th></tr></thead>
+          <tbody>
+            <tr><td><strong>결론 위치</strong></td><td>끝에 있거나 없음</td><td>중간쯤</td><td><strong>첫 문단에 명확히</strong></td></tr>
+            <tr><td><strong>숫자 근거</strong></td><td>숫자 거의 없음</td><td>있지만 기준 불명</td><td><strong>절대값+비율, 기준 명시</strong></td></tr>
+            <tr><td><strong>사실/추정 구분</strong></td><td>추정을 단정</td><td>일부만 표시</td><td><strong>전부 &lsquo;추정&rsquo; 표시</strong></td></tr>
+            <tr><td><strong>독자 적합</strong></td><td>누구용인지 불명</td><td>애매</td><td><strong>길이·톤이 독자에 맞음</strong></td></tr>
+            <tr><td><strong>다음 액션</strong></td><td>없음</td><td>모호</td><td><strong>누가·뭘·언제까지</strong></td></tr>
+            <tr><td><strong>바로 쓸 수 있나</strong></td><td>많이 고쳐야</td><td>조금 수정</td><td><strong>그대로 발송 가능</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul>
+        <li><strong>10~12점</strong>: 그대로 보내도 됩니다 👏</li>
+        <li><strong>6~9점</strong>: 좋습니다 — 낮은 항목 한둘만 보완</li>
+        <li><strong>5점 이하</strong>: 지시를 다시.</li>
+      </ul>
+
+      <div class="callout callout--tip">
+        <div class="callout-label">💡</div>
+        <p>AI에게 채점을 시켜도 됩니다: <em>&ldquo;위 보고서를 이 6개 항목으로 0~2점씩 채점하고, 1점 이하 항목만 고쳐줘.&rdquo;</em> — 2차시의 자기검증을 문서에 적용한 형태입니다.</p>
+      </div>
+
+      <div class="callout callout--scenario">
+        <div class="callout-label">🗣️ 다음 시간 예고</div>
+        <p>오늘 배운 <strong>초안 → 교정 → 톤 조절</strong>은 보고서 전용이 아닙니다. <strong>5차시</strong>에서는 먼저 커넥터를 붙여 <strong>오늘 만든 보고서를 실제 메일함·캘린더로 내보내고</strong>, 같은 3단계로 <strong>쓰기 껄끄러운 메일</strong>을 처리합니다. <strong>10차시</strong> 회의록에서도 이 3단계를 그대로 씁니다.<br><strong>오늘 만든 보고서가 그대로 5차시의 재료가 되니, 결과물을 꼭 남겨두세요.</strong></p>
+      </div>
+    </section>
+
+    <!-- 10 트러블슈팅 -->
+    <section class="lesson-section" id="sec10">
+      <div class="section-head">
+        <span class="section-mark">!</span>
+        <h2>안 될 때 <small>트러블슈팅</small></h2>
+      </div>
+
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>증상</th><th>원인</th><th>대응</th></tr></thead>
+          <tbody>
+            <tr><td><strong>엑셀을 안 읽거나 한 시트만 봄</strong></td><td>시트를 특정 안 함</td><td><em>&ldquo;<code>일별매출</code>과 <code>전주실적</code> 두 시트를 모두 열어서&rdquo;</em> 처럼 <strong>시트명을 나열</strong></td></tr>
+            <tr><td><strong>합계·증감률이 틀림</strong></td><td>어림 계산</td><td><em>&ldquo;계산 과정을 단계별로 보여줘&rdquo;</em> · 검수표 요구</td></tr>
+            <tr><td><strong>템플릿 형식이 깨짐</strong></td><td>지시가 모호</td><td><em>&ldquo;형식·순서는 그대로, <code>[대괄호]</code>만 채워&rdquo;</em> 명시</td></tr>
+            <tr><td><strong>지난주 문장까지 그대로 베낌</strong></td><td>지난 글을 통째로 참조</td><td>템플릿(플레이스홀더) 방식으로 전환 (실습 I)</td></tr>
+            <tr><td><strong>[확인필요]투성이</strong></td><td>템플릿 항목이 데이터에 없음</td><td>템플릿 항목을 실제 데이터 구조에 맞게 조정</td></tr>
+            <tr><td><strong>전주 대비를 못 계산함</strong></td><td>비교할 전주 데이터가 없음</td><td>데이터에 <strong>전주 시트를 포함</strong>해서 주기 (오늘 엑셀의 <code>전주실적</code> 시트)</td></tr>
+            <tr><td><strong>매번 문체가 달라짐</strong></td><td>참조 예시가 없음</td><td>잘 나온 보고서를 3차시 Project에 &lsquo;과거 예시&rsquo;로 올려두기</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout callout--tip">
+        <div class="callout-label">💡 공통 원칙</div>
+        <p>결과가 이상하면 <strong>어느 파일·어느 시트·어느 칸</strong>인지 좁혀서 다시 지시. 모호함이 줄면 오류도 줍니다.</p>
+      </div>
+    </section>
+
+    <!-- 11 FAQ -->
+    <section class="lesson-section" id="sec11">
+      <div class="section-head">
+        <span class="section-mark">?</span>
+        <h2>자주 묻는 질문 <small>FAQ</small></h2>
+      </div>
+
+      <div class="faq-item">
+        <div class="q"><span class="tag">Q.</span>AI가 쓴 보고서를 그대로 내도 되나요? 티가 나지 않을까요?</div>
+        <div class="a"><span class="tag">A.</span><p><strong>그대로 내지 마세요</strong> — 티가 나서가 아니라, 검수를 안 한 셈이기 때문입니다. 다만 한두 번 다듬으면 티는 안 납니다. AI 문체 특유의 흔적(과한 접속사, &ldquo;~할 수 있습니다&rdquo; 반복, 결론 없는 균형 잡기)만 걷어내면 됩니다. <em>&ldquo;접속사를 줄이고 문장을 짧게, 단정할 건 단정해줘&rdquo;</em> 가 잘 통합니다.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="q"><span class="tag">Q.</span>보고서에 그래프도 넣고 싶은데요.</div>
+        <div class="a"><span class="tag">A.</span><p>오늘은 텍스트 보고서까지입니다. 데이터 시각화는 <strong>7차시</strong>에서 다룹니다.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="q"><span class="tag">Q.</span>민감한 내용(인사·급여·계약)이 담긴 문서도 이렇게 처리해도 되나요?</div>
+        <div class="a"><span class="tag">A.</span><p><strong>회사 정책을 먼저 확인</strong>하세요. 3차시에서 말씀드린 것과 같습니다. 꼭 필요하면 <strong>숫자를 가명화</strong>하거나(실명 → A씨, 실제 금액 → 비율만) 구조·문장만 AI에게 맡기고 민감 값은 사람이 채우는 방식도 있습니다.</p></div>
+      </div>
+    </section>
+
+    <!-- 13 오늘 정리 -->
+    <section class="lesson-section" id="sec13">
+      <div class="section-head">
+        <span class="section-mark">✓</span>
+        <h2>오늘 정리</h2>
+      </div>
+
+      <ul>
+        <li>글쓰기는 <strong>초안·교정·톤 조절</strong>로 쪼개라 — 보고서는 여기에 <strong>형식 다듬기·검수</strong>가 끼어 다섯 단계. <strong>0→1은 Claude</strong>에게. 빈 화면 노려보지 말 것.</li>
+        <li>오늘 <strong>실습 B부터 I까지 전부 한 대화, 한 문서</strong>였다. 내가 던진 한 줄이 보고서 → 검수 → 팀 공유 메일·경영진 한 줄 → <strong>다음 주 템플릿</strong>까지 갔다.</li>
+        <li><strong>템플릿은 형식을, 마스터 프롬프트는 규칙을</strong> 고정한다. 둘 다 있어야 매주 같은 모양이 나온다.</li>
+        <li><strong>[보고서]</strong> 결론부터(역피라미드). 팀장은 첫 문단, 임원은 첫 문장만 읽는다.</li>
+        <li><strong>[보고서]</strong> 독자가 위로 갈수록 <strong>정보를 덜어낸다.</strong> 특히 <strong>사외용에선 내부 지표를 반드시 걷어낼 것.</strong></li>
+        <li><strong>[보고서]</strong> 반복 보고서 = <strong>지난 형식(또는 템플릿) + 이번 데이터</strong> → 초안 양산, 사람은 검토·톤만.</li>
+        <li><strong>[보고서]</strong> 형식은 <strong>플레이스홀더 템플릿</strong>으로 고정하면 매주 모양이 일정하다.</li>
+        <li><strong>[보고서]</strong> 숫자 사고 4가지: <strong>단위 뒤섞임 / 반올림 과잉 / 기준 실종 / 상관을 인과로.</strong> 마지막이 가장 조용하고 위험하다.</li>
+        <li><strong>[보고서]</strong> 증감은 <strong>절대값 + 비율을 함께.</strong> 비율만 쓰면 착시가 생긴다(2건→4건 = &ldquo;100% 증가&rdquo;).</li>
+        <li><strong>[보고서]</strong> <strong>검수는 3층 — ①숫자 ②논리 ③톤.</strong> 바쁠 때 생략되는 게 ①이고 사고도 거기서 난다.</li>
+        <li><strong>[보고서]</strong> <strong>검수표를 AI에게 시켜라.</strong> 단, 핵심 지표 2~3개는 사람이 직접 대조.</li>
+        <li>교정 시킬 땐 <strong>&ldquo;바꾼 곳을 보여줘&rdquo;</strong> — 변경 추적 없이는 검토 불가.</li>
+        <li><strong>한 번에 다 시키지 마라.</strong> 보고서를 먼저 완성하고 재활용은 그다음. <strong>검수 안 된 걸 재활용하면</strong> 틀린 숫자가 여러 문서로 복제된다.</li>
+      </ul>
+    </section>
+
+    <!-- 14 퀴즈 -->
+    <section class="lesson-section" id="sec14">
+      <div class="section-head">
+        <span class="section-mark">✅</span>
+        <h2>자가진단 퀴즈</h2>
+      </div>
+
+      <p>객관식·O/X는 바로 채점되고, 서술형은 모범답안을 펼쳐 비교하세요. 자동채점 5문항 중 4개 이상이면 통과.</p>
+
+      <div class="quiz-item">
+        <p class="q">Q1. 반복 보고서를 &lsquo;양산&rsquo;하는 공식은?<br>ⓐ 매번 처음부터 새로 쓴다<br>ⓑ 형식(템플릿) + 이번 주 데이터<br>ⓒ 지난주 보고서를 그대로 제출<br>ⓓ 최대한 길게 쓰라고 시킨다</p>
+        <details><summary>정답 보기</summary><div class="ans"><p>ⓑ 형식(템플릿) + 이번 주 데이터</p></div></details>
+      </div>
+      <div class="quiz-item">
+        <p class="q">Q2. 지난주 보고서를 통째로 주는 것보다 플레이스홀더 템플릿이 나은 이유는?<br>ⓐ 결과가 더 길게 나와서<br>ⓑ 지난 글의 문장까지 따라오지 않고 형식이 매주 일정해서<br>ⓒ 요금이 절약돼서<br>ⓓ AI가 더 빨라져서</p>
+        <details><summary>정답 보기</summary><div class="ans"><p>ⓑ 지난 글의 문장까지 따라오지 않고 형식이 매주 일정해서</p></div></details>
+      </div>
+      <div class="quiz-item">
+        <p class="q">Q3. AI가 만든 보고서에서 사람이 반드시 해야 할 일은?<br>ⓐ 전부 다시 타이핑<br>ⓑ 핵심 숫자를 원본 데이터와 대조 검수<br>ⓒ 폰트 바꾸기<br>ⓓ 없음 — AI를 믿는다</p>
+        <details><summary>정답 보기</summary><div class="ans"><p>ⓑ 핵심 숫자를 원본 데이터와 대조 검수</p></div></details>
+      </div>
+      <div class="quiz-item">
+        <p class="q">Q4. AI가 &lsquo;라이브 방송 덕분에 매출이 늘었다&rsquo;고 쓰면 데이터에 근거한 사실이다. (O / X)</p>
+        <details><summary>정답 보기</summary><div class="ans"><p>X — 데이터가 증명하는 건 &ldquo;라이브를 했다&rdquo;와 &ldquo;매출이 늘었다&rdquo; 두 사실뿐. 인과는 추정입니다.</p></div></details>
+      </div>
+      <div class="quiz-item">
+        <p class="q">Q5. 보고서를 이메일·메신저·한 줄 보고로 재활용할 때, 정보는 같고 길이·톤만 달라진다. (O / X)</p>
+        <details><summary>정답 보기</summary><div class="ans"><p>O</p></div></details>
+      </div>
+      <div class="quiz-item">
+        <p class="q">Q6. 보고서를 이메일·메신저·경영진 한 줄로 재활용하기 전에 반드시 먼저 해야 할 일은 무엇이고, 왜 그런가? (서술형)</p>
+        <details><summary>모범답안 보기</summary><div class="ans"><p>숫자 검수. 검수 안 된 보고서를 재활용하면 틀린 숫자가 여러 문서로 그대로 복제되기 때문.</p></div></details>
+      </div>
+      <div class="quiz-item">
+        <p class="q">Q7. &ldquo;이 글 다듬어줘&rdquo;보다 나은 교정 지시를 &lsquo;변경 추적&rsquo;을 포함해 한 줄로 쓰시오. (서술형)</p>
+        <details><summary>모범답안 보기</summary><div class="ans"><p>&ldquo;번역투·어색한 표현을 자연스럽게 바꾸고, 바꾼 곳을 목록으로 보여줘.&rdquo;</p></div></details>
+      </div>
+      <div class="quiz-item">
+        <p class="q">Q8. 내 업무에서 템플릿화할 반복 문서 1개와 플레이스홀더 항목 3개를 적으시오. (서술형)</p>
+        <details><summary>모범답안 보기</summary><div class="ans"><p>매주·매월 반복하며 형식이 고정된 문서 위주로 자유 서술. 플레이스홀더는 숫자·날짜·대상명처럼 매번 바뀌는 값.</p></div></details>
+      </div>
+    </section>
+
+
+    <a class="next-lesson" href="lesson5.html">
+      <div>
+        <span class="label">다음 차시</span>
+        <h3>5차시 · 커넥터·메일: 밖으로 내보내기</h3>
+        <p style="margin:8px 0 0; color:var(--ink-soft); font-size:.92rem; max-width:50ch;">Gmail·캘린더 커넥터로 오늘의 결과물을 실제로 내보내고, 쓰기 껄끄러운 메일 4유형과 안내문 양산까지.</p>
+      </div>
+      <span class="arrow">→</span>
+    </a>
+
+  </main>
+
+  <footer class="page-footer">
+    <span>그린컵 AI 에이전트 과정 · 4차시 보고서</span>
+  </footer>
+
 </div>
 
-<p><strong>첫 3주가 진짜 — 루틴 정착 가이드</strong></p>
-<p>한 번 해보고 "생각보다 별로네" 하고 그만두는 경우가 많습니다. <strong>3주만 버티면</strong> 확실히 자리 잡습니다.</p>
-<table>
-<thead><tr><th>주차</th><th>예상 소요</th><th>이번 주에 할 일</th></tr></thead>
-<tbody>
-<tr><td><strong>1주차</strong></td><td>20~25분</td><td>프롬프트 다듬느라 오래 걸림. <strong>정상입니다.</strong> 이번 주 목표는 "한 번 끝까지 해보기"</td></tr>
-<tr><td><strong>2주차</strong></td><td>10분</td><td>1주차에 고쳤던 부분을 <strong>마스터 프롬프트에 반영</strong>. 매번 손보던 게 줄어듦</td></tr>
-<tr><td><strong>3주차</strong></td><td>5분</td><td>붙여넣고 검수만. 여기서부터 <strong>진짜 이득</strong></td></tr>
-</tbody>
-</table>
-
-<div class="box sheet">
-<p>💡 핵심은 <strong>매주 고친 부분을 프롬프트에 되먹이는 것</strong>입니다. 3주차에도 매번 똑같은 걸 고치고 있다면, 그건 아직 프롬프트에 안 들어간 규칙이라는 뜻이에요.</p>
-<p>✍️ 워크시트 <strong>F(3주 회고)</strong>에 '기존 ○분 → AI 활용 ○분 / 고친 부분'을 3주간 적어보세요. <strong>오늘의 유일한 숙제</strong>입니다.</p>
-</div>
-<div class="box tip">
-<p>💡 이 "돌리고 → 고치고 → 프롬프트에 반영"이 바로 <strong>Day 11의 작업지시서 개선 루프</strong>와 같은 원리입니다.</p>
-</div>
-
-<h3>⑧ 내 문서, 스스로 채점하기 (루브릭)</h3>
-<p>"잘 썼나?"를 감으로 판단하지 말고 항목으로 보세요. <strong>12점 만점</strong>입니다.</p>
-<table>
-<thead><tr><th>항목</th><th>0점</th><th>1점</th><th>2점</th></tr></thead>
-<tbody>
-<tr><td><strong>결론 위치</strong></td><td>끝에 있거나 없음</td><td>중간쯤</td><td><strong>첫 문단에 명확히</strong></td></tr>
-<tr><td><strong>숫자 근거</strong></td><td>숫자 거의 없음</td><td>있지만 기준 불명</td><td><strong>절대값+비율, 기준 명시</strong></td></tr>
-<tr><td><strong>사실/추정 구분</strong></td><td>추정을 단정</td><td>일부만 표시</td><td><strong>전부 '추정' 표시</strong></td></tr>
-<tr><td><strong>독자 적합</strong></td><td>누구용인지 불명</td><td>애매</td><td><strong>길이·톤이 독자에 맞음</strong></td></tr>
-<tr><td><strong>다음 액션</strong></td><td>없음</td><td>모호</td><td><strong>누가·뭘·언제까지</strong></td></tr>
-<tr><td><strong>바로 쓸 수 있나</strong></td><td>많이 고쳐야</td><td>조금 수정</td><td><strong>그대로 발송 가능</strong></td></tr>
-</tbody>
-</table>
-<ul>
-<li><strong>10~12점</strong>: 그대로 보내도 됩니다 👏</li>
-<li><strong>6~9점</strong>: 좋습니다 — 낮은 항목 한둘만 보완</li>
-<li><strong>5점 이하</strong>: 지시를 다시. 대개 <strong>구조(역피라미드)나 숫자 지시(④ 숫자 검수 훈련)</strong>가 빠진 경우입니다</li>
-</ul>
-<div class="box tip">
-<p>💡 AI에게 채점을 시켜도 됩니다: <em>"위 보고서를 이 6개 항목으로 0~2점씩 채점하고, 1점 이하 항목만 고쳐줘."</em> — Day 2의 자기검증을 문서에 적용한 형태입니다.</p>
-</div>
-
-<p class="foot">AI Agent 과정 · 4차시 — 보고서·회의록·메일 · PART 2(회의록)·PART 3(메일)은 준비 중입니다.</p>
-
-</div>
 </body>
 </html>
