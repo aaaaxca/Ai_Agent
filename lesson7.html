@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>데이터 다루기</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --paper:#F5F7FB;
+    --surface:#FFFFFF;
+    --surface-2:#EEF1F9;
+    --ink:#1B2333;
+    --ink-soft:#525C72;
+    --border:#DCE1EE;
+    --accent:#2954D6;
+    --accent-ink:#FFFFFF;
+    --accent-tint:#E7ECFB;
+    --amber:#8A5A10;
+    --amber-tint:#FBF0DC;
+    --amber-line:#E9CE9C;
+    --red:#B23434;
+    --red-tint:#FCE9E9;
+    --red-line:#EFC2C2;
+    --green:#1F8A5F;
+    --green-tint:#E5F5EE;
+    --shadow:0 1px 2px rgba(27,35,51,.04), 0 8px 24px -12px rgba(27,35,51,.12);
+    --term-bg:#12151E;
+    --term-ink:#DDE3F0;
+    --term-accent:#7C9BFF;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#10131B;
+      --surface:#171B26;
+      --surface-2:#1C2130;
+      --ink:#E7EAF2;
+      --ink-soft:#A7AFC2;
+      --border:#2B3143;
+      --accent:#89A6FF;
+      --accent-ink:#0B1020;
+      --accent-tint:#1E2740;
+      --amber:#E8B75D;
+      --amber-tint:#2E2716;
+      --amber-line:#4A3B1E;
+      --red:#E58888;
+      --red-tint:#3A1E1E;
+      --red-line:#4E2A2A;
+      --green:#5FD1A0;
+      --green-tint:#123326;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#10131B;
+    --surface:#171B26;
+    --surface-2:#1C2130;
+    --ink:#E7EAF2;
+    --ink-soft:#A7AFC2;
+    --border:#2B3143;
+    --accent:#89A6FF;
+    --accent-ink:#0B1020;
+    --accent-tint:#1E2740;
+    --amber:#E8B75D;
+    --amber-tint:#2E2716;
+    --amber-line:#4A3B1E;
+    --red:#E58888;
+    --red-tint:#3A1E1E;
+    --red-line:#4E2A2A;
+    --green:#5FD1A0;
+    --green-tint:#123326;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Noto Sans KR","Pretendard",sans-serif;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+    word-break:keep-all;
+    overflow-wrap:break-word;
+  }
+  h1,h2,h3{
+    font-family:"Nanum Myeongjo",serif;
+    color:var(--ink);
+    text-wrap:balance;
+    margin:0;
+  }
+  a{color:var(--accent);}
+  strong{color:var(--ink); font-weight:700;}
+  em{font-style:italic;}
+  code{
+    font-family:"JetBrains Mono",monospace;
+    font-size:.9em;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:4px;
+    padding:.1em .4em;
+  }
+  p{margin:0 0 1em;}
+  ul,ol{margin:0 0 1em; padding-left:1.3em;}
+  li{margin-bottom:.45em;}
+  .page-shell{
+    max-width:860px;
+    margin:0 auto;
+    padding:0 20px 96px;
+  }
+
+  /* ---------- Masthead ---------- */
+  .masthead{
+    padding:56px 0 40px;
+    border-bottom:1px solid var(--border);
+    margin-bottom:40px;
+  }
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.78rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--accent);
+    background:var(--accent-tint);
+    border:1px solid var(--border);
+    padding:5px 12px;
+    border-radius:999px;
+    margin-bottom:20px;
+  }
+  .masthead h1{
+    font-size:clamp(2.1rem, 4.5vw, 3.1rem);
+    font-weight:800;
+    margin-bottom:10px;
+  }
+  .masthead .lede{
+    color:var(--ink-soft);
+    font-size:1.05rem;
+    max-width:60ch;
+    margin-bottom:0;
+  }
+  .masthead .meta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px 24px;
+    margin-top:24px;
+    font-size:.9rem;
+    color:var(--ink-soft);
+  }
+  .masthead .meta-row span{display:flex; align-items:center; gap:6px;}
+  .masthead .meta-row b{color:var(--ink); font-weight:700;}
+
+  main{min-width:0;}
+
+  /* ---------- Sections ---------- */
+  .lesson-section{
+    padding-bottom:44px;
+    margin-bottom:44px;
+    border-bottom:1px solid var(--border);
+    scroll-margin-top:20px;
+  }
+  .lesson-section:last-of-type{border-bottom:none;}
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    margin-bottom:20px;
+  }
+  .section-mark{
+    font-family:"JetBrains Mono",monospace;
+    font-weight:700;
+    font-size:1rem;
+    color:var(--accent-ink);
+    background:var(--accent);
+    border-radius:8px;
+    padding:3px 9px;
+    flex-shrink:0;
+  }
+  .section-head h2{
+    font-size:clamp(1.35rem,2.6vw,1.7rem);
+    font-weight:700;
+  }
+  .section-head h2 small{
+    display:block;
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:500;
+    font-size:.85rem;
+    color:var(--ink-soft);
+    margin-top:4px;
+  }
+  h3.sub-head{
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:700;
+    font-size:1.02rem;
+    color:var(--accent);
+    margin:28px 0 10px;
+  }
+  h3.sub-head.first{margin-top:0;}
+  h4.mini-head{
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:700;
+    font-size:.96rem;
+    color:var(--ink);
+    margin:20px 0 8px;
+  }
+
+  /* ---------- Callouts ---------- */
+  .callout{
+    border:1px solid var(--border);
+    border-left:4px solid var(--accent);
+    background:var(--surface);
+    border-radius:10px;
+    padding:16px 18px;
+    margin:20px 0;
+    box-shadow:var(--shadow);
+  }
+  .callout p:last-child{margin-bottom:0;}
+  .callout ul:last-child, .callout ol:last-child{margin-bottom:0;}
+  .callout-label{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-weight:700;
+    font-size:.92rem;
+    margin-bottom:8px;
+    color:var(--ink);
+  }
+  .callout--scenario{border-left-color:var(--accent); background:var(--accent-tint);}
+  .callout--tip{border-left-color:var(--amber); background:var(--amber-tint);}
+  .callout--tip .callout-label{color:var(--amber);}
+  .callout--warning{border-left-color:var(--red); background:var(--red-tint);}
+  .callout--warning .callout-label{color:var(--red);}
+  .callout--summary{border-left-color:var(--accent); background:var(--surface);}
+  .callout--summary .callout-label{color:var(--accent);}
+  .callout--question{border-left-color:var(--ink-soft); background:var(--surface-2);}
+  .callout--practice{border-left-color:var(--green); background:var(--green-tint);}
+  .callout--practice .callout-label{color:var(--green);}
+  .co-icon{font-size:1.02em; margin-right:2px;}
+  .co-icon:empty{display:none;}
+  .callout-label:empty{display:none;}
+  .callout hr{border:none; border-top:1px dashed var(--border); margin:12px 0;}
+
+  /* ---------- Prepare chip ---------- */
+  .prep{
+    font-size:.9rem;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-left:4px solid var(--ink-soft);
+    border-radius:8px;
+    padding:11px 14px;
+    margin:0 0 14px;
+  }
+  .prep b{color:var(--ink);}
+  .materials{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:14px 16px;
+    margin:0 0 14px;
+    font-size:.92rem;
+    line-height:1.75;
+  }
+  .materials div b{color:var(--ink); font-weight:700;}
+  .materials div span{color:var(--ink-soft);}
+  .callout--practice.practice-head{margin-top:32px;}
+  .callout--practice.practice-head .callout-label{font-size:1.05rem; margin-bottom:6px;}
+  .callout--practice ul{margin-bottom:10px;}
+
+  /* ---------- Terminal / prompt ---------- */
+  .terminal{
+    background:var(--term-bg);
+    color:var(--term-ink);
+    border-radius:10px;
+    padding:16px 18px;
+    margin:14px 0;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.84rem;
+    line-height:1.8;
+    overflow-x:auto;
+    white-space:pre-wrap;
+  }
+  .prompt{
+    background:var(--term-bg);
+    color:var(--term-ink);
+    border-radius:8px;
+    padding:10px 14px;
+    margin:10px 0;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.82rem;
+    line-height:1.8;
+    white-space:pre-wrap;
+    overflow-x:auto;
+  }
+  .prompt .note{color:#8892AC; font-family:"Noto Sans KR",sans-serif;}
+  .terminal code, .prompt code{background:none; border:none; padding:0; color:inherit;}
+
+  /* ---------- Tables ---------- */
+  .table-scroll{overflow-x:auto; margin:18px 0; border:1px solid var(--border); border-radius:12px;}
+  table{border-collapse:collapse; width:100%; min-width:480px; font-size:.92rem;}
+  th,td{
+    text-align:left;
+    padding:11px 14px;
+    border-bottom:1px solid var(--border);
+    vertical-align:top;
+  }
+  th{
+    background:var(--surface-2);
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:700;
+    color:var(--ink);
+    white-space:nowrap;
+  }
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:nth-child(even){background:var(--surface);}
+  tbody tr:nth-child(odd){background:transparent;}
+  td strong{color:var(--accent);}
+  .tag-bad{color:var(--red); font-weight:700;}
+  .tag-good{color:var(--green); font-weight:700;}
+
+  /* ---------- Lists with markers ---------- */
+  .steps{padding-left:0; list-style:none; counter-reset:step;}
+  .steps li{counter-increment:step; position:relative; padding-left:36px; margin-bottom:14px;}
+  .steps li::before{
+    content:counter(step);
+    position:absolute; left:0; top:-1px;
+    width:24px; height:24px;
+    border-radius:50%;
+    background:var(--accent);
+    color:var(--accent-ink);
+    font-family:"JetBrains Mono",monospace;
+    font-size:.78rem;
+    font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  /* ---------- Checklist ---------- */
+  .checklist{list-style:none; padding-left:0;}
+  .checklist li{position:relative; padding-left:28px; margin-bottom:.5em;}
+  .checklist li::before{
+    content:"";
+    position:absolute; left:0; top:.5em;
+    width:15px; height:15px;
+    border:1.5px solid var(--border);
+    border-radius:4px;
+    background:var(--surface);
+  }
+
+  /* ---------- Figure ---------- */
+  figure.fig{margin:20px 0; text-align:center;}
+  figure.fig img{max-width:100%; height:auto; border:1px solid var(--border); border-radius:10px; background:var(--surface);}
+  figure.fig figcaption{font-size:.85rem; color:var(--ink-soft); margin-top:8px;}
+
+  /* ---------- Toggle ---------- */
+  details.toggle{
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:var(--surface);
+    padding:12px 16px;
+    margin:18px 0;
+  }
+  details.toggle > summary{
+    cursor:pointer;
+    font-weight:700;
+    color:var(--accent);
+    font-size:.95rem;
+    list-style:none;
+  }
+  details.toggle > summary::-webkit-details-marker{display:none;}
+  details.toggle > summary::before{content:"\25B8 "; font-family:"JetBrains Mono",monospace;}
+  details.toggle[open] > summary::before{content:"\25BE ";}
+  details.toggle[open] > summary{margin-bottom:10px; padding-bottom:8px; border-bottom:1px dashed var(--border);}
+  .toggle-body > :last-child{margin-bottom:0;}
+  .toggle-body .lesson-section{border-bottom:none; padding-bottom:0; margin-bottom:0;}
+
+  /* ---------- FAQ / quiz ---------- */
+  .quiz-item{
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:14px 16px;
+    margin-bottom:12px;
+    background:var(--surface);
+  }
+  .quiz-item .q{font-weight:700; margin-bottom:0;}
+  .quiz-item details{margin-top:8px;}
+  .quiz-item summary{cursor:pointer; color:var(--accent); font-weight:700; font-size:.86rem;}
+  .quiz-item .ans{margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); color:var(--ink-soft); font-size:.9rem;}
+  .quiz-item .ans p{margin-bottom:0;}
+
+  /* ---------- Next lesson ---------- */
+  .next-lesson{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:22px 26px;
+    margin-top:8px;
+    box-shadow:var(--shadow);
+    text-decoration:none;
+    color:inherit;
+  }
+  a.next-lesson:hover{border-color:var(--accent);}
+  a.next-lesson:hover .arrow{transform:translateX(4px);}
+  .next-lesson .label{
+    font-family:"JetBrains Mono",monospace;
+    font-size:.76rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+    display:block;
+  }
+  .next-lesson h3{font-size:1.2rem; font-weight:700; font-family:"Nanum Myeongjo",serif;}
+  .next-lesson .arrow{
+    font-family:"JetBrains Mono",monospace;
+    font-size:1.4rem;
+    color:var(--accent);
+    display:inline-block;
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .next-lesson .arrow{transition:transform .15s ease;}
+  }
+
+  .page-footer{
+    margin-top:60px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    color:var(--ink-soft);
+    font-size:.84rem;
+  }
+
+  @media (prefers-reduced-motion:no-preference){
+    a{transition:background-color .15s ease, color .15s ease;}
+  }
+</style>
+</head>
+<body>
+<div class="page-shell">
+
+  <header class="masthead">
+    <a class="eyebrow" href="index.html" style="text-decoration:none;">← 그린컵 AI 에이전트 과정 · 7차시</a>
+    <h1>데이터 다루기</h1>
+    <p class="lede">날짜는 제각각, 금액엔 &ldquo;삼만원&rdquo;, 같은 고객이 두 번 — 손으로 정리하면 반나절인 엑셀을 <strong>몇 분 만에 정리하고, 재구매율과 돈 되는 채널까지 직접 뽑습니다.</strong></p>
+    <div class="meta-row">
+      <span>📍 <b>오늘 배우는 것</b> — 데이터 작업 4단계(살펴보기·정제·분석·요약), 지우나 남기나 표시하나 판단 3가지, 추세·이동평균과 전환 퍼널, RFM·코호트·파레토, 같은 데이터가 다른 숫자가 되는 &ldquo;분모 전쟁&rdquo;, 핵심 숫자 검수와 발표 슬라이드 개요까지</span>
+    </div>
+  </header>
+
+  <main>
+<div class="callout callout--scenario"><div class="callout-label">🎯 오늘의 가상 문제상황</div><p>팀장이 엑셀 두 개를 던집니다. <em>"이거 주문 데이터랑 고객 명단인데, 좀 정리해서 이번 달 매출이랑 단골 고객 좀 뽑아줘."</em> 열어보니… 날짜는 <code>6/1</code>, <code>6월 1일</code>, <code>06.02.2024</code> 제각각이고, 금액엔 <code>삼만원</code>이 적혀 있고, 같은 고객이 <code>김민정</code>·<code>김 민정</code>으로 두 번 들어가 있습니다. 손으로 정리하면 반나절. 그런데 팀장이 한마디 더. <em>"정리한 김에 재구매율이랑 어느 채널이 돈이 되는지도 좀 봐줘."</em> 예전 같으면 데이터 분석가한테 넘길 일. <strong>오늘은 그걸 몇 분 만에, 직접 뽑습니다.</strong></p></div>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">1</span><h2>현실의 데이터는 더럽다<small>오늘 다룰 문제, 그 재료</small></h2></div>
+<p>4차시에서 쓴 엑셀은 깔끔했습니다. 하지만 <strong>현실의 데이터는 거의 항상 지저분</strong>합니다.</p>
+<p>흔한 지저분함:</p>
+<ul><li><strong>형식 제각각</strong> — 날짜가 <code>6/1</code>, <code>6월 1일</code>, <code>2024-06-01</code> 뒤죽박죽</li><li><strong>단위·표기 혼용</strong> — <code>19000</code>, <code>19,000원</code>, <code>₩19000</code>, <code>삼만원</code></li><li><strong>빈 칸(결측)</strong> — 고객명이나 금액이 비어 있음</li><li><strong>중복</strong> — 같은 주문/고객이 여러 번</li><li><strong>오타·띄어쓰기</strong> — <code>데일리텀블러</code>, <code>데일리 텀블러</code>, <code>데일리텀불러</code></li></ul>
+<p>사람이 이걸 손으로 맞추면 시간이 엄청 듭니다. Claude는 이런 <strong>'규칙은 있는데 손이 많이 가는'</strong> 일을 잘합니다.</p>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 핵심: 데이터 정리는 에이전트가 빛나는 영역입니다. 단, <strong>무엇을 어떻게 정리할지 규칙을 알려줘야</strong> 합니다. "알아서 깔끔하게"보다 "날짜는 <code>YYYY-MM-DD</code>로 통일, 금액은 숫자만"처럼 <strong>구체적으로</strong> (2차시 복습!).</p></div>
+<div class="callout callout--question"><div class="callout-label">🤔 왜 데이터가 더러워지나?</div><p>사람이 여러 명, 여러 시점에, 서로 다른 도구로 입력하기 때문입니다. 영업사원은 <code>삼만원</code>, 시스템은 <code>30000</code>, 엑셀 자동완성은 <code>6/1</code>. 정답이 없어서가 아니라 <strong>규칙이 없었기</strong> 때문이라, 규칙만 주면 기계가 잘 맞춥니다.</p></div>
+
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">2</span><h2>데이터 작업 4단계</h2></div>
+<div class="table-scroll"><table><thead><tr><th><strong>단계</strong></th><th><strong>시킬 말 예시</strong></th></tr></thead><tbody><tr><td>① <strong>살펴보기</strong></td><td>"이 데이터에 어떤 문제(빈칸·중복·형식)가 있는지 먼저 점검해줘"</td></tr><tr><td>② <strong>정제</strong></td><td>"날짜는 YYYY-MM-DD로, 금액은 숫자만, 상품명 오타 통일, 중복 제거해줘"</td></tr><tr><td>③ <strong>분석·집계</strong></td><td>"고객별 총 구매액, 상품별 판매량을 표로 만들어줘"</td></tr><tr><td>④ <strong>시각화·요약</strong></td><td>"매출 추이를 설명하고, 차트로 그릴 수 있게 데이터 정리해줘"</td></tr></tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> ①을 빼먹지 마세요. <strong>정리 전에 "뭐가 문제인지" 먼저 묻는 것</strong>이 좋은 결과의 핵심입니다. AI가 데이터를 파악한 뒤 정리하면 실수가 줍니다.</p></div>
+<p><strong>정제 → 분석은 한 세트입니다.</strong> 오늘 앞부분(실습 B)에서 '지저분한 걸 깨끗하게'를 배우고, 뒷부분(실습 C~E)에서 그 깨끗한 데이터로 <strong>실무 분석</strong>을 뽑습니다. 지저분한 데이터로는 분석해도 답이 틀리니, 순서가 중요합니다. (<em>Garbage in, garbage out.</em>)</p>
+<div class="callout callout--summary"><div class="callout-label">📌 4단계는 "파일 하나로 끝까지"가 아니라 "어떤 데이터든 이 순서로"입니다</div><p>데이터를 받으면 언제나 ①살펴보기부터 시작해 ②→③→④로 갑니다. 오늘은 실습마다 <strong>다른 파일</strong>을 쓰고, 파일마다 연습하는 단계가 다릅니다. 실습 B의 60행짜리 주문 데이터는 <strong>정제 연습용</strong>이라 분석하기엔 작습니다. 그래서 분석은 이미 정리된 더 큰 데이터(90일·1년치)로 넘어가서 합니다.</p></div>
+<div class="table-scroll"><table><thead><tr><th><strong>실습</strong></th><th><strong>쓰는 파일</strong></th><th><strong>연습하는 단계</strong></th></tr></thead><tbody><tr><td>B</td><td>주문 데이터 → 고객 명단</td><td>①살펴보기 → ②정제 (파일 하나씩 끝까지)</td></tr><tr><td>C</td><td>90일 매출·방문 지표</td><td>①살펴보기(결측 확인) → ③분석</td></tr><tr><td>D</td><td>1년치 주문 로그</td><td>①살펴보기(정의 정하기) → ③분석</td></tr><tr><td>E</td><td>실습 C·D 결과</td><td>④검수·시각화</td></tr><tr><td>F</td><td>6월 월간 종합</td><td>④요약 → 발표 슬라이드</td></tr></tbody></table></div>
+<div class="callout callout--practice practice-head"><div class="callout-label">🛠 실습 A — Project에 준비물 세팅 (최초 1회)</div>
+<p><strong>3차시에서 만든 그린컵 Project를 엽니다.</strong> 오늘 실습은 모두 이 안에서 진행합니다. 브랜드 톤·정제 규칙이 쌓이는 곳이 여기라서, 실습 B-3에서 만든 정제 규칙도 이 Project 지시문에 저장하게 됩니다.</p>
+</div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">3</span><h2>살펴보기 → 정제<small>정제할 때 내려야 하는 판단 3가지 — 지우나, 남기나, 표시하나</small></h2></div>
+<div class="callout callout--practice practice-head"><div class="callout-label">🛠 실습 B — 지저분한 데이터 정제</div>
+<p>4단계의 <strong>①살펴보기 → ②정제</strong>를 파일 하나씩 끝까지 해봅니다. 순서는 <strong>B-1 주문 데이터(살펴보기 → 정제) → B-2 고객 명단(살펴보기 → 정제) → B-3 규칙 저장</strong>. 세 단계 모두 <strong>한 대화</strong>에서 이어갑니다.</p><div class="materials"><div style="font-weight:700;margin-bottom:4px;">📎 준비물</div><div style="margin-top:6px;"><b>주문 데이터(messy_orders.xlsx)</b> <span>· Excel · 3개 시트 · 60행</span></div><div style="margin-top:6px;"><b>고객 명단(customer_list_messy.xlsx)</b> <span>· Excel · 3개 시트 · 42명</span></div></div></div>
+<p><strong>데이터 파일은 Project 지식(Knowledge)에 올리지 마세요.</strong><br>Project 지식에 올린 파일은 <strong>글자만 뽑아 읽기 때문에</strong> 시트 구조와 정확한 계산이 무너집니다. 대화에 직접 첨부해야 AI가 파일을 실제로 열어 <strong>모든 시트를 정확히 읽고 계산</strong>합니다.</p>
+<div class="prep">📁 <b>모든 파일이 시트가 여러 장입니다.</b> 첫 시트만 보고 답하면 틀리게 설계돼 있어요 — <strong>정답이 다른 시트에 있습니다.</strong> 각 파일의 시트 구성은 해당 실습 시작 부분에 있습니다.</div>
+<h3 class="sub-head">B-1 · 주문 데이터(<code>messy_orders.xlsx</code>) — 6월 상반기 주문 60건</h3>
+<div class="table-scroll"><table><thead><tr><th><strong>시트</strong></th><th><strong>내용</strong></th><th><strong>왜 중요한가</strong></th></tr></thead><tbody><tr><td><code>주문데이터_원본</code></td><td>지저분한 주문 60행</td><td>정제 대상</td></tr><tr><td><code>상품마스터</code></td><td>정식 상품명·정가·원가</td><td><strong>오타 통일의 정답지</strong>  • 금액이 정가와 맞는지 대조 가능</td></tr><tr><td><code>입력규칙_안내</code></td><td>팀 내부 입력 규칙 8개</td><td><strong>"어떻게 정리할지"의 근거.</strong> 규칙을 내가 지어내지 않아도 됨</td></tr></tbody></table></div>
+<p><strong>심어둔 함정</strong></p>
+<ul><li>날짜 형식 5종·빈칸</li><li>금액에 <code>삼만원</code>·<code>5.7만</code>·<code>₩</code>·<strong>마이너스(환불)</strong>·빈칸</li><li>수량에 <code>두개</code>·빈칸·<code>0</code>(취소)</li><li>상품명 오타 6종</li><li>결제수단 표기 4종</li><li><strong>주문번호만 다르고 나머지가 같은 1쌍</strong> + <strong>주문번호는 같은데 금액이 다른 1쌍</strong></li><li><strong>단가×수량과 금액이 안 맞는 행</strong>(쿠폰 적용)</li></ul>
+<h4 class="mini-head">①살펴보기 — 시트 구조 → 문제 진단</h4>
+<p>그린컵 Project에서 <strong>새 대화</strong>를 열고 주문 데이터(<code>messy_orders.xlsx</code>)를 첨부한 뒤, <strong>정리하기 전에 두 번</strong> 묻습니다. 아직 아무것도 고치지 않습니다.</p>
+<p><strong>STEP 1 · 시트 구조부터</strong> — 파일을 올리고 딱 이 한 줄:</p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 파일에 시트가 몇 개고 각각 뭐가 들어 있는지 먼저 알려줘. 아직 정리하지 마."</em></p></div>
+<p>→ 시트가 <strong>3개</strong>(주문데이터_원본 / 상품마스터 / 입력규칙_안내)라고 나오나요? 여기서 <em>"시트가 하나뿐"</em> 이라고 답하면 파일을 제대로 못 읽은 겁니다. 다시 올리세요.</p>
+<p><strong>STEP 2 · 그다음 </strong> AI가 데이터를 <strong>읽고 문제 진단(</strong>우리가 놓친 문제까지 잡아줄 수도.<strong>)</strong></p>
+<ul><li><em>"이 주문 데이터를 정리하기 전에, 어떤 문제들이 있는지 먼저 목록으로 짚어줘. (형식 불일치·빈칸·중복·오타 등) 아직 고치지는 마."</em></li></ul>
+<p><strong>채점표 — 아래 8개 중 몇 개를 잡아냈나요?</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>#</strong></th><th><strong>심어둔 문제</strong></th><th><strong>어디 있나</strong></th></tr></thead><tbody><tr><td>1</td><td>날짜 형식 <strong>5종</strong> 혼용 + 빈칸 1건</td><td><code>2024-06-01</code> / <code>6/1</code> / <code>6월 1일</code> / <code>06.02.2024</code> / <code>2024/6/2</code></td></tr><tr><td>2</td><td>금액 표기 혼용</td><td><code>38,000원</code> / <code>29000</code> / <code>₩45000</code> / <code>삼만원</code> / <code>5.7만</code> / 빈칸</td></tr><tr><td>3</td><td>수량에 한글·빈칸·0</td><td><code>두개</code>, 빈칸, <code>0</code>(취소건)</td></tr><tr><td>4</td><td>상품명 오타·띄어쓰기 <strong>6종</strong></td><td><code>데일리텀블러</code> <code>데일리 텀불러</code> <code>써모보온병</code> <code>미니머그</code> <code>유리텀블러</code> <code>접이식실리콘컵</code></td></tr><tr><td>5</td><td>결제수단 4종 표기</td><td><code>카드</code> / <code>신용카드</code> / <code>CARD</code> / <code>card</code></td></tr><tr><td>6</td><td><strong>주문번호만 다르고 나머지가 전부 같은 1쌍</strong></td><td>ORD-0603-01 과 ORD-0603-04</td></tr><tr><td>7</td><td><strong>주문번호는 같은데 금액이 다른 1쌍</strong></td><td>ORD-0614-03 이 두 번, 19,000 / 38,000</td></tr><tr><td>8</td><td><strong>마이너스 금액</strong></td><td>ORD-0608-01 <code>-29,000원</code> (환불을 여기 적어버림)</td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 6번과 7번은 둘 다 "중복"으로 보이지만, 정반대입니다.</div></div>
+<p>6번 <strong>주문번호만 다르고 나머지가 전부 같은 1쌍<br> -ORD-0603-01과 0603-04:</strong> 날짜, 고객, 상품, 수량, 금액이 모두 같아서 중복 입력일 수 있어요. → <strong>찾는 게</strong> 어렵다<br>같은 주문을 두 번 적었고, 두 번째에 <strong>새 주문번호가 붙은</strong> 겁니다. <br>그래서 <em>"중복 제거해줘"</em> 라고 하면 AI는 <strong>번호가 다르니 다른 행</strong>이라고 보고 그냥 지나갑니다.<br><br>7번 <strong>주문번호는 같은데 금액이 다른 1쌍<br> -ORD-0614-03:</strong> 주문번호가 같은 행이 2개예요. 수량은 둘 다 1인데 금액은 19,000원과 38,000원으로 달라요 → <strong>어느 쪽이 맞는지 파일 안에 답이 없기 때문에 정하는 게</strong> 어렵다</p>
+<p>→ <strong>비교할 칸을 직접 정해주세요:</strong> <em>"주문번호를 빼고 나머지 열이 모두 같은 행을 찾아줘."</em></p>
+<div class="callout callout--tip"><div class="callout-label">💡 왜 하필 주문번호를 뺄까?</div><p>주문번호는 적을 때마다 <strong>새로 붙는 값</strong>입니다. 그래서 <em>"번호가 다르다 = 다른 주문이다"</em> 가 성립하지 않아요. 중복을 찾는 데 도움이 안 되는 정도가 아니라 <strong>오히려 감춥니다.</strong> 그래서 비교에서 뺍니다.</p></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 놓친 게 있다면 — 좁혀서 다시 묻습니다</div></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 8번을 못 잡았다면: <em>"금액이 음수인 행이 있어? 있다면 왜 그런지 메모까지 같이 보여줘."</em> — <strong>한 번에 다 못 잡는 게 정상입니다.</strong> 범위를 좁혀 다시 물으면 걸려요. 오늘 내내 쓸 기술입니다.</p></div>
+<div class="callout callout--summary"><div class="callout-label">📌 문제는 다 찾았는데 아직 하나도 안 고쳤습니다.</div><p>1~5번은 규칙대로 맞추면 되지만, <strong>6·7·8번은 "고칠까, 둘까"부터 정해야</strong> 합니다. 지우면 안 되는 걸 지우는 게 데이터 작업 최대의 사고거든요. 그래서 <strong>바로 아래 판단 기준을 먼저 읽고, 그다음 ②정제에서 같은 대화로 이어서 고칩니다.</strong></p></div>
+<h4 class="mini-head">정제 전에 — 판단 3가지: 지우나, 남기나, 표시하나</h4>
+<p>정제는 "형식 맞추기"가 아닙니다. <strong>매 행마다 판단</strong>이 필요하죠. 판단은 결국 셋 중 하나입니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>상황</strong></th><th><strong>하면 안 되는 것</strong></th><th><strong>해야 하는 것</strong></th></tr></thead><tbody><tr><td><strong>빈칸(결측)</strong></td><td>0이나 평균으로 채우기</td><td><strong>[결측]으로 표시하고 그대로 두기.</strong> 집계할 땐 분모에서도 빼기</td></tr><tr><td><strong>중복 의심</strong></td><td>자동으로 합치기</td><td><strong>의심 표시 + 근거.</strong> 합치는 건 사람이</td></tr><tr><td><strong>이상한 값</strong></td><td>조용히 고치거나 지우기</td><td><strong>표시하고 왜 이상한지 남기기</strong></td></tr></tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 관통하는 원칙은 하나입니다 — <strong>"모르는 건 모른다고 남긴다."</strong> AI에게 이걸 안 시키면, AI는 <strong>아는 척하는 쪽</strong>을 고릅니다. 빈칸은 0으로 채우고, 비슷한 이름은 합치고, 이상한 값은 그럴듯하게 고쳐놓죠. 그리고 여러분은 <strong>뭐가 바뀌었는지 모르게</strong> 됩니다.</p></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ "AI가 뭘 바꿨는지 모르는 것"이 데이터 작업 최대의 위험입니다.</div><p>그래서 정제를 시킬 땐 항상 한 줄 더: <em>"네가 값을 바꾼 행은 전부 따로 목록으로 보여줘. 원래 값과 바꾼 값을 나란히."</em></p></div>
+<div class="callout callout--summary"><p><span class="co-icon">📌</span> 판단 기준(지우나·남기나·표시하나)을 쥐었으니 <strong>같은 대화에서</strong> 바로 정제로 넘어갑니다.</p></div>
+<h4 class="mini-head">②정제 — 규칙 주고 정리 (규칙은 파일 안에 있습니다)</h4>
+<p>많은 사람이 여기서 규칙을 <strong>직접 지어냅니다.</strong> 하지만 이 파일엔 <code>입력규칙_안내</code> 시트가 들어 있습니다. 실무에서도 대개 어딘가에 있어요.</p>
+<ul><li><em>"<strong><code>입력규칙_안내</code></strong> 시트를 먼저 읽고, 그 규칙대로 <strong><code>주문데이터_원본</code></strong>을 정리해줘. 상품명은 <strong><code>상품마스터</code></strong> 시트의 '정식 상품명'으로 통일해. 판단이 애매한 행은 고치지 말고 [확인필요]로 표시하고, 왜 애매한지 한 줄로 적어줘."</em></li><li>이어서: <em>"네가 [확인필요]로 남긴 행만 따로 모아 보여줘. 각 행마다 내가 뭘 결정해줘야 하는지도."</em></li></ul>
+<p><strong>→ 여기서 나와야 할 [확인필요] 후보 (8건):</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>행</strong></th><th><strong>왜 사람이 정해야 하나</strong></th></tr></thead><tbody><tr><td>ORD-0601-03</td><td>수량이 비어 있음 — 1개인지 확인 불가</td></tr><tr><td>ORD-0602-04</td><td>주문일이 비어 있음</td></tr><tr><td>ORD-0603-02</td><td><code>삼만원</code>인데 접이식 실리콘컵 정가는 17,000원 — <strong>숫자 변환은 되지만 정가와 안 맞음</strong></td></tr><tr><td>ORD-0604-02</td><td>고객명 누락</td></tr><tr><td>ORD-0605-01</td><td>금액 누락</td></tr><tr><td>ORD-0605-03</td><td>26,100원 = 29,000 − 10% (쿠폰). <strong>단가×수량과 안 맞지만 정상 거래</strong></td></tr><tr><td>ORD-0608-01</td><td>음수 금액 (환불) — 이 시트에 있으면 안 되는 행</td></tr><tr><td>ORD-0614-03 (2건)</td><td>같은 주문번호, 다른 금액</td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ ORD-0603-02가 오늘 실습 B의 백미입니다.</div><p><code>삼만원</code> → 30,000 으로 바꾸는 건 쉽습니다. 그런데 <strong>상품마스터를 보면 접이식 실리콘컵은 17,000원</strong>이에요. 30,000원이 될 수가 없죠. 메모에도 "가격확인필요"라고 적혀 있고요. <strong>형식만 고치고 값의 타당성은 안 보는 것</strong> — 이게 데이터 정제의 가장 흔한 사고입니다.</p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 그래서 한 줄을 더 시킵니다: <em>"정리된 데이터에서 <strong><code>단가 × 수량</code></strong>과 <strong><code>금액</code></strong>이 맞지 않는 행을 전부 찾아, 메모에 사유가 적혀 있는지와 함께 표로 보여줘."</em> → 쿠폰(사유 있음)과 오류(사유 없음)가 갈립니다.<br>→ 담당자에게 묻거나 원본 영수증을 보고, AI에게 <strong>확인된 사항을 반영하라고 지시</strong>합니다.</p></div>
+<ul><li>마지막으로(검수): <em>"네가 값을 바꾼 행을 원래 값과 바꾼 값을 나란히 대조표로 보여줘."</em> ← 위 ⚠️ "AI가 뭘 바꿨는지 모르는 것" 방지</li></ul>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>비교해보기</strong>: 새 대화에서 규칙 없이 <em>"알아서 깔끔하게 정리해줘"</em> 라고만 시킨 결과와 나란히 놓아보세요. 규칙을 준 쪽과 안 준 쪽이 얼마나 다른지 — 그게 오늘 배울 것의 절반입니다.</p></div>
+<h4 class="mini-head">정제 후 점검 — 정제 지시 체크리스트 12항목</h4>
+<p>②정제를 마쳤으면, <code>입력규칙_안내</code> 시트와 내 지시에 <strong>아래 12항목이 다 들어 있었는지</strong> 하나씩 확인하세요. <strong>빠진 항목이 곧 사고 지점</strong>입니다. 빠진 게 있으면 그 줄의 '지시 예'를 복사해 AI에게 추가로 시키면 됩니다. 다음 달 규칙 시트가 없는 파일을 받으면, 이 '지시 예'를 모아 그대로 정제 지시로 쓰세요.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>#</strong></th><th><strong>항목</strong></th><th><strong>지시 예</strong></th></tr></thead><tbody><tr><td>1</td><td>날짜 형식</td><td>"모두 YYYY-MM-DD로. 연도가 없으면 [연도불명] 표시"</td></tr><tr><td>2</td><td>숫자·통화</td><td>"금액은 숫자만. 원·콤마·₩ 제거"</td></tr><tr><td>3</td><td>단위</td><td>"'5.7만'처럼 만 단위 표기는 원 단위로 환산"</td></tr><tr><td>4</td><td>한글 수량·금액</td><td>"'두개'→2, '삼만원'→30000. <strong>단, 변환한 행은 표시</strong>"</td></tr><tr><td>5</td><td>명칭 통일</td><td>"상품명은 상품마스터의 정식 명칭으로"</td></tr><tr><td>6</td><td>앞뒤 공백</td><td>"이름·이메일의 앞뒤 공백 제거"</td></tr><tr><td>7</td><td>대소문자</td><td>"이메일은 소문자로 통일"</td></tr><tr><td>8</td><td>빈칸</td><td>"빈칸은 채우지 말고 [결측] 표시"</td></tr><tr><td>9</td><td>완전 중복</td><td>"모든 열이 같은 행만 제거하고, 몇 건 지웠는지 알려줘"</td></tr><tr><td>10</td><td>유사 중복</td><td>"비슷하지만 다른 행은 합치지 말고 의심 표시"</td></tr><tr><td>11</td><td>값의 타당성</td><td>"<strong>단가×수량과 금액이 안 맞는 행</strong>을 찾아줘"</td></tr><tr><td>12</td><td>변경 이력</td><td>"바꾼 값은 원래 값과 함께 목록으로"</td></tr></tbody></table></div>
+<div class="callout callout--tip"><div class="callout-label">💡 11번이 대부분의 정제 작업에서 빠집니다.</div><p>방금 본 ORD-0603-02(정가 17,000원인데 30,000원)처럼, 형식은 맞아도 <strong>값이 애초에 가능한지</strong>는 따로 물어야 걸립니다.</p></div>
+<div class="callout callout--practice"><p><span class="co-icon">✅</span> <strong>주문 데이터 끝.</strong> 결과물: 정제된 주문 데이터 + [확인필요] 행 목록 + 변경 대조표. 이제 <strong>같은 대화</strong>에서 고객 명단으로 넘어갑니다.</p></div>
+<h3 class="sub-head">B-2 · 고객 명단(<code>customer_list_messy.xlsx</code>) — 고객 42명</h3>
+<div class="table-scroll"><table><thead><tr><th><strong>시트</strong></th><th><strong>내용</strong></th></tr></thead><tbody><tr><td><code>고객명단</code></td><td>이름·연락처·이메일·가입경로·생년월일·마케팅수신동의</td></tr><tr><td><code>가입경로_표기표</code></td><td>인스타/IG/인스타그램 → 정식 표기 매핑</td></tr><tr><td><code>취급주의</code></td><td>실무에서 이런 파일을 올릴 때의 사전 조치</td></tr></tbody></table></div>
+<p><strong>심어둔 함정</strong></p>
+<ul><li>띄어쓰기(<code>김 민정</code>)</li><li>이메일 대소문자</li><li>전화번호 형식 4종 + <strong>앞자리 누락</strong></li><li>이메일 도메인 오타(<code>example.con</code>)</li><li>마케팅수신동의 표기 7종(동의 <code>Y</code>·<code>y</code>·<code>예</code>·<code>O</code>·<code>1</code> / 거부 <code>N</code>·<code>n</code>)</li><li><strong>동명이인 2쌍</strong> — 이름이 같지만 <strong>합치면 안 되는</strong> 사람</li></ul>
+<h4 class="mini-head">①살펴보기 — 시트 구조 → 같은 사람 찾기</h4>
+<p>같은 대화에 고객 명단(<code>customer_list_messy.xlsx</code>)을 첨부하고, 이번에도 시트 구조부터 묻습니다:</p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 파일에 시트가 몇 개고 각각 뭐가 들어 있는지 먼저 알려줘. 아직 정리하지 마."</em></p></div>
+<p>→ 시트가 <strong>3개</strong>(고객명단 / 가입경로_표기표 / 취급주의)라고 나와야 합니다.</p>
+<p>이 파일의 핵심 문제는 <strong>중복</strong>입니다. 같은 사람인지부터 진단합니다 — 여기서도 아직 합치지 않습니다.</p>
+<ul><li><em>"같은 고객으로 의심되는 항목을 묶어서 보여줘. (이름 띄어쓰기·전화번호 형식·이메일 대소문자 차이를 고려). 단, 확실하지 않으면 합치지 말고 '의심' 표시와 근거만 적어줘."</em></li></ul>
+<p><strong>→ 정답: 합쳐도 되는 것 4쌍, 절대 합치면 안 되는 것 2쌍</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>대상</strong></th><th><strong>판정</strong></th><th><strong>근거</strong></th></tr></thead><tbody><tr><td>C0001 김민정 / C0002 김 민정</td><td>🟡 <strong>동일인 유력</strong></td><td>전화·이메일 동일(형식·대소문자만 다름), 생년월일 같음</td></tr><tr><td>C0003 / C0004 이수진</td><td>🟡 <strong>동일인 유력</strong></td><td>전화 형식만 다르고 이메일·생년월일 동일</td></tr><tr><td>C0018 / C0019 문서영</td><td>🟡 <strong>동일인 유력</strong></td><td>전화 동일, 이메일 대소문자만 다름</td></tr><tr><td>C0008 / C0040 윤서연</td><td>🟡 <strong>동일인 유력</strong></td><td>전화(공백 표기) 동일, 이메일 대소문자만 다름</td></tr><tr><td><strong>C0006 최영 / C0007 최 영</strong></td><td>🔴 <strong>판단 불가 — 합치면 안 됨</strong></td><td><strong>전화 끝자리가 다름</strong>(7777 vs 7778). C0006은 이메일·생년월일이 비어 있어 <strong>대조할 근거 자체가 없음</strong></td></tr><tr><td><strong>C0001 김민정 / C0016 김민정</strong></td><td>🔴 <strong>다른 사람</strong></td><td>이름만 같고 전화·이메일·생년월일 전부 다름 (<strong>동명이인</strong>)</td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 여기가 오늘 가장 위험한 지점입니다.</div><p>AI에게 <em>"중복 제거해줘"</em> 라고 하면 이름이 같은 C0001과 C0016을 <strong>합쳐버릴 수 있습니다.</strong><br>실무에서 이러면 <strong>남의 구매 이력이 내 계정에 붙습니다.</strong> 그래서 지시가 <em>"합치지 말고 표시만"</em> 이어야 해요.<br>반대 사고도 있습니다 — C0006/C0007은 이름이 비슷하니 합쳐버리는 것.<br><strong>한 자리 차이나는 전화번호</strong>는 오타일 수도, 다른 사람일 수도 있죠.<br>게다가 C0006엔 대조할 이메일·생년월일이 아예 없습니다.<br><strong>근거가 없으면 판정도 없습니다</strong> — 모른다고 남기는 게 정답이에요.</p></div>
+<h4 class="mini-head">②정제 — 표기 통일 (원래 값은 남기기)</h4>
+<ul><li>이어서 형식 통일까지: <em>"<strong><code>가입경로_표기표</code></strong> 시트를 참고해 가입경로를 정식 표기로 통일하고, 마케팅수신동의는 Y/N 두 가지로만 정리해줘. 원래 값이 뭐였는지 열을 하나 더 남겨줘."</em></li></ul>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 마지막 문장(<strong>원래 값 열을 남겨라</strong>)이 실무 습관입니다. 변환이 잘못됐을 때 되돌릴 수 있어야 하거든요. <code>Y</code>·<code>y</code>·<code>예</code>·<code>O</code>·<code>1</code> 이 전부 동의인지, <code>1</code>이 혹시 다른 뜻인지 나중에 확인할 수 있습니다.</p></div>
+<ul><li>이어서 나머지 열까지: <em>"연락처는 010-0000-0000 형식으로, 이메일은 앞뒤 공백을 지우고 소문자로, 생년월일은 YYYY-MM-DD로 통일해줘. 단, 앞자리가 빠진 번호나 도메인 오타처럼 원래 값이 확실하지 않은 건 고치지 말고 [확인필요]로 표시해줘. 바꾼 칸은 원래 값과 함께 대조표로 보여줘."</em></li></ul>
+<p>→ 첫 프롬프트는 가입경로·수신동의 <strong>두 열만</strong> 정리합니다. 연락처·이메일·생년월일은 두 번째 프롬프트를 시켜야 바뀝니다. <code>10-4444-5555</code>(C0005)와 <code>example.con</code>(C0010)은 [확인필요]로 남아야 정답입니다.</p>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 여기서 함정이 하나 더 터집니다.</div><p>동일인으로 판정한 <strong>C0008과 C0040은 원래 마케팅수신동의 값이 다릅니다</strong>(<code>1</code> vs <code>Y</code>).<br><code>Y</code>는 확실한 동의지만, <code>1</code>은 동의일 가능성이 높을 뿐 파일 어디에도 <strong>"1 = 동의"라는 근거가 없습니다.</strong> AI는 이걸 Y로 바꿔 버립니다.<br>마케팅 수신동의는 법적 근거가 필요한 항목이라, 잘못 판단하면 <strong>동의 안 한 사람에게 광고 메일이 나갑니다.</strong><br>그래서 어느 값을 남길지는 <strong>사내 규칙</strong>으로 정합니다. <strong>최신 값</strong> 규칙이면 <code>Y</code>(C0040), <strong>보수적인 값</strong> 규칙이면 확인될 때까지 <code>N</code>. 규칙에 따라 답이 정반대입니다.<br>이런 건 절대 AI가 알아서 정하게 두면 안 됩니다. 정한 규칙을 AI에게 지시하고, B-3에서 Project 지시문에 저장해 두세요.</p></div>
+<div class="callout callout--practice"><p><span class="co-icon">✅</span> <strong>고객 명단 끝.</strong> 결과물: 고객 중복 판정표(합칠 것 / 합치면 안 될 것) + 표기 통일된 명단. 마지막으로 오늘 쓴 규칙을 저장합니다.</p></div>
+<h3 class="sub-head">B-3 · 정제 규칙을 '재사용 자산'으로</h3>
+<p>한 번 만든 정제 규칙을 매달 다시 쓰려면 <strong>어딘가에 남겨야</strong> 합니다.</p>
+<ul><li><em>"방금 이 두 파일을 정리하며 적용한 규칙을 '월간 데이터 정제 규칙'이라는 제목의 목록으로 정리해줘. Project 지시문에 넣을 거야. 파일마다 달라지는 예시는 빼고, 매번 지킬 원칙만 10줄 이내로 줄여줘."</em></li><li>나온 규칙을 <strong>3차시에서 만든 그린컵 Project의 지시문</strong>에 붙여넣으세요.</li></ul>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 이게 3차시의 프로젝트 지시문이 여기서 쓰이는 방식입니다. 다음 달엔 <em>"우리 정제 규칙대로 이 파일 정리해줘"</em> 한 줄이면 끝나요.</p></div>
+<h4 class="mini-head">정제용 마스터 프롬프트 — 실습 B-1~B-2를 한 번에</h4>
+<p>실습 B-1~B-2에서 나눠 시킨 걸 한 번에 묶은 프롬프트입니다. 다음 달 새 원본이 오면 이걸 먼저 돌리세요.</p>
+<p>👉 <strong>지금 새 대화창을 열고 한 번 더 진행해보세요.</strong> 정리 전 원본 주문 데이터(<code>messy_orders.xlsx</code>)부터 첨부해 아래 프롬프트를 돌리고, 이어서 고객 명단(<code>customer_list_messy.xlsx</code>)도 같은 방식으로 돌립니다.<br>B-1~B-2에서 나눠 시킨 결과와 비교해 [확인필요] 8건, 동일인 4쌍 / 합치면 안 되는 2쌍이 그대로 나오는지 확인하세요.</p>
+<div class="prompt">첨부 파일을 정리해줘. 순서대로.
+
+0) 먼저 시트 구성을 알려주고, 규칙·기준이 적힌 시트가 있으면 그걸 읽고 시작해.
+1) 정리 전에 문제 목록부터: 형식 불일치 / 빈칸 / 중복 / 오타 / 값이 이상한 행
+2) 정리 규칙
+   - 날짜는 YYYY-MM-DD, 금액·수량은 숫자만
+   - 명칭은 마스터 시트의 정식 표기로 통일
+   - 앞뒤 공백 제거, 이메일은 소문자
+3) 손대지 말 것
+   - 빈칸은 채우지 마. [결측]으로 표시만.
+   - 비슷한 항목을 임의로 합치지 마. [중복의심]과 근거만 표시.
+   - 이상한 값을 고치지 마. [확인필요]와 이유만 표시.
+4) 값의 타당성도 확인: 단가×수량과 금액이 안 맞는 행을 따로 뽑아줘.
+5) 마지막에 두 가지를 붙여줘.
+   - 변경 이력표: 행 | 컬럼 | 원래 값 | 바꾼 값 | 이유
+   - 사람이 결정해야 할 행 목록: 행 | 무엇을 정해야 하나</div>
+<div class="callout callout--tip"><div class="callout-label">💡 3번 블록이 이 프롬프트의 핵심입니다.</div><p>하라는 것보다 <strong>하지 말라는 것</strong>이 더 길죠.<br>데이터 정제에서 사고는 <em>안 한 것</em> 때문이 아니라 <strong>AI가 알아서 해버린 것</strong> 때문에 납니다.</p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 이 프롬프트를 위에서 만든 정제 규칙과 함께 <strong>3차시의 그린컵 Project 지시문</strong>에 저장해두세요.<br>매달 데이터가 올 때마다 새로 쓸 필요가 없어집니다.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">4</span><h2>실무에서 쓰는 데이터 분석 기법 — 그리고 AI가 다 해준다</h2></div>
+<p>여기서부터 4단계의 ③ <strong>분석</strong>입니다. 매출·방문자 데이터를 다루는 회사들은 정해진 <strong>분석 기법</strong>들을 씁니다. 원래는 데이터 분석가가 SQL과 통계로 하던 일이죠. <strong>이 기법이 뭔지 개념만 알면, 실행은 Claude에게 한 문장으로 시킬 수 있습니다.</strong></p>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 이 장의 목표는 여러분을 데이터 분석가로 만드는 게 아닙니다. <strong>"이런 분석이 있다"는 걸 알고, AI에게 정확한 이름으로 시키는 것</strong>입니다. 용어를 알면 시킬 수 있고, 결과도 검수할 수 있습니다.</p></div>
+<div class="callout callout--summary"><p><span class="co-icon">📌</span> 기법은 두 묶음으로 나눠 배웁니다. <strong>방문자·매출을 보는 기법</strong>(추세·퍼널·이상치)은 여기서 배우고 실습 C에서 바로 써봅니다. <strong>고객을 보는 기법</strong>(RFM·코호트·파레토)은 7절에서 배우고 실습 D에서 씁니다.</p></div>
+<h3 class="sub-head">4.1 추세 분석 &amp; 이동평균 — 매출이 정말 오르고 있나?</h3>
+<ul><li><strong>개념</strong>: 일별 매출은 요일·이벤트 때문에 들쭉날쭉합니다. 진짜 흐름을 보려면 <strong>이동평균(moving average)</strong> 으로 잡음을 걷어냅니다. 7일 이동평균은 '최근 7일 평균'을 매일 갱신해 요일 효과를 지웁니다. 여기에 <strong>MoM</strong>(전월 대비, Month-over-Month), <strong>YoY</strong>(전년 대비, Year-over-Year) 증감률을 얹으면 성장 속도가 보입니다.</li><li><strong>전통 방식</strong>: 엑셀에 <code>AVERAGE</code> 수식 90개 깔고, 피벗으로 월별 묶고, 증감률 수식 손으로.</li><li><strong>AI에게</strong>: <em>"일별 매출에 7일 이동평균을 붙이고, 성장하는 추세인지 둔화인지 한 문단으로 판단해줘. 월별로 묶어 MoM 증감률도."</em></li></ul>
+<h3 class="sub-head">4.2 전환 퍼널 &amp; 전환율 — 손님이 어디서 새는가</h3>
+<ul><li><strong>개념</strong>: 방문자가 <strong>방문 → 장바구니 → 주문</strong>으로 갈수록 줄어듭니다. 각 단계 넘어가는 비율이 <strong>전환율(conversion rate)</strong>. 어느 단계에서 가장 많이 빠지는지 보면, <strong>어디를 고쳐야 돈이 되는지</strong>가 나옵니다. 방문을 2배 늘리는 것보다 장바구니→주문 전환을 5%p 올리는 게 쌀 때가 많습니다.</li><li><strong>전통 방식</strong>: 로그 데이터를 SQL로 단계별 집계, 나누기.</li><li><strong>AI에게</strong>: <em>"세션·장바구니추가·주문수로 전환 퍼널을 만들어줘. 단계별 전환율(%)과, 가장 크게 이탈하는 구간을 짚어줘."</em></li></ul>
+<h3 class="sub-head">4.3 이상치 탐지 &amp; 상관관계 — 함정 조심</h3>
+<ul><li><strong>이상치(outlier)</strong>: 6/20처럼 유난히 튀는 날. 평균을 왜곡하므로 <strong>원인을 확인하고 따로</strong> 봐야 합니다. <em>"평소 대비 크게 벗어난 날을 찾아 이유 후보와 함께 표시해줘."</em></li><li><strong>상관관계 ≠ 인과관계</strong>: "광고비 늘린 주에 매출도 늘었다"는 <strong>상관</strong>일 뿐, 광고가 원인이라 단정하면 위험합니다. 계절·프로모션 등 다른 요인이 숨어 있을 수 있죠. AI에게 시킬 때 <em>"상관은 상관이라 표현하고, 인과로 단정하지 마"</em> 를 붙이세요.</li></ul>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 여기가 사람이 꼭 개입할 곳.</div><p>기법 실행(계산·표)은 AI가 완벽에 가깝게 하지만, <strong>"그래서 왜?"라는 해석</strong>은 맥락을 아는 사람 몫입니다. AI는 "6/20 매출 급증"까지, "라이브 때문"은 사람이 확인.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">5</span><h2>매출·방문자 지표 사전 (읽고 말하기)</h2></div>
+<p>분석 결과를 받으면 이 용어들이 쏟아집니다. 뜻만 알면 됩니다 — 계산은 AI가 합니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>지표</strong></th><th><strong>뜻</strong></th><th><strong>시킬 말</strong></th></tr></thead><tbody><tr><td><strong>전환율</strong> (CVR)</td><td>방문 대비 구매 비율</td><td>"방문 대비 주문 전환율(%) 계산"</td></tr><tr><td><strong>객단가</strong> (AOV)</td><td>주문 1건당 평균 결제액</td><td>"AOV = 매출 ÷ 주문수 로 계산"</td></tr><tr><td><strong>재구매율</strong></td><td>2회 이상 구매 고객 비율</td><td>"재구매(2회+) 고객 비율"</td></tr><tr><td><strong>이탈률</strong> (Churn)</td><td>최근 안 돌아온 고객 비율</td><td>"최근 N일 미구매 고객 비율"</td></tr><tr><td><strong>LTV</strong> (고객생애가치)</td><td>한 고객이 평생 쓸 금액 추정</td><td>"고객 평균 총구매 × 예상 구매횟수로 LTV 추정"</td></tr><tr><td><strong>ARPU</strong></td><td>고객 1인당 평균 매출</td><td>"총매출 ÷ 고객수"</td></tr><tr><td><strong>환불률</strong></td><td>주문 대비 환불 비율</td><td>"환불건 ÷ 주문수(%)"</td></tr></tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 회의에서 "우리 CVR이 왜 떨어졌지?"라는 말을 알아듣고, 자리에서 바로 AI에게 물어 답을 뽑는 것 — 그게 오늘의 목표입니다.</p></div>
+<div class="callout callout--practice practice-head"><div class="callout-label">🛠 실습 C — 방문자·매출 실무 분석 (핵심)</div><p>4단계의 <strong>①살펴보기(결측 확인) → ③분석</strong>입니다. <strong>새 대화</strong>를 열고 90일 매출·방문 지표(<code>sales_90days.xlsx</code>)를 첨부하세요. 4절 기법과 5절 지표를 실제 데이터에 씁니다.</p><div class="materials"><div style="font-weight:700;margin-bottom:4px;">📎 준비물</div><div style="margin-top:6px;"><b>90일 매출·방문 지표(sales_90days.xlsx)</b> <span>· Excel · 4개 시트</span></div></div></div>
+<p><strong>90일 매출·방문 지표(<code>sales_90days.xlsx</code>)</strong><strong> — 2024-04-01 ~ 06-29 (90일)</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>시트</strong></th><th><strong>내용</strong></th></tr></thead><tbody><tr><td><code>일별지표</code></td><td>날짜·요일·세션·신규방문·장바구니·주문·매출·환불·<strong>광고비</strong>·유입1위</td></tr><tr><td><code>채널별일별</code></td><td>위를 <strong>채널 4개로 쪼갠</strong> 352행 (채널별 세션·주문·매출·광고비)</td></tr><tr><td><code>이벤트로그</code></td><td>프로모션·라이브·<strong>시스템 장애</strong> 일지</td></tr><tr><td><code>지표정의</code></td><td>컬럼별 정의와 <strong>주의사항</strong> (세션 ≠ 방문자 등)</td></tr></tbody></table></div>
+<p><strong>심어둔 함정</strong></p>
+<ul><li><strong>결측 2일</strong>(집계 서버 오류 — 0으로 채우면 안 됨)</li><li><strong>매출 급증일</strong>(6/20)과 <strong>급감일</strong>(5/18)의 원인이 <code>이벤트로그</code>에 있음</li><li>채널마다 전환율·ROAS가 실제로 크게 다름</li></ul>
+<h4 class="mini-head">C-1 — 결측부터 확인 (분석 전 필수)</h4>
+<p>분석을 바로 시작하면 안 됩니다. <strong>먼저 데이터에 구멍이 있는지</strong> 봐야죠. (4단계의 ① 살펴보기가 분석 데이터에서도 똑같이 먼저입니다.)</p>
+<ul><li><em>"<strong><code>일별지표</code></strong> 시트에서 값이 비어 있는 날이 있는지 확인해줘. 있다면 며칠이고, <strong><code>이벤트로그</code></strong> 시트에 그 이유가 적혀 있는지도 찾아줘."</em></li></ul>
+<p><strong>→ 정답: 결측 2일 (2024-05-12, 2024-06-09).</strong> 둘 다 <code>이벤트로그</code>에 "집계 서버 오류로 지표 미수집"으로 기록돼 있습니다.</p>
+<ul><li>이어서: <em>"앞으로 평균·합계를 낼 때 그 날들을 어떻게 처리할지 먼저 제안해줘. 0으로 채우는 것과 제외하는 것의 차이도 설명해."</em></li></ul>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 0으로 채우면 어떻게 되나?</div><p>90일 평균 매출의 분모는 90인데 분자에 0이 두 번 들어갑니다 → <strong>평균이 약 2% 낮게</strong> 나오죠. 별거 아닌 것 같지만, 이런 게 쌓여 "매출이 줄었다"는 잘못된 결론이 됩니다. <strong>결측은 0이 아닙니다. 분모에서도 빼야 합니다.</strong></p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 그래서 이 파일엔 <code>지표정의</code> 시트가 있습니다. 맨 아래 줄에 <em>"(빈 행) 집계 서버 오류로 수집되지 않은 날 — 0으로 채우지 말 것"</em> 이라고 적혀 있어요. <strong>실무 데이터엔 이런 문서가 딸려 오는데, 대부분 안 읽습니다.</strong></p></div>
+<p>→ AI가 "이 기준으로 진행할까요?"라고 물으면 <strong>"응, 결측 2일은 제외하고 88일 기준으로 해줘"</strong>라고 답하고 C-2로 넘어갑니다.</p>
+<h4 class="mini-head">C-2 — 추세·이동평균 (4.1절)</h4>
+<ul><li><em>"<strong><code>일별지표</code></strong>로 일별 매출에 7일 이동평균을 붙여줘. 결측일은 계산에서 제외하고, 제외했다는 걸 표시해. 88일간 성장 추세인지 둔화인지 한 문단으로 판단해줘."</em></li><li>이어서: <em>"월별로 묶어 매출·주문수와 MoM 증감률(%)을 표로."</em></li></ul>
+<p><strong>→ 정답 (결측 제외, 88일 기준):</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>월</strong></th><th><strong>수집일</strong></th><th><strong>매출</strong></th><th><strong>주문수</strong></th><th><strong>일평균 매출</strong></th><th><strong>MoM (합계)</strong></th><th><strong>MoM (일평균)</strong></th></tr></thead><tbody><tr><td>2024-04</td><td>30일</td><td>29,293,291원</td><td>1,271건</td><td>976,443원</td><td>—</td><td>—</td></tr><tr><td>2024-05</td><td>30일 (5/12 결측)</td><td>31,811,341원</td><td>1,374건</td><td>1,060,378원</td><td>+8.6%</td><td><strong>+8.6%</strong></td></tr><tr><td>2024-06</td><td>28일 (6/9 결측, 6/29까지)</td><td>34,816,757원</td><td>1,530건</td><td>1,243,456원</td><td>+9.4%</td><td><strong>+17.3%</strong></td></tr><tr><td><strong>합계</strong></td><td><strong>88일</strong></td><td><strong>95,921,389원</strong></td><td><strong>4,175건</strong></td><td></td><td></td><td></td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 달마다 수집된 일수가 다릅니다 — 합계로 비교하면 안 됩니다.</div><p>결측일을 빼면 4월 30일, 5월 30일, 6월 28일입니다(6월은 6/29에 끝나고 6/9가 결측).<br>6월을 합계로 비교하면 <strong>+9.4%</strong>, 하루 평균으로 비교하면 <strong>+17.3%</strong> — 성장 속도가 두 배 가까이 다르게 보입니다.<br>AI가 처음부터 일평균으로 계산했다면 함정을 잘 피한 것입니다. 합계로만 비교했다면 시켜보세요: <em>"월별 일수가 다른데, 하루 평균으로도 비교해줘."</em></p></div>
+<h4 class="mini-head">C-3 — 이상치와 그 '진짜 원인' (4.3절)</h4>
+<ul><li><em>"매출이 평소 대비 유난히 튀거나 꺼진 날(이상치)을 찾아줘. 그리고 <strong><code>이벤트로그</code></strong> 시트에 그날 무슨 일이 있었는지 대조해서 표로 만들어줘. 어떤 기준으로 이상치라고 판단했는지도 적어줘."</em></li></ul>
+<p><strong>→ 반드시 나와야 할 3건:</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>날짜</strong></th><th><strong>매출</strong></th><th><strong>이벤트로그</strong></th></tr></thead><tbody><tr><td><strong>2024-06-20 (목)</strong></td><td><strong>3,537,499원</strong> (최고)</td><td>인플루언서 라이브 방송</td></tr><tr><td>2024-06-21 (금)</td><td>1,669,877원</td><td>라이브 후광 효과</td></tr><tr><td><strong>2024-05-18 (토)</strong></td><td><strong>75,050원</strong> (최저)</td><td><strong>결제 모듈 장애 — 종일 결제 실패</strong></td></tr></tbody></table></div>
+<p>기준에 따라 5/5, 6/1, 4/20 같은 프로모션 날이 더 나올 수 있습니다. 이벤트로그로 이유가 설명되면 맞는 답입니다.<br>이상치는 정해진 기준이 없으니, <strong>AI가 어떤 기준을 썼는지</strong> 꼭 확인하세요.</p>
+<div class="callout callout--tip"><div class="callout-label">💡 5/18을 반드시 뜯어보세요.</div><p>그날 숫자는 이렇습니다:</p></div>
+<div class="table-scroll"><table><thead><tr><th><strong>세션</strong></th><th><strong>장바구니추가</strong></th><th><strong>주문수</strong></th><th><strong>매출</strong></th></tr></thead><tbody><tr><td>373 (정상)</td><td>78 (정상)</td><td><strong>3</strong></td><td>75,050원</td></tr></tbody></table></div>
+<div class="callout callout--summary"><div class="callout-label"> 방문도 정상, 장바구니도 정상인데 주문만 무너졌습니다.</div><p>이게 퍼널로 원인을 좁히는 방법이에요 — <em>"매출이 떨어졌다"</em> 가 아니라 <em>"결제 단계에서만 떨어졌다"</em> 까지 가야 원인이 잡힙니다.</p></div>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>인과 단정 금지 훈련</strong>: 이벤트로그에 "라이브 방송"이 있다고 해서 <em>"라이브 때문에 매출이 3배 됐다"</em> 고 단정하면 안 됩니다. 같은 날 다른 요인이 있었을 수도 있죠. AI에게 <em>"상관은 상관이라 쓰고, 인과는 '추정'이라 표시해"</em> 를 꼭 붙이세요. (다만 5/18 결제 장애처럼 <strong>메커니즘이 명확한 것</strong>은 인과로 봐도 무리가 없습니다 — 이 차이를 구분하는 게 4.3절의 핵심입니다.)</p></div>
+<h4 class="mini-head">C-4 — 전환 퍼널 (4.2절)</h4>
+<ul><li><em>"세션수 → 장바구니추가 → 주문수로 전체 전환 퍼널을 만들고, 단계별 전환율(%)을 계산해줘. 결측일은 제외하고. 가장 크게 이탈하는 구간이 어디인지, 그걸 개선하면 어떤 효과일지 한 줄로."</em></li></ul>
+<p><strong>→ 정답 (88일 합계):</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>단계</strong></th><th><strong>값</strong></th><th><strong>다음 단계 전환율</strong></th></tr></thead><tbody><tr><td>세션</td><td>46,748</td><td>↓ <strong>21.2%</strong></td></tr><tr><td>장바구니추가</td><td>9,890</td><td>↓ <strong>42.2%</strong></td></tr><tr><td>주문</td><td>4,175</td><td>(전체 전환율 <strong>8.93%</strong>)</td></tr></tbody></table></div>
+<div class="callout callout--tip"><div class="callout-label">💡 가장 크게 새는 곳은 세션→장바구니(78.8% 이탈)</div><p>입니다. 그런데 여기서 흔한 오해 하나 — <em>"그럼 여기를 고쳐야겠네"</em> 가 항상 맞진 않습니다. <strong>둘러보기만 하는 방문은 어느 쇼핑몰에나 있습니다.</strong> 반면 장바구니까지 담고 안 사는 57.8%는 <strong>살 마음이 있었던 사람</strong>이라 개선 여지가 큽니다. <strong>이탈 숫자가 큰 곳 ≠ 고칠 곳.</strong></p></div>
+<ul><li>이어서: <em>"주중과 주말의 전환율(주문수 ÷ 세션수)을 비교해줘."</em></li></ul>
+<p><strong>→ 정답: 주중 9.59% vs 주말 6.66%</strong> — 주말엔 방문은 있는데 <strong>덜 삽니다.</strong></p>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 이 한 줄이 실무에선 바로 액션이 됩니다: <em>"주말엔 신규 유치 광고비를 줄이고, 주중에 재방문 유도를 걸자."</em> 데이터가 <strong>돈 쓰는 순서</strong>를 바꾸는 순간이죠.</p></div>
+<h4 class="mini-head">C-5 — 채널 성과 (진짜 판단이 필요한 곳 · 5절 지표 사용)</h4>
+<p>여기서 <code>채널별일별</code> 시트를 씁니다.</p>
+<ul><li><em>"<strong><code>채널별일별</code></strong> 시트로 채널별 총 세션·주문·매출·광고비를 집계하고, 전환율(주문÷세션)·객단가(매출÷주문)·ROAS(매출÷광고비)를 표로 만들어줘. 광고비가 0인 채널은 ROAS를 계산하지 말고 '해당없음'으로."</em></li></ul>
+<p><strong>→ 정답:</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>채널</strong></th><th><strong>세션</strong></th><th><strong>주문</strong></th><th><strong>매출</strong></th><th><strong>광고비</strong></th><th><strong>전환율</strong></th><th><strong>객단가</strong></th><th><strong>ROAS</strong></th></tr></thead><tbody><tr><td>인스타그램</td><td>16,223</td><td>1,212</td><td>23,546,451</td><td>5,495,357</td><td>7.47%</td><td>19,428</td><td><strong>4.28</strong></td></tr><tr><td>네이버검색</td><td>11,383</td><td>1,167</td><td>29,708,306</td><td>2,963,907</td><td>10.25%</td><td>25,457</td><td><strong>10.02</strong></td></tr><tr><td>유튜브</td><td>11,260</td><td>772</td><td>14,342,621</td><td>4,627,055</td><td>6.86%</td><td>18,579</td><td><strong>3.10</strong></td></tr><tr><td>직접/재방문</td><td>7,882</td><td>1,024</td><td>28,324,011</td><td>0</td><td><strong>12.99%</strong></td><td><strong>27,660</strong></td><td>해당없음</td></tr></tbody></table></div>
+<ul><li>이어서: <em>"이 표를 보고 광고 예산을 어떻게 조정할지 제안해줘. 단, 상관은 상관이라 표현하고 인과로 단정하지 마."</em></li></ul>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 여기서 세 가지 함정이 동시에 터집니다.</div><p><strong>① "유튜브 ROAS가 3.10으로 꼴찌니 끄자"</strong> — 성급합니다. 6/20 라이브가 유튜브 채널이었고, 그날 하루가 유튜브 매출의 상당 부분입니다. <strong>평균이 이벤트 하나에 끌려다니는지</strong> 확인해야 해요. 시켜보세요: <em>"6월 20일을 빼고 채널별 ROAS를 다시 계산해줘."</em><br><strong>② "직접/재방문이 전환율 12.99%로 최고니 여기 투자하자"</strong> — 직접/재방문엔 <strong>광고비를 넣을 수가 없습니다.</strong> 이 채널은 다른 채널이 데려온 고객이 돌아온 결과예요. 즉 <strong>인스타·유튜브의 성과 일부가 여기에 잡혀 있습니다.</strong> 이걸 모르고 "인스타 끄고 직접 유입만 키우자"고 하면 몇 달 뒤 직접 유입도 마릅니다.<br><strong>③ "네이버 ROAS 10.02가 압도적이니 예산 몰자"</strong> — 검색 광고는 <strong>이미 살 마음이 있는 사람</strong>을 데려옵니다(그래서 전환율·객단가가 높죠). 예산을 늘려도 <strong>검색량 자체가 늘지는 않습니다.</strong> ROAS가 높다고 무한정 부을 수 있는 채널이 아니에요.</p></div>
+<div class="callout callout--tip"><div class="callout-label">💡 이게 오늘 4.3절에서 말한 "AI는 여기까지, 사람은 여기부터"의 실제 모습입니다.</div><p>표를 만드는 건 AI가 몇 초면 합니다. 하지만 위 ①②③은 <strong>우리 비즈니스를 아는 사람만</strong> 할 수 있는 판단이에요. 시켜보세요: <em>"이 표만 보고 판단할 때 놓칠 수 있는 함정을 3가지 짚어줘."</em> — AI도 힌트를 주지만, <strong>최종 결정은 여러분 몫</strong>입니다.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">6</span><h2>같은 데이터, 다른 숫자 — '분모 전쟁'</h2></div>
+<p>고객 분석으로 넘어가기 전에 꼭 알아야 할 것. 데이터 회의에서 제일 자주 나는 싸움은 계산 실수가 아닙니다. <strong>정의가 서로 달라서</strong> 생깁니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>지표</strong></th><th><strong>이렇게도 세고</strong></th><th><strong>이렇게도 센다</strong></th><th><strong>차이가 나는 이유</strong></th></tr></thead><tbody><tr><td><strong>전환율</strong></td><td>주문 ÷ <strong>세션</strong></td><td>주문 ÷ <strong>방문자(사람)</strong></td><td>한 사람이 3번 오면 세션은 3</td></tr><tr><td><strong>재구매율</strong></td><td>2회+ ÷ <strong>구매 경험 고객</strong></td><td>2회+ ÷ <strong>전체 회원</strong></td><td>가입만 하고 안 산 사람 포함 여부</td></tr><tr><td><strong>매출</strong></td><td>결제 완료 <strong>총매출</strong></td><td>환불 뺀 <strong>순매출</strong></td><td>환불을 언제 빼느냐</td></tr><tr><td><strong>객단가</strong></td><td>매출 ÷ <strong>주문 수</strong></td><td>매출 ÷ <strong>구매 고객 수</strong></td><td>한 사람이 여러 번 사면 달라짐</td></tr><tr><td><strong>이탈률</strong></td><td>최근 90일 미구매</td><td>최근 180일 미구매</td><td>기준 기간을 몇 일로 잡느냐</td></tr><tr><td><strong>ROAS</strong></td><td>매출 ÷ <strong>광고비</strong></td><td>매출 ÷ <strong>광고비+제작비+인건비</strong></td><td>비용에 뭘 넣느냐</td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 오늘 실습에서 이걸 직접 겪게 됩니다.</div><p>1년치 주문 로그(<code>orders_1year.xlsx</code>)의 재구매율은 분모에 따라 <strong>28.3%</strong> 와 <strong>23.1%</strong> 로 갈립니다. 5.2%p 차이 — 보고서에서 "개선했다/악화됐다"를 뒤집을 수 있는 크기죠.</p></div>
+<p><strong>그래서 AI에게 시킬 때 이렇게 씁니다:</strong></p>
+<div class="prompt">재구매율을 계산할 때 분모를 명시해줘.
+① 구매 경험이 있는 고객 기준
+② 전체 회원 기준
+두 값을 모두 계산하고, 차이가 나는 이유를 한 줄로 설명해줘.</div>
+<div class="callout callout--tip"><div class="callout-label">💡 "두 가지 다 계산해줘"</div><p>가 실무 요령입니다. 어느 쪽이 맞는지 몰라도, 둘 다 보면 <strong>어느 쪽으로 보고할지</strong> 판단이 서거든요. 그리고 보고서에는 <strong>반드시 정의를 병기</strong>하세요: <em>"재구매율 28.3%(구매 경험 고객 기준)"</em>.</p></div>
+<div class="callout callout--question"><div class="callout-label">🤔 왜 AI가 이걸 알아서 안 물어보나?</div><p>AI는 여러분이 정의를 안 주면 <strong>가장 흔한 정의를 골라 조용히 계산</strong>합니다. 틀린 게 아니라 <strong>말을 안 한 것</strong>이죠. 그래서 데이터 작업에선 <em>"애매하면 물어봐"</em> 보다 <em>"정의를 명시하고, 여러 해석이 가능하면 전부 계산해줘"</em> 가 더 잘 먹힙니다.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">7</span><h2>고객을 보는 분석 기법</h2></div>
+<h3 class="sub-head">7.1 RFM 세분화 — 어떤 고객이 VIP인가</h3>
+<ul><li><strong>개념</strong>: 고객을 세 축으로 점수 매깁니다 — <strong>R</strong>ecency(얼마나 최근에 샀나), <strong>F</strong>requency(얼마나 자주), <strong>M</strong>onetary(총 얼마). 각 축을 상/중/하로 나눠 조합하면 <strong>VIP / 충성 / 이탈위험 / 신규</strong> 같은 그룹이 나옵니다. 마케팅을 전체에 뿌리는 대신 그룹별로 다르게 씁니다.</li><li><strong>전통 방식</strong>: 고객별 집계 후 분위수(quantile)로 등급 나누고 3차원 매트릭스 손으로.</li><li><strong>AI에게</strong>: <em>"주문 로그로 고객별 RFM을 계산하고, R·F·M을 각각 상/중/하로 나눠 VIP·이탈위험 등 그룹으로 분류해줘. 그룹별 인원수와 특징, 각 그룹에 쓸 마케팅 한 줄도."</em></li></ul>
+<h3 class="sub-head">7.2 코호트 &amp; 재구매율(리텐션) — 한 번 산 손님이 다시 오나</h3>
+<ul><li><strong>개념</strong>: <strong>코호트(cohort)</strong> 는 '같은 시기에 시작한 집단'입니다. 예: <em>2023년 7월에 처음 산 고객들</em>. 이 집단이 이후 몇 %가 다시 사는지 추적하면 <strong>리텐션(retention, 잔존/재구매율)</strong> 이 보입니다. 신규 유치보다 <strong>재구매</strong>가 싸고 이익이라, 대부분 회사의 핵심 지표입니다. 반대말이 <strong>이탈률(churn)</strong>.</li><li><strong>전통 방식</strong>: 첫 구매월 기준으로 그룹핑, 월별 재구매 여부 매트릭스(코호트 표) 작성.</li><li><strong>AI에게</strong>: <em>"첫 구매월을 코호트로 묶고, 각 코호트가 이후 개월별로 몇 %가 재구매했는지 코호트 표로 만들어줘. 전체 재구매율과 평균 재구매 주기도."</em></li></ul>
+<h3 class="sub-head">7.3 파레토(80/20) &amp; ABC 분석 — 무엇에 집중할까</h3>
+<ul><li><strong>개념</strong>: 흔히 <strong>매출의 80%가 상위 20% 고객(또는 상품)에서</strong> 나옵니다(파레토 법칙). 상위 기여 항목을 <strong>A(핵심)·B·C</strong> 로 나누는 게 ABC 분석. 관리 자원을 A에 몰아주는 근거가 됩니다.</li><li><strong>전통 방식</strong>: 내림차순 정렬 → 누적 비율 계산 → 80% 선 긋기.</li><li><strong>AI에게</strong>: <em>"상품별 매출을 내림차순으로 정렬하고 누적 비율을 붙여줘. 매출 80%를 차지하는 상위 상품이 몇 개(전체의 몇 %)인지, ABC로 분류해줘."</em></li></ul>
+<h3 class="sub-head">결론 — 기법은 알되, 실행은 AI</h3>
+<p>전에는 이 표 하나 뽑으려면 SQL을 배우거나 분석가에게 부탁해 며칠 기다렸습니다. <strong>지금은 엑셀 하나 붙이고 정확한 이름("RFM으로 나눠줘")만 대면 몇 분입니다.</strong> 여러분이 할 일은 (1) 어떤 분석이 있는지 알고, (2) 정확히 시키고, (3) 핵심 숫자·해석을 검수하는 것. 오늘 실습에서 전부 해봅니다.</p>
+<div class="callout callout--practice practice-head"><div class="callout-label">🛠 실습 D — 고객 분석 (1년치 주문 로그)</div><p>4단계의 <strong>①살펴보기(정의 정하기) → ③분석</strong>, 이번엔 고객 쪽입니다. <strong>새 대화</strong>를 열고 1년치 주문 로그(<code>orders_1year.xlsx</code>)를 첨부한 뒤, <strong>시트 5개</strong> 중 <code>읽기전_주의</code> 시트를 먼저 읽히세요.</p><div class="materials"><div style="font-weight:700;margin-bottom:4px;">📎 준비물</div><div style="margin-top:6px;"><b>1년치 주문 로그(orders_1year.xlsx)</b> <span>· Excel · 5개 시트 · 586건</span></div></div></div>
+<p><strong>1년치 주문 로그(<code>orders_1year.xlsx</code>)</strong><strong> — 2023-07 ~ 2024-06</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>시트</strong></th><th><strong>내용</strong></th></tr></thead><tbody><tr><td><code>주문로그</code></td><td>586건 (주문ID·고객·상품·수량·단가·금액·유입채널·<strong>상태</strong>)</td></tr><tr><td><code>고객마스터</code></td><td>360명 (가입일·가입채널·지역·연령대)</td></tr><tr><td><code>상품마스터</code></td><td>정가·원가·마진율</td></tr><tr><td><code>환불로그</code></td><td>환불 26건 (환불일·사유)</td></tr><tr><td><code>읽기전_주의</code></td><td>분석 전 반드시 정할 것 4가지</td></tr></tbody></table></div>
+<p><strong>심어둔 함정</strong></p>
+<ul><li>상태 컬럼에 <strong>정상/환불/취소</strong>가 섞임</li><li><strong>주문이 한 건도 없는 고객 67명</strong> → 재구매율 분모가 뭐냐에 따라 답이 달라짐</li><li>주문의 <code>유입채널</code>과 고객의 <code>가입채널</code>이 다름</li></ul>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 1년치 주문 로그(<code>orders_1year.xlsx</code>)는 회사 전체 주문이 아니라 회원 360명의 샘플입니다.</div><p>(파일의 <code>읽기전_주의</code> 시트에도 적혀 있습니다.) 그래서 이 파일의 총매출을 회사 실적으로 쓰면 안 됩니다. 샘플로는 <strong>비율</strong>(재구매율·파레토·코호트)을 봅니다. 실무 데이터도 대부분 이렇게 옵니다 — <strong>"이 파일이 전수인가 샘플인가"를 먼저 확인하는 습관</strong>을 여기서 들이세요.</p></div>
+<h4 class="mini-head">D-1 — 분석 전에 '정의'부터 정하기 (6절)</h4>
+<p>이 파일엔 함정이 있습니다. 그냥 시키면 <strong>틀린 답이 그럴듯하게</strong> 나와요.</p>
+<ul><li><em>"<strong><code>읽기전_주의</code></strong> 시트를 읽고, 이 데이터로 매출·재구매율을 계산하기 전에 내가 먼저 정해야 할 것들을 목록으로 알려줘. 각 항목마다 선택지와, 선택에 따라 답이 어떻게 달라지는지도."</em></li></ul>
+<p><strong>→ 반드시 나와야 할 4가지 결정:</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>결정할 것</strong></th><th><strong>선택지</strong></th><th><strong>왜 중요한가</strong></th></tr></thead><tbody><tr><td>① 매출에 무엇을 포함?</td><td>정상만 / 정상+환불 / 전부</td><td>상태 컬럼에 <strong>정상 548 · 환불 26 · 취소 12</strong> 가 섞여 있음</td></tr><tr><td>② 재구매율의 <strong>분모</strong>는?</td><td>구매 경험 고객 / 전체 회원</td><td><strong>주문이 한 건도 없는 회원 67명</strong>이 있음</td></tr><tr><td>③ 코호트 기준은?</td><td>가입월 / 첫 구매월</td><td>가입하고 몇 달 뒤 첫 구매하는 고객이 있어 결과가 달라짐</td></tr><tr><td>④ 채널은 어느 것?</td><td>주문의 유입채널 / 고객의 가입채널</td><td>두 컬럼이 서로 다름</td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ ②가 오늘 실습 D의 핵심 함정입니다.</div><p>같은 데이터로 재구매율이 <strong>28.3%</strong> 도 되고 <strong>23.1%</strong> 도 됩니다. 어느 쪽도 틀리지 않았어요 — <strong>분모가 다를 뿐</strong>입니다. 그런데 보고서에 "재구매율 28%"라고만 적으면, 읽는 사람은 자기 방식대로 해석합니다. <strong>지표엔 항상 정의를 붙이세요.</strong></p></div>
+<h4 class="mini-head">D-2 — RFM 세분화 (7.1절)</h4>
+<ul><li><em>"<strong><code>주문로그</code></strong>의 상태가 '정상'인 건만 써서 고객ID별 RFM을 계산해줘. R=2024-06-30 기준 마지막 구매일로부터 며칠, F=구매 횟수, M=총 구매액. 각 축을 상/중/하로 나눠 VIP·충성·이탈위험·신규 그룹으로 분류하고, 그룹별 인원수와 특징·평균 구매액을 표로."</em></li><li>이어서: <em>"<strong><code>고객마스터</code></strong> 시트를 붙여, VIP 그룹의 지역·연령대·가입채널 분포를 보여줘. 다른 그룹과 뚜렷하게 다른 점이 있나?"</em></li><li>이어서: <em>"'이탈위험' 그룹에 보낼 리마인드 쿠폰 메일을 그린컵 톤으로 한 통 써줘."</em> → 분석이 곧장 실행(메일)으로 이어지는 흐름 체험 (5차시 이메일 자동화 연결).</li></ul>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 두 번째 지시가 RFM을 <strong>실제로 쓸 수 있게</strong> 만듭니다. "VIP가 몇 명"까지는 숫자놀음이고, "VIP는 주로 어느 채널로 들어온 어떤 사람"까지 가야 <strong>다음 광고를 어디에 걸지</strong>가 나옵니다.</p></div>
+<h4 class="mini-head">D-3 — 재구매율 &amp; 코호트 (6절 · 7.2절)</h4>
+<ul><li><em>"정상 주문 기준으로, ① 구매 경험이 있는 고객 중 2회 이상 구매 비율 ② 전체 회원(고객마스터) 중 2회 이상 구매 비율 — 두 가지를 모두 계산하고 차이가 왜 생기는지 설명해줘."</em></li></ul>
+<p><strong>→ 정답: ① 28.3% (83명 ÷ 293명) / ② 23.1% (83명 ÷ 360명).</strong> 차이는 <strong>한 번도 안 산 회원 67명</strong> 때문입니다.</p>
+<ul><li>이어서: <em>"첫 구매월을 코호트로 묶고, 각 코호트가 이후 개월별로 몇 %가 재구매했는지 코호트 표로 만들어줘. 표를 읽을 때 주의할 점도 같이."</em></li></ul>
+<p><strong>→ 코호트 크기 (첫 구매월 기준, 정상 주문):</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>2023</strong></th><th><strong>07</strong></th><th><strong>08</strong></th><th><strong>09</strong></th><th><strong>10</strong></th><th><strong>11</strong></th><th><strong>12</strong></th></tr></thead><tbody><tr><td>인원</td><td>17</td><td>26</td><td>20</td><td>29</td><td>30</td><td>24</td></tr></tbody></table></div>
+<div class="table-scroll"><table><thead><tr><th><strong>2024</strong></th><th><strong>01</strong></th><th><strong>02</strong></th><th><strong>03</strong></th><th><strong>04</strong></th><th><strong>05</strong></th><th><strong>06</strong></th></tr></thead><tbody><tr><td>인원</td><td>21</td><td>32</td><td>29</td><td>32</td><td>27</td><td><strong>6</strong></td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 2024-06 코호트가 6명뿐인 걸 보셨나요?</div><p>데이터가 6/30에서 끝나기 때문입니다. 그리고 더 중요한 건 — <strong>최근 코호트일수록 관찰 기간이 짧아서 재구매율이 낮게 나올 수밖에 없다</strong>는 점이에요. 6월에 처음 산 사람에게 "6개월 내 재구매"를 물을 수 없죠.<br>이걸 모르고 코호트 표를 보면 <strong>"최근 고객의 충성도가 떨어지고 있다"</strong> 는 완전히 틀린 결론이 나옵니다. 코호트 표의 오른쪽 아래 삼각형은 <strong>아직 안 채워진 칸</strong>이지 <strong>성적이 나쁜 칸</strong>이 아닙니다.</p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 시켜보세요: <em>"각 코호트의 관찰 가능 개월 수가 다른 점을 표에 명시하고, 공정하게 비교하려면 어떻게 봐야 하는지 알려줘."</em> → <strong>"모든 코호트의 1개월차만 나란히 비교"</strong> 같은 답이 나오면 제대로 이해한 겁니다.</p></div>
+<h4 class="mini-head">D-4 — 파레토(80/20) (7.3절)</h4>
+<ul><li><em>"정상 주문 기준으로 고객별 총 구매액을 내림차순 정렬하고 누적 매출 비율을 붙여줘. ① 매출의 80%를 만드는 상위 고객이 몇 명(전체 구매고객의 몇 %)인지 ② 상위 20% 고객이 매출의 몇 %를 차지하는지 — 둘 다 알려줘."</em></li></ul>
+<p><strong>→ 정답: ① 상위 105명 = 구매고객 293명의 35.8% ② 상위 20%(58명) = 매출의 67.9%</strong></p>
+<div class="callout callout--tip"><div class="callout-label">💡 교과서의 "80/20"이 정확히 안 나오죠?</div><p>정상입니다. 파레토는 <strong>자연법칙이 아니라 경험칙</strong>이에요. 우리 데이터는 <strong>"80/36"</strong> 이고, 그래도 메시지는 같습니다 — <em>"소수가 매출 대부분을 만든다."</em> AI가 "정확히 20%입니다"라고 답했다면 <strong>숫자를 맞춰서 지어낸 것</strong>이니 검산하세요.</p></div>
+<ul><li>이어서: <em>"상품별로도 같은 파레토 분석을 하고, ABC로 분류해줘. <strong><code>상품마스터</code></strong>의 마진율도 붙여서, 매출 기준 순위와 이익 기준 순위가 다른지 비교해줘."</em></li></ul>
+<p><strong>→ 상품 매출 파레토:</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>상품</strong></th><th><strong>매출</strong></th><th><strong>누적</strong></th></tr></thead><tbody><tr><td>써모 보온병</td><td>7,511,000</td><td>37.8%</td></tr><tr><td>데일리 텀블러</td><td>4,864,000</td><td>62.2%</td></tr><tr><td>유리 텀블러</td><td>3,519,000</td><td><strong>79.9%</strong> ← 여기까지가 A</td></tr><tr><td>미니 머그</td><td>2,100,000</td><td>90.5%</td></tr><tr><td>접이식 실리콘컵</td><td>1,479,000</td><td>97.9%</td></tr><tr><td>실리콘 뚜껑</td><td>420,000</td><td>100.0%</td></tr></tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 마지막 지시(<strong>마진율 붙이기</strong>)가 진짜입니다. 매출 1위가 이익 1위가 아닐 수 있거든요. <code>상품마스터</code>에 원가가 있으니 <strong>이익 기준 파레토</strong>를 뽑을 수 있습니다. <em>"매출은 잘 나오는데 남는 게 없는 상품"</em> 을 찾는 게 실무에서 훨씬 값진 분석입니다.</p></div>
+<h4 class="mini-head">D-5 — 환불 분석 (별도 시트 활용)</h4>
+<ul><li><em>"<strong><code>환불로그</code></strong> 시트로 환불 사유별 건수와 금액을 집계하고, 환불이 특정 상품에 몰려 있는지 확인해줘. <strong><code>주문로그</code></strong>의 정상 주문 대비 환불률(%)도."</em></li></ul>
+<p><strong>→ 정답: 환불 26건 / 787,000원.</strong> 사유는 색상 불만 8 · 배송 지연 7 · 제품 파손 5 · 단순 변심 3 · 사이즈 불만 3.</p>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 환불 사유 1·2위(<strong>색상 불만, 배송 지연</strong>)는 <strong>고칠 수 있는 것</strong>입니다. 상세페이지 색상 사진을 바꾸거나 물류사를 점검하면 되죠. 반면 '단순 변심'은 어쩔 수 없습니다. <strong>"고칠 수 있는 환불"과 "어쩔 수 없는 환불"을 나누는 것</strong> — 이게 환불 분석의 요령입니다.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">8</span><h2>붙여넣기용 마스터 프롬프트 (분석용)</h2></div>
+<p>실습 C·D에서 하나씩 시킨 분석을 한 번에 묶은 프롬프트입니다. 정제가 끝난 데이터에 이걸 붙이면 실무 분석 한 세트가 나옵니다.</p>
+<div class="prompt">첨부한 데이터로 아래 분석을 순서대로 해줘. 각 항목은 표 + 두 줄 해석.
+1) 추세: 일별 매출에 7일 이동평균, 성장/둔화 판단, 월별 MoM 증감률
+2) 퍼널: 세션→장바구니→주문 단계별 전환율(%)과 최대 이탈 구간
+3) 고객: RFM으로 VIP·충성·이탈위험·신규 분류(그룹별 인원·특징)
+4) 재구매: 첫 구매월 코호트별 재구매율, 전체 재구매율
+5) 집중: 상품별 매출 파레토(누적 80% 상위 상품)
+규칙:
+- 숫자는 데이터에서 정확히 계산하고, 계산 과정은 접어서 확인 가능하게.
+- 원인은 '추정'이라 표시하고 단정하지 마. 상관을 인과로 쓰지 마.
+- 튀는 이상치(급증·급감)는 따로 표시.
+마지막에 '핵심 숫자 검수표'(지표 | 값 | 원본 근거)를 붙여줘.</div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 마지막 줄이 포인트: <strong>AI에게 자기 숫자의 검수표를 만들게</strong> 하면 사람이 대조하기 쉽습니다 (4차시 복습).</p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 이 프롬프트도 실습 B의 정제용 프롬프트와 함께 <strong>3차시의 그린컵 Project 지시문</strong>에 저장해두세요.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">9</span><h2>⚠️ 데이터에서 AI가 틀리는 지점 — 검수 전에 알아둘 것</h2></div>
+<p>여기서부터 4단계의 ④입니다. 데이터는 <strong>숫자</strong>라서 틀리면 티가 안 나고 위험합니다. 조심할 곳:</p>
+<ul><li><strong>합계·평균 계산</strong> — 가끔 어긋납니다. 핵심 숫자는 직접 검산하거나 "다시 계산해 확인"시키기.</li><li><strong>결측 처리</strong> — 빈 칸을 멋대로 0이나 추정값으로 채울 수 있음. "빈 칸은 채우지 말고 따로 표시해줘"라고 명시. (실습 C-1)</li><li><strong>중복 판단</strong> — <code>김민정</code>과 <code>김 민정</code>이 같은 사람인지 AI가 단정하면 위험. "동일인으로 의심되는 것만 표시하고, 합치진 마"처럼 신중하게. (실습 B-2)</li><li><strong>단위 오해</strong> — <code>삼만원</code>을 30000으로 바꿀 때 확인. (실습 B-1)</li><li><strong>인과 단정</strong> — "매출이 늘었다"는 사실, "라이브 때문에 늘었다"는 <em>추정</em>. 상관과 인과를 섞지 않게 "추정이면 추정이라 표시"시키기 (4.3절).</li></ul>
+<div class="callout callout--question"><div class="callout-label">🤔 왜 틀리나?</div><p>AI는 계산기가 아니라 <em>"그럴듯한 다음 말"을 예측*하는 기계입니다. 긴 표의 합계·비율처럼 '진짜 계산'이 필요한 곳에서 그럴듯한 근사값을 슬쩍 내놓곤 합니다. 그래서 *"계산 과정을 단계별로 보여줘"</em> 라고 시키면 정확도가 올라갑니다. (요즘 모델은 표 계산 시 내부적으로 코드를 돌려 정확도가 크게 올랐지만, <strong>보고·정산 숫자는 여전히 사람이 대조</strong>하세요.)</p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 원칙은 4차시와 같습니다: <strong>정리·분석은 AI, 최종 숫자와 인과 해석 검수는 사람.</strong> 특히 보고·정산에 쓸 숫자는 반드시 원본과 대조.</p></div>
+<div class="callout callout--practice practice-head"><div class="callout-label">🛠 실습 E — 종합 · 검수 &amp; 시각화</div><p>4단계의 <strong>④검수·시각화</strong>입니다. 실습 C·D에서 뽑은 숫자를 한데 모아, 정답표와 대조하고 차트로 옮깁니다.</p><div class="materials"><div style="font-weight:700;margin-bottom:4px;">📎 준비물</div><div><b>새 파일 없음</b> <span>: 실습 C의 90일 매출·방문 지표(sales_90days.xlsx)·실습 D의 1년치 주문 로그(orders_1year.xlsx)에서 뽑은 결과를 사용</span></div></div></div>
+<h4 class="mini-head">E-1 — 종합 대시보드 (8절 마스터 프롬프트)</h4>
+<ul><li>8절의 <strong>마스터 프롬프트</strong>를 그대로 붙여넣어, 추세·퍼널·RFM·코호트·파레토를 <strong>한 번에</strong> 뽑아보세요.</li><li>나온 결과 끝의 <strong>'핵심 숫자 검수표'</strong> 로, 실습 E-2에서 대조합니다.</li></ul>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 한 번에 시킨 결과와, 실습 C·D에서 하나씩 시킨 결과를 <strong>비교해보세요.</strong> 보통 한 번에 시키면 <strong>깊이가 얕아집니다</strong> — 각 분석의 함정(결측·분모·코호트 관찰기간)을 건너뛰기 쉽거든요. <strong>처음엔 쪼개서, 익숙해지면 묶어서</strong> 가 정답입니다.</p></div>
+<h4 class="mini-head">E-2 — 숫자 검수 훈련 (오늘 가장 중요한 실습)</h4>
+<p>지금까지 나온 숫자들을 <strong>아래 정답표와 대조</strong>하세요. 하나라도 다르면 그건 <strong>여러분이 어딘가를 놓쳤거나, AI가 틀린 것</strong>입니다.</p>
+<p><strong>✅ 핵심 숫자 정답표</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>#</strong></th><th><strong>지표</strong></th><th><strong>정답</strong></th><th><strong>어디서 틀리나</strong></th></tr></thead><tbody><tr><td>1</td><td>유효 일수 · 90일 매출·방문 지표(<code>sales_90days.xlsx</code>)</td><td><strong>88일</strong> (90일 중 결측 2일)</td><td>90일로 계산</td></tr><tr><td>2</td><td>90일 총 매출</td><td><strong>95,921,389원</strong></td><td>결측일을 0으로 채움</td></tr><tr><td>3</td><td>90일 총 주문</td><td><strong>4,175건</strong></td><td>〃</td></tr><tr><td>4</td><td>전체 전환율</td><td><strong>8.93%</strong> (4,175 ÷ 46,748)</td><td>분모를 신규방문으로 잡음</td></tr><tr><td>5</td><td>세션→장바구니</td><td><strong>21.2%</strong></td><td></td></tr><tr><td>6</td><td>장바구니→주문</td><td><strong>42.2%</strong></td><td></td></tr><tr><td>7</td><td>주중 vs 주말 전환율</td><td><strong>9.59% vs 6.66%</strong></td><td></td></tr><tr><td>8</td><td>최고 매출일</td><td><strong>6/20 · 3,537,499원</strong></td><td></td></tr><tr><td>9</td><td>최저 매출일</td><td><strong>5/18 · 75,050원</strong> (결제 장애)</td><td>결측일을 최저로 착각</td></tr><tr><td>10</td><td>네이버검색 ROAS</td><td><strong>10.02</strong> (최고)</td><td></td></tr><tr><td>11</td><td>유튜브 ROAS</td><td><strong>3.10</strong> (최저)</td><td></td></tr><tr><td>12</td><td>정상 주문 수 · 1년치 주문 로그(<code>orders_1year.xlsx</code>)</td><td><strong>548건</strong> (전체 586 중)</td><td>환불·취소를 안 뺌</td></tr><tr><td>13</td><td>재구매율 (구매고객 기준)</td><td><strong>28.3%</strong></td><td></td></tr><tr><td>14</td><td>재구매율 (전체 회원 기준)</td><td><strong>23.1%</strong></td><td>분모를 안 밝힘</td></tr><tr><td>15</td><td>매출 80% 상위 고객 비율</td><td><strong>35.8%</strong></td><td>"20%"라고 지어냄</td></tr><tr><td>16</td><td>상품 A등급 (누적 80%)</td><td><strong>써모 보온병 · 데일리 텀블러 · 유리 텀블러</strong></td><td></td></tr><tr><td>17</td><td>환불 건수/금액</td><td><strong>26건 / 787,000원</strong></td><td></td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 정답과 다르다고 바로 AI를 탓하지 마세요.</div><p>먼저 확인할 것: <em>내가 결측을 빼라고 말했나? 상태='정상'만 쓰라고 했나? 분모를 지정했나?</em> — <strong>열에 아홉은 지시가 부족했던 것</strong>입니다. 2차시에서 배운 "구체적으로"가 데이터에선 <strong>숫자 정의</strong>로 나타납니다.</p></div>
+<p><strong>검수를 AI에게 시키는 법:</strong></p>
+<ul><li><em>"위에서 계산한 재구매율을 다시 계산해서 확인하고, 계산 과정을 단계별로 보여줘. 분자와 분모가 각각 몇 명이고, 어떤 기준으로 셌는지 명시해."</em></li><li><em>"지금까지 낸 숫자들을 '지표 | 값 | 계산식 | 원본 시트·컬럼' 4칸 표로 정리해줘."</em></li></ul>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 마지막 지시가 <strong>검수표</strong>입니다. <strong>계산식과 출처가 같이 적힌 표</strong>라야 사람이 5분 안에 대조할 수 있어요. "총매출 9,592만원"만 있으면 검수에 30분이 걸립니다.</p></div>
+<h4 class="mini-head">E-3 — 차트로 (선택)</h4>
+<ul><li><em>"일별 매출과 7일 이동평균을 함께 보여주는 선그래프를 그려줘."</em></li><li><em>"RFM 그룹별 인원을 막대그래프로, 상품 매출 파레토를 누적선으로."</em></li><li><em>"채널별 전환율과 ROAS를 하나의 그래프에 두 축으로 그려줘."</em></li><li><em>"5월 18일 전후 3일의 퍼널(세션·장바구니·주문)을 나란히 비교하는 그래프로."</em> → 장애일의 붕괴 지점이 눈에 보입니다</li><li>그림이 안 나오면 <strong>차트용 데이터 표</strong>를 받아 엑셀에서 그리세요: <em>"이 분석을 차트로 그릴 수 있게 X축·Y축 값만 깔끔한 표로 정리해줘."</em></li></ul>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">10</span><h2>분석을 발표로 — 데이터에서 슬라이드 개요까지</h2></div>
+<p>분석의 최종 목적지는 대개 <strong>발표</strong>입니다. 여기서 가장 흔한 실수: 데이터를 그대로 슬라이드에 붙이는 것. <em>"6월 매출 6,700만원"</em>(실습 F의 6월 월간 종합(<code>monthly_data.xlsx</code>) 기준) 은 <strong>사실</strong>이지 <strong>인사이트</strong>가 아닙니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>단계</strong></th><th><strong>예</strong></th></tr></thead><tbody><tr><td>📊 <strong>데이터</strong></td><td>"6월 매출 6,700만원, 인플루언서 ROAS 3.7" (실습 F 데이터 기준)</td></tr><tr><td>💡 <strong>인사이트</strong></td><td>"매출 최고치 경신했지만, 인플루언서 채널은 광고비 대비 효율이 가장 낮음"</td></tr><tr><td>🎯 <strong>액션</strong></td><td>"다음 달 인플루언서 예산 일부를 효율 높은 채널로 재배분 제안"</td></tr></tbody></table></div>
+<p><strong>3단계로 시킵니다:</strong></p>
+<ol><li><strong>분석</strong> — <em>"이 데이터에서 가장 중요한 변화·신호 5가지를 좋은 소식/나쁜 소식으로 나눠 짚어줘."</em></li><li><strong>스토리</strong> — <em>"발표용 스토리로 짜줘. '잘됐다 → 왜 → 문제 → 그래서 다음엔' 흐름으로."</em></li><li><strong>슬라이드 개요</strong> — <em>"슬라이드 7장 개요로. 각 장은 '제목 + 핵심 메시지 한 줄 + 불릿 3개 + 추천 차트' 형식."</em></li></ol>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 슬라이드 디자인은 PowerPoint 몫이지만, <strong>'무슨 말을 어떤 순서로'(개요)가 90%</strong> 입니다. 발표 대본까지 시키면 더 좋습니다.</p></div>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> 발표는 여러 사람 앞입니다 — 핵심 숫자 원본 대조, 과장·비약 점검("ROAS 3.7"을 "실패"로 단정 금지), 추정과 사실 구분. 9절 원칙 그대로.</p></div>
+<div class="callout callout--practice practice-head"><div class="callout-label">🛠 실습 F — 분석을 발표 슬라이드로 (10절 실전)</div><p><strong>새 대화</strong>를 열고 6월 월간 종합(<code>monthly_data.xlsx</code>)을 첨부하세요. 6월 월간 종합 데이터로, 시트는 3개입니다 — 월별매출추이 / 채널성과(ROAS) / 캠페인 성과.</p><div class="materials"><div style="font-weight:700;margin-bottom:4px;">📎 준비물</div><div style="margin-top:6px;"><b>6월 월간 종합(monthly_data.xlsx)</b> <span>· Excel · 3개 시트</span><br><span>6월 월간 종합 자료. 월별 매출 추이, 채널별 광고 효율(ROAS), 캠페인 성과</span></div></div></div>
+<ul><li><em>"이 월간 데이터에서 가장 눈에 띄는 신호 5가지를 좋은 것/우려되는 것으로 나눠 짚어줘."</em></li><li>이어서: <em>"7월에 실행할 만한 제안 3가지를 근거와 함께."</em> → 숫자가 <strong>제안</strong>으로 바뀌는 걸 확인</li><li>이어서: <em>"전사 회의 발표용 슬라이드 7장 개요를 만들어줘. 각 장은 '제목 / 핵심 메시지 한 줄 / 불릿 3개 / 추천 차트' 형식으로. 마지막 장은 7월 제안. 각 장의 발표 대본도 2~3문장씩."</em></li><li>검수: <em>"개요에 쓴 핵심 숫자들이 원본 데이터와 일치하는지 표로 대조하고, 과장하거나 추정을 단정한 부분이 있으면 표시해줘."</em></li></ul>
+<h3 class="sub-head">🎓 도전 과제 (빨리 끝낸 사람용)</h3>
+<p>실습 C·D에서 쓴 파일(90일 매출·방문 지표, 1년치 주문 로그)을 그대로 씁니다. 각 실습 대화로 돌아가 이어서 시키세요.</p>
+<ul><li><strong>LTV 추정</strong>: <em>"재구매율과 평균 객단가로 고객 LTV를 대략 추정하고, 신규고객 획득에 얼마까지 써도 되는지 근거와 함께 제안해줘."</em></li><li><strong>이익 기준 파레토</strong>: <code>상품마스터</code>의 원가를 붙여 <strong>매출 순위와 이익 순위를 나란히</strong> 비교하기. <em>"매출은 상위인데 이익은 하위인 상품"</em> 이 있나요? 있다면 그게 오늘 가장 값진 발견입니다.</li><li><strong>이벤트 효과 분리</strong>: <em>"6월 20일 라이브 하루를 빼고 채널별 ROAS를 다시 계산해줘. 뺀 전후를 나란히 표로."</em> → <strong>평균이 이벤트 하나에 끌려다니는지</strong> 확인하는 실무 기법입니다.</li><li><strong>채널 교차 비교</strong>: 1년치 주문 로그(<code>orders_1year.xlsx</code>)에서 <em>"고객의 가입채널별로 재구매율과 평균 구매액을 비교해줘."</em> → <strong>어느 채널이 '오래 남는 고객'을 데려오는지</strong>가 나옵니다. ROAS만 볼 때와 순위가 뒤집힐 수 있어요.</li><li><strong>두 파일 이어붙이기</strong>: 90일 매출·방문 지표(<code>sales_90days.xlsx</code>)의 채널 성과와 1년치 주문 로그(<code>orders_1year.xlsx</code>)의 채널별 고객 가치를 함께 놓고, <em>"단기 효율(ROAS)과 장기 가치(재구매·LTV)가 다른 채널이 있는지 비교해줘."</em> → 실무에서 광고 예산 논쟁의 핵심입니다.</li><li><strong>환불 파고들기</strong>: <em>"환불 사유 중 '색상 불만'이 특정 상품에 몰려 있는지 확인하고, 상세페이지에서 고칠 수 있는 것과 아닌 것으로 나눠줘."</em></li><li><strong>자동 인사이트</strong>: <em>"이 데이터에서 경영진이 알아야 할 인사이트 3개를, 근거 숫자와 함께 우선순위로 뽑아줘."</em></li><li><strong>내 데이터로</strong>: 내가 다루는 실제 매출·방문 데이터(민감정보 지우고)로 마스터 프롬프트를 돌려보기.</li></ul>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 위 항목 중 <strong>'단기 효율 vs 장기 가치'</strong> 가 데이터 분석이 실제로 돈을 버는 지점입니다. ROAS가 낮아 끄려던 채널이 <strong>재구매율이 가장 높은 고객을 데려오고 있었다</strong>면? 껐다면 몇 달 뒤에 대가를 치릅니다. <strong>한 지표만 보면 항상 틀립니다.</strong></p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">11</span><h2>안 될 때 — 트러블슈팅</h2></div>
+<div class="table-scroll"><table><thead><tr><th><strong>증상</strong></th><th><strong>원인</strong></th><th><strong>대응</strong></th></tr></thead><tbody><tr><td><strong>엑셀을 안 읽고 대충 답함</strong></td><td>파일 인식 실패, 시트가 여러 개</td><td><em>"첨부 엑셀의 '일별지표' 시트를 열어 확인해"</em> — <strong>시트명까지 지정</strong></td></tr><tr><td><strong>합계·비율이 틀림</strong></td><td>어림 계산</td><td><em>"계산 과정을 단계별로 보여줘"</em>  • 검수표 요구</td></tr><tr><td><strong>빈 칸을 멋대로 채움</strong></td><td>결측 추정</td><td><em>"빈 칸은 채우지 말고 [결측]으로 표시"</em> 명시</td></tr><tr><td><strong>중복을 과감히 합침</strong></td><td>동일인 단정</td><td><em>"의심만 표시하고 합치지 마"</em></td></tr><tr><td><strong>원인을 단정</strong></td><td>상관을 인과로</td><td><em>"추정이면 추정, 상관이면 상관이라 표현"</em></td></tr><tr><td><strong>RFM/코호트를 대충 함</strong></td><td>기준 모호</td><td>R·F·M 정의와 등급 나누는 기준(상/중/하)을 <strong>명시</strong></td></tr><tr><td><strong>시트가 여러 개인데 하나만 봄</strong></td><td>첫 시트만 읽음</td><td><em>"이 파일의 시트가 몇 개고 각각 뭔지 먼저 알려줘"</em> 로 시작</td></tr><tr><td><strong>결측일을 0으로 채워 평균이 낮게 나옴</strong></td><td>빈칸 = 0 으로 처리</td><td><em>"빈 행은 계산에서 제외하고, 제외한 날짜를 명시해"</em></td></tr><tr><td><strong>재구매율이 자료마다 다름</strong></td><td>분모 정의가 다름</td><td>6절 — 분모를 지정하고, 가능하면 <strong>두 가지 다</strong> 계산</td></tr><tr><td><strong>환불·취소가 매출에 섞임</strong></td><td>상태 컬럼 무시</td><td><em>"상태가 '정상'인 건만 써줘"</em> 를 매번 명시</td></tr><tr><td><strong>파레토가 정확히 80/20으로 나옴</strong></td><td>숫자를 맞춰서 지어냄</td><td>누적 비율 표를 요구해 <strong>직접 확인</strong>. 우리 데이터는 80/36</td></tr><tr><td><strong>코호트 최근 달이 나빠 보임</strong></td><td>관찰 기간이 짧을 뿐</td><td><em>"각 코호트의 관찰 가능 개월 수를 표에 명시해"</em></td></tr><tr><td><strong>비슷한 이름을 합쳐버림</strong></td><td>'중복 제거' 지시</td><td><em>"합치지 말고 의심 표시와 근거만"</em> — 동명이인 위험</td></tr><tr><td><strong>표는 맞는데 해석이 과함</strong></td><td>상관을 인과로</td><td><em>"추정은 추정이라 표시"</em>  • 최종 해석은 사람이</td></tr></tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 공통 원칙: 결과가 이상하면 <strong>어느 파일·어느 시트·어느 계산</strong>인지 좁혀서 다시 지시. 모호함이 줄면 오류도 줍니다.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">12</span><h2>자주 묻는 질문 (FAQ)</h2></div>
+<p><strong>Q. 엑셀 파일이 큰데(수만 행) 그대로 올려도 되나요?</strong> A. 행이 아주 많으면 AI가 전부 정확히 세지 못할 수 있습니다. 두 가지 길이 있어요. ① <strong>필요한 열만 남기고</strong> 올리기 (분석에 안 쓰는 열은 지우면 훨씬 안정적입니다) ② 그래도 크면 <strong>17차시의 Claude Code</strong>로 넘기기 — 코드로 계산하면 행 수와 무관하게 정확합니다. <em>"이건 몇 만 행인데 정확한 집계가 필요해"</em> 가 Code로 갈 신호입니다.</p>
+<p><strong>Q. AI가 계산한 숫자를 어디까지 믿어야 하나요?</strong> A. <strong>보고·정산에 들어가는 숫자는 무조건 대조</strong>하세요. 실무 기준은 이렇습니다 — 내부 탐색용(경향 파악)이면 그대로 써도 되고, <strong>남에게 보여주는 순간부터</strong> 검수표를 만들어 원본과 맞춰봅니다. 오늘 실습 E-2의 정답표가 그 연습이에요.</p>
+<p><strong>Q. 개인정보가 든 고객 데이터를 올려도 되나요?</strong> A. <strong>회사 정책이 1순위</strong>입니다. 정책이 허용해도 습관은 이렇게 들이세요 — 이름·연락처·이메일은 <code>C0001</code> 같은 ID로 바꾸고, 분석에 안 쓰는 열은 지웁니다. 오늘 고객 명단(<code>customer_list_messy.xlsx</code>)의 <code>취급주의</code> 시트에 이 절차가 적혀 있습니다. (실습에선 중복 판정을 연습해야 해서 일부러 남겨뒀습니다.)</p>
+<p><strong>Q. 결과가 매번 조금씩 다릅니다.</strong> A. <strong>문장 표현이 다른 건 정상</strong>이지만 <strong>숫자가 다르면 문제</strong>입니다. 대부분 원인은 두 가지예요 — ① 결측·환불·취소를 어떻게 처리할지 안 정해줘서 매번 다르게 처리함 ② 분모 정의를 안 줘서 매번 다른 정의를 씀. <strong>정의를 프롬프트에 못박으면</strong> 숫자는 안정됩니다. 그래도 흔들리면 Code로 굳힐 신호입니다.</p>
+<p><strong>Q. 차트를 그려달라고 하면 이미지가 안 나옵니다.</strong> A. 플랜·환경에 따라 다릅니다. 안 되면 <strong>차트용 데이터 표</strong>를 받아 엑셀에서 그리세요: <em>"이 분석을 차트로 그릴 수 있게, X축·Y축 값만 깔끔한 표로 정리해줘."</em> 표만 있으면 엑셀에서 클릭 두 번입니다.</p>
+<p><strong>Q. '이동평균 7일'은 왜 하필 7일인가요?</strong> A. <strong>요일 효과를 지우기 위해서</strong>입니다. 7일이면 월~일이 한 번씩 들어가니 "주말이라 낮았다" 같은 흔들림이 상쇄되죠. 월 단위 흐름을 보려면 30일 이동평균을 씁니다. 데이터가 90일뿐이면 30일 이동평균은 앞쪽 29일이 빈다는 점도 기억하세요.</p>
+<p><strong>Q. 분석 결과를 팀에 공유할 때 뭘 같이 줘야 하나요?</strong> A. 최소 세 가지 — ① <strong>지표 정의</strong>(분모까지) ② <strong>기간과 제외 항목</strong>("4/1~6/29, 결측 2일 제외") ③ <strong>원본 파일 위치</strong>. 이 셋이 없으면 나중에 누구도 그 숫자를 재현할 수 없습니다.</p>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">13</span><h2>내 업무라면? — 자동화 후보 찾기</h2></div>
+<p>1~2분, 오늘 배운 걸 내 일에 대입해 보세요.</p>
+<ul><li>내가 매달 <strong>손으로 집계하는 표</strong>는? (매출 마감, 방문 리포트, 회원 현황…) → 정제+집계 자동화 후보</li><li>우리 팀이 보는 <strong>핵심 지표</strong>는? (전환율·재구매율·객단가) → 마스터 프롬프트에 넣기</li><li>분석가에게 <strong>부탁하고 기다리던 것</strong>은? → 이제 이름 대고 직접 시키기</li><li>결과에서 <strong>꼭 사람이 확인해야 할 숫자·해석</strong>은? → 검수표 항목으로 고정</li></ul>
+<div class="callout callout--summary"><p><span class="co-icon"></span> 예: 마케팅팀 — 채널별 전환·ROI 주간 집계. CRM팀 — RFM 기반 타겟 추출. 운영팀 — 재구매율·이탈 모니터링. 전부 <strong>"엑셀 + 정확한 분석 이름"</strong> 구조라 오늘 방식이 그대로 먹힙니다.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">14</span><h2>직무별 '내 업무에 이렇게 붙인다' 레시피</h2></div>
+<p>오늘 배운 게 마케팅·쇼핑몰만의 얘기 같나요? <strong>아닙니다.</strong> "반복되는 표 + 정해진 지표"가 있는 모든 직무에 그대로 붙습니다. 내 직무를 찾아, <strong>가진 파일 → 시킬 말 → 검수할 것</strong> 세 칸으로 바로 써먹으세요.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>직무</strong></th><th><strong>내가 가진 데이터</strong></th><th><strong>오늘 기법 대입</strong></th><th><strong>시킬 말 (붙여넣기)</strong></th></tr></thead><tbody><tr><td><strong>영업</strong></td><td>월별 거래처·수주 엑셀</td><td>파레토·RFM</td><td><em>"거래처별 매출 파레토로 상위 20% 핵심처를 뽑고, 최근 3개월 주문 없는 '이탈위험' 거래처를 표시해줘."</em></td></tr><tr><td><strong>마케팅</strong></td><td>채널별 광고비·유입·전환</td><td>퍼널·전환율·ROI</td><td><em>"채널별 광고비 대비 주문 전환율과 ROAS를 표로. 효율 낮은 채널을 짚어줘."</em></td></tr><tr><td><strong>CS/운영</strong></td><td>VOC·문의·환불 로그</td><td>집계·이상치</td><td><em>"문의를 유형별로 분류·집계하고, 특정 주에 급증한 유형(이상치)을 찾아줘."</em></td></tr><tr><td><strong>인사(HR)</strong></td><td>채용·근태·퇴사 데이터</td><td>코호트·이탈률</td><td><em>"입사 분기 코호트별 6개월 잔존율을 표로. 조기 퇴사 패턴을 짚어줘."</em></td></tr><tr><td><strong>재무/회계</strong></td><td>월 마감·비용 원장</td><td>추세·이상치</td><td><em>"계정별 월 비용 추세와 전월 대비 증감(%). 비정상적으로 튄 항목을 표시."</em></td></tr><tr><td><strong>재고/물류</strong></td><td>품목별 입출고</td><td>ABC·파레토</td><td><em>"품목을 매출 기여로 ABC 분류. A등급 품목의 재고 회전을 점검해줘."</em></td></tr><tr><td><strong>교육/공공</strong></td><td>수강·민원·설문</td><td>집계·세분화</td><td><em>"설문을 항목별로 집계하고, 응답자 그룹별 차이를 비교표로."</em></td></tr></tbody></table></div>
+<h3 class="sub-head">3단계로 내 것으로 만들기</h3>
+<ol><li><strong>찾기</strong> — 내가 매주/매달 <strong>손으로 만드는 표 하나</strong>를 고른다. (제일 지겨운 것)</li><li><strong>시키기</strong> — 그 표의 원본 엑셀을 붙이고, 위 표의 '시킬 말'을 내 항목명으로 바꿔 넣는다.</li><li><strong>고정하기</strong> — 잘 나오면 그 프롬프트를 <strong>그린컵 Project(또는 메모)</strong> 에 저장. 다음 달엔 데이터만 갈아끼운다. (3·4차시에서 배운 재사용)</li></ol>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>핵심 판별법</strong>: "형식은 매번 같고 숫자만 바뀐다" → 오늘 방식 100% 적용 대상. 주간보고, 월 마감, 회원 리포트, KPI 대시보드 전부 여기 속합니다.</p></div>
+<h3 class="sub-head">⚠️ 붙이기 전 체크 (실무 주의)</h3>
+<ul><li><strong>민감정보</strong> — 실명·주민번호·전화번호는 지우거나 익명화(<code>C0001</code>)하고 올리세요. 회사 보안 정책 먼저 확인.</li><li><strong>원본 보존</strong> — AI엔 <strong>사본</strong>을 주세요. 정제·집계는 항상 복사본에서.</li><li><strong>숫자 검수</strong> — 보고·정산에 쓸 값은 <strong>원본과 대조</strong>. "계산 과정 보여줘" + 검수표는 기본.</li><li><strong>인과 금지</strong> — "왜 그런가"는 맥락 아는 내가 판단. AI엔 "추정" 표시만 시킨다.</li></ul>
+<h3 class="sub-head">🎯 오늘의 숙제 (한 개만)</h3>
+<p>내 실제 업무 파일 하나로, 위 '시킬 말' 중 <strong>한 줄</strong>을 골라 돌려보세요. 결과가 손으로 하던 것과 맞는지 검수까지. <strong>"이거 되네?" 한 번</strong>이 업무 전이의 시작입니다.</p>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">✅</span><h2>오늘 자가진단</h2></div>
+<p>다음 차시로 넘어가기 전에 확인하세요. <strong>✗가 있으면 그 절로 돌아가세요.</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>#</strong></th><th><strong>확인</strong></th><th><strong>못 하면</strong></th></tr></thead><tbody><tr><td>1</td><td>데이터 작업 4단계(살펴보기→정제→분석·집계→시각화·요약)를 안 보고 말할 수 있다</td><td>2절</td></tr><tr><td>2</td><td><strong>빈칸을 0으로 채우면 왜 위험한지</strong> 설명할 수 있다</td><td>3절·실습 C-1</td></tr><tr><td>3</td><td>중복을 "합치지 말고 표시만" 시켜야 하는 이유를 안다 (동명이인)</td><td>3절·실습 B-2</td></tr><tr><td>4</td><td>형식 검사로 못 잡는 <strong>'값의 타당성'</strong> 문제를 예로 들 수 있다</td><td>3절 체크리스트 11번</td></tr><tr><td>5</td><td>같은 데이터에서 재구매율이 두 값으로 갈리는 이유를 안다</td><td><strong>6절 분모 전쟁</strong></td></tr><tr><td>6</td><td>추세·퍼널·RFM·코호트·파레토가 각각 뭘 보는 건지 한 줄로 말할 수 있다</td><td>4절·7절</td></tr><tr><td>7</td><td>퍼널에서 <strong>이탈이 큰 곳 ≠ 고칠 곳</strong>인 이유를 안다</td><td>실습 C-4</td></tr><tr><td>8</td><td>코호트 표의 오른쪽 아래가 왜 낮게 나오는지 안다</td><td>실습 D-3</td></tr><tr><td>9</td><td>채널 ROAS만 보고 예산을 옮기면 안 되는 이유를 3개 댈 수 있다</td><td>실습 C-5</td></tr><tr><td>10</td><td>실습 E-2의 정답표와 내 결과를 대조해봤다</td><td>실습 E-2</td></tr><tr><td>11</td><td>내 실제 업무 파일 하나로 한 줄이라도 돌려봤다</td><td>14절 숙제</td></tr></tbody></table></div>
+<div class="callout callout--tip"><div class="callout-label">💡 5번과 9번이 오늘의 진짜 성적표<strong>입니다. 계산은 AI가 합니다. 여러분이 챙길 건 </strong>정의를 정하는 것<strong>과 </strong>숫자를 해석하는 것</div><p>— 그 둘은 넘길 수 없습니다.</p></div>
+<h3 class="sub-head">오늘의 결과물 체크리스트</h3>
+<ul class="checklist"><li>정제된 주문 데이터 + <strong>[확인필요] 행 목록</strong></li><li>고객 중복 판정표 (합칠 것 / 합치면 안 될 것 구분)</li><li>90일 분석 세트 (추세·퍼널·채널)</li><li>1년 고객 분석 세트 (RFM·코호트·파레토·환불)</li><li><strong>핵심 숫자 검수표</strong> (지표 | 값 | 계산식 | 출처)</li><li><strong>월간 데이터 정제 규칙</strong> ← Project에 저장해 다음 달에 재사용</li></ul>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">＊</span><h2>오늘 정리</h2></div>
+<ul><li>현실 데이터는 더럽다 — 형식·단위·빈칸·중복·오타. <strong>정제는 AI가 잘하는 일.</strong> 정리 전 "문제 진단"부터.</li><li>규칙을 <strong>구체적으로</strong> 줘라. "알아서"는 금물. <em>Garbage in, garbage out</em> — 지저분한 데이터로는 분석도 틀린다.</li><li>실무 분석 기법 — <strong>추세·이동평균 / 전환 퍼널 / RFM / 코호트·재구매 / 파레토.</strong> 개념만 알면 실행은 <strong>AI에게 한 문장</strong>.</li><li>지표 용어(전환율·객단가·LTV·이탈률)를 알면, 시킬 수도 검수할 수도 있다.</li><li>정제의 판단은 셋뿐 — <strong>지우나 / 남기나 / 표시하나.</strong> 원칙은 하나: <strong>모르는 건 모른다고 남긴다.</strong></li><li><strong>빈칸은 0이 아니다.</strong> 채우지 말고 분모에서도 빼라. 결측 2일을 0으로 채우면 평균이 조용히 틀어진다.</li><li><strong>중복은 합치지 말고 표시만.</strong> 이름이 같아도 다른 사람일 수 있다(동명이인). 합치는 판단은 사람이.</li><li>형식이 맞다고 값이 맞는 건 아니다 — <strong><code>단가 × 수량 = 금액</code></strong><strong>이 성립하는지</strong>까지 봐야 한다.</li><li><strong>같은 데이터에서 숫자가 갈리는 건 계산이 틀려서가 아니라 정의가 달라서다.</strong> 지표엔 항상 분모를 병기하라.</li><li>퍼널에서 <strong>이탈이 큰 구간 ≠ 고칠 구간.</strong> 살 마음이 있었던 사람이 새는 곳을 먼저 본다.</li><li>코호트 표의 최근 달이 낮은 건 <strong>성적이 나빠서가 아니라 아직 시간이 안 지나서</strong>다.</li><li><strong>숫자와 인과 해석은 AI가 틀리기 쉬운 곳.</strong> 계산은 AI, 최종 검수와 "왜?"는 사람.</li><li>정제 규칙과 마스터 프롬프트는 <strong>Project에 저장</strong>하라. 다음 달엔 데이터만 갈아끼운다.</li></ul>
+</section>
+<div class="callout callout--summary"><p><span class="co-icon">🗣️</span> 다음 차시 예고: 지금까진 내 데이터·문서를 다뤘죠. 다음 시간엔 <strong>바깥 세상 정보</strong> — 긴 보고서, 경쟁사 자료를 읽고 비교하는 '조사' 업무를 자동화합니다.</p></div>
+<a class="next-lesson" href="lesson8.html"><div><span class="label">다음 차시</span><h3>조사·요약·검토. 바깥 세상 정보(긴 보고서, 경쟁사 자료)를 읽고 비교하는 '조사' 업무를 자동화합니다.</h3></div><span class="arrow">→</span></a>
+  </main>
+
+  <footer class="page-footer">
+    <p>그린컵 AI 에이전트 과정 · 7차시 데이터 다루기</p>
+  </footer>
+
+</div>
+</body>
+</html>
