@@ -596,7 +596,7 @@
 <h3 class="sub-head">C-1 · 결측부터 확인 (분석 전 필수)</h3>
 <p>분석을 바로 시작하면 안 됩니다. <strong>먼저 데이터에 구멍이 있는지</strong> 봐야죠. <br>(4단계의 ① 살펴보기가 분석 데이터에서도 똑같이 먼저입니다.)</p>
 <ul><li><em>"<strong><code>일별지표</code></strong> 시트에서 값이 비어 있는 날이 있는지 확인해줘. 있다면 며칠이고, <strong><code>이벤트로그</code></strong> 시트에 그 이유가 적혀 있는지도 찾아줘."</em></li></ul>
-<p><strong>→ 정답: 결측 2일 (2024-05-12, 2024-06-09).</strong> 둘 다 <code>이벤트로그</code>에 "집계 서버 오류로 지표 미수집"으로 기록돼 있습니다.</p>
+<p><strong>→ 정답: 결측 2일 (2024-05-12, 2024-06-09).</strong> <br>둘 다 <code>이벤트로그</code>에 "집계 서버 오류로 지표 미수집"으로 기록돼 있습니다.</p>
 <ul><li>이어서: <em>"앞으로 평균·합계를 낼 때 그 날들을 어떻게 처리할지 먼저 제안해줘. 0으로 채우는 것과 제외하는 것의 차이도 설명해."</em></li></ul>
 <div class="callout callout--warning"><div class="callout-label">⚠️ 0으로 채우면 어떻게 되나?</div><p>90일 평균 매출의 분모는 90인데 분자에 0이 두 번 들어갑니다 → <strong>평균이 약 2% 낮게</strong> 나오죠. 별거 아닌 것 같지만, 이런 게 쌓여 "매출이 줄었다"는 잘못된 결론이 됩니다. <strong>결측은 0이 아닙니다. 분모에서도 빼야 합니다.</strong></p></div>
 <div class="callout callout--tip"><p><span class="co-icon">💡</span> 그래서 이 파일엔 <code>지표정의</code> 시트가 있습니다. 맨 아래 줄에 <em>"(빈 행) 집계 서버 오류로 수집되지 않은 날 — 0으로 채우지 말 것"</em> 이라고 적혀 있어요. <strong>실무 데이터엔 이런 문서가 딸려 오는데, 대부분 안 읽습니다.</strong></p></div>
@@ -606,24 +606,28 @@
 <p><strong>→ 정답 (결측 제외, 88일 기준):</strong></p>
 <div class="table-scroll"><table><thead><tr><th><strong>월</strong></th><th><strong>수집일</strong></th><th><strong>매출</strong></th><th><strong>주문수</strong></th><th><strong>일평균 매출</strong></th><th><strong>MoM (합계)</strong></th><th><strong>MoM (일평균)</strong></th></tr></thead><tbody><tr><td>2024-04</td><td>30일</td><td>29,293,291원</td><td>1,271건</td><td>976,443원</td><td>—</td><td>—</td></tr><tr><td>2024-05</td><td>30일 (5/12 결측)</td><td>31,811,341원</td><td>1,374건</td><td>1,060,378원</td><td>+8.6%</td><td><strong>+8.6%</strong></td></tr><tr><td>2024-06</td><td>28일 (6/9 결측, 6/29까지)</td><td>34,816,757원</td><td>1,530건</td><td>1,243,456원</td><td>+9.4%</td><td><strong>+17.3%</strong></td></tr><tr><td><strong>합계</strong></td><td><strong>88일</strong></td><td><strong>95,921,389원</strong></td><td><strong>4,175건</strong></td><td></td><td></td><td></td></tr></tbody></table></div>
 <div class="callout callout--warning"><div class="callout-label">⚠️ 달마다 수집된 일수가 다릅니다 — 합계로 비교하면 안 됩니다.</div><p>결측일을 빼면 4월 30일, 5월 30일, 6월 28일입니다(6월은 6/29에 끝나고 6/9가 결측).<br>6월을 합계로 비교하면 <strong>+9.4%</strong>, 하루 평균으로 비교하면 <strong>+17.3%</strong> — 성장 속도가 두 배 가까이 다르게 보입니다.<br>AI가 처음부터 일평균으로 계산했다면 함정을 잘 피한 것입니다. 합계로만 비교했다면 시켜보세요: <em>"월별 일수가 다른데, 하루 평균으로도 비교해줘."</em></p></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 그런데 +17.3%를 "실력"이라고 말하면 안 됩니다.</div><p>6월에는 <strong>6/20 인플루언서 라이브</strong>(하루 매출 약 354만 원, 평소의 3배)가 들어 있습니다. 이 하루를 빼고 다시 계산하면 6월 일평균 성장률은 <strong>+9.3%</strong>입니다. 성장의 절반 가까이가 이벤트 하루 덕분인 셈이죠.<br>시켜보세요: <em>"6/20을 빼고 6월 일평균 매출 MoM을 다시 계산해줘."</em><br>→ 기간을 맞추는 것(일평균)과, 튀는 날을 따로 보는 것(C-3 이상치) — <strong>둘 다 해야</strong> 진짜 흐름이 보입니다.</p></div>
 <h3 class="sub-head">C-3 · 이상치 탐지 &amp; 상관관계 (4.2) — 함정 조심</h3>
-<ul><li><strong>이상치(outlier)</strong>: 6/20처럼 유난히 튀는 날. 평균을 왜곡하므로 <strong>원인을 확인하고 따로</strong> 봐야 합니다.</li><li><strong>상관관계 ≠ 인과관계</strong>: "광고비 늘린 주에 매출도 늘었다"는 <strong>상관</strong>일 뿐, 광고가 원인이라 단정하면 위험합니다. 계절·프로모션 등 다른 요인이 숨어 있을 수 있죠. AI에게 시킬 때 <em>"상관은 상관이라 표현하고, 인과로 단정하지 마"</em> 를 붙이세요.</li><li><strong>AI에게</strong>: <em>"매출이 평소 대비 유난히 튀거나 꺼진 날(이상치)을 찾아줘. 그리고 <strong><code>이벤트로그</code></strong> 시트에 그날 무슨 일이 있었는지 대조해서 표로 만들어줘. 어떤 기준으로 이상치라고 판단했는지도 적어줘."</em></li></ul>
+<ul><li><strong>이상치(outlier)</strong>: 6/20처럼 유난히 튀는 날. 평균을 왜곡하므로 <strong>원인을 확인하고 따로</strong> 봐야 합니다.</li><li><strong>상관관계 ≠ 인과관계</strong>: "광고비 늘린 주에 매출도 늘었다"는 <strong>상관</strong>일 뿐, 광고가 원인이라 단정하면 위험합니다. 계절·프로모션 등 다른 요인이 숨어 있을 수 있죠. AI에게 시킬 때 <em>"상관은 상관이라 표현하고, 인과로 단정하지 마"</em> 를 붙이세요.</li><li><strong>AI에게</strong>: <em>"매출이 평소 대비 유난히 튀거나 꺼진 날(이상치)을 찾아줘. 그리고 <strong><code>이벤트로그</code></strong> 시트에 그날 무슨 일이 있었는지 대조해서 표로 만들어줘. 어떤 기준으로 이상치라고 판단했는지도 적어줘."<br><br>이어서 : "상관은 상관이라 표현하고, 인과로 단정하지 마."</em></li></ul>
 <p><strong>→ 반드시 나와야 할 3건:</strong></p>
 <div class="table-scroll"><table><thead><tr><th><strong>날짜</strong></th><th><strong>매출</strong></th><th><strong>이벤트로그</strong></th></tr></thead><tbody><tr><td><strong>2024-06-20 (목)</strong></td><td><strong>3,537,499원</strong> (최고)</td><td>인플루언서 라이브 방송</td></tr><tr><td>2024-06-21 (금)</td><td>1,669,877원</td><td>라이브 후광 효과</td></tr><tr><td><strong>2024-05-18 (토)</strong></td><td><strong>75,050원</strong> (최저)</td><td><strong>결제 모듈 장애 — 종일 결제 실패</strong></td></tr></tbody></table></div>
 <p>기준에 따라 5/5, 6/1, 4/20 같은 프로모션 날이 더 나올 수 있습니다. 이벤트로그로 이유가 설명되면 맞는 답입니다.<br>이상치는 정해진 기준이 없으니, <strong>AI가 어떤 기준을 썼는지</strong> 꼭 확인하세요.</p>
-<div class="callout callout--tip"><div class="callout-label">💡 5/18을 반드시 뜯어보세요.</div><p>그날 숫자는 이렇습니다:</p></div>
-<div class="table-scroll"><table><thead><tr><th><strong>세션</strong></th><th><strong>장바구니추가</strong></th><th><strong>주문수</strong></th><th><strong>매출</strong></th></tr></thead><tbody><tr><td>373 (정상)</td><td>78 (정상)</td><td><strong>3</strong></td><td>75,050원</td></tr></tbody></table></div>
-<div class="callout callout--summary"><div class="callout-label"> 방문도 정상, 장바구니도 정상인데 주문만 무너졌습니다.</div><p>이게 퍼널로 원인을 좁히는 방법이에요 — <em>"매출이 떨어졌다"</em> 가 아니라 <em>"결제 단계에서만 떨어졌다"</em> 까지 가야 원인이 잡힙니다.</p></div>
+<div class="callout callout--tip"><div class="callout-label">💡 5/18결제 모듈 장애를 반드시 뜯어보세요.</div><p>그날 숫자는 이렇습니다</p><div class="table-scroll"><table><thead><tr><th><strong>세션</strong></th><th><strong>장바구니추가</strong></th><th><strong>주문수</strong></th><th><strong>매출</strong></th></tr></thead><tbody><tr><td>373 (정상)</td><td>78 (정상)</td><td><strong>3</strong></td><td>75,050원</td></tr></tbody></table></div><div class="callout callout--summary"><div class="callout-label"> 방문도 정상, 장바구니도 정상인데 주문만 무너졌습니다.</div><p>이게 퍼널로 원인을 좁히는 방법이에요<br><em>"매출이 떨어졌다"</em> 가 아니라 <em>"결제 단계에서만 떨어졌다"</em> 까지 가야 원인이 잡힙니다.</p></div></div>
+
+
 <div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>인과 단정 금지 훈련</strong>: 이벤트로그에 "라이브 방송"이 있다고 해서 <em>"라이브 때문에 매출이 3배 됐다"</em> 고 단정하면 안 됩니다. 같은 날 다른 요인이 있었을 수도 있죠. AI에게 <em>"상관은 상관이라 쓰고, 인과는 '추정'이라 표시해"</em> 를 꼭 붙이세요. (다만 5/18 결제 장애처럼 <strong>메커니즘이 명확한 것</strong>은 인과로 봐도 무리가 없습니다 — 이 차이를 구분하는 게 4.2절의 핵심입니다.)</p></div>
 <div class="callout callout--warning"><div class="callout-label">⚠️ 여기가 사람이 꼭 개입할 곳.</div><p>기법 실행(계산·표)은 AI가 완벽에 가깝게 하지만, <strong>"그래서 왜?"라는 해석</strong>은 맥락을 아는 사람 몫입니다. AI는 "6/20 매출 급증"까지, "라이브 때문"은 사람이 확인.</p></div>
 <h3 class="sub-head">C-4 · 전환 퍼널 &amp; 전환율 (4.3) — 손님이 어디서 새는가</h3>
 <ul><li><strong>개념</strong>: 방문자가 <strong>방문 → 장바구니 → 주문</strong>으로 갈수록 줄어듭니다. 각 단계 넘어가는 비율이 <strong>전환율(conversion rate)</strong>. 어느 단계에서 가장 많이 빠지는지 보면, <strong>어디를 고쳐야 돈이 되는지</strong>가 나옵니다. 방문을 2배 늘리는 것보다 장바구니→주문 전환을 5%p 올리는 게 쌀 때가 많습니다.</li><li><strong>전통 방식</strong>: 로그 데이터를 SQL로 단계별 집계, 나누기.</li><li><strong>AI에게</strong>: <em>"세션수 → 장바구니추가 → 주문수로 전체 전환 퍼널을 만들고, 단계별 전환율(%)을 계산해줘. 결측일은 제외하고. 가장 크게 이탈하는 구간이 어디인지, 그걸 개선하면 어떤 효과일지 한 줄로."</em></li></ul>
-<p><strong>→ 정답 (88일 합계):</strong></p>
+<p><strong>→ 정답 (88일 합계)</strong></p>
 <div class="table-scroll"><table><thead><tr><th><strong>단계</strong></th><th><strong>값</strong></th><th><strong>다음 단계 전환율</strong></th></tr></thead><tbody><tr><td>세션</td><td>46,748</td><td>↓ <strong>21.2%</strong></td></tr><tr><td>장바구니추가</td><td>9,890</td><td>↓ <strong>42.2%</strong></td></tr><tr><td>주문</td><td>4,175</td><td>(전체 전환율 <strong>8.93%</strong>)</td></tr></tbody></table></div>
-<div class="callout callout--tip"><div class="callout-label">💡 가장 크게 새는 곳은 세션→장바구니(78.8% 이탈)</div><p>입니다. 그런데 여기서 흔한 오해 하나 — <em>"그럼 여기를 고쳐야겠네"</em> 가 항상 맞진 않습니다. <strong>둘러보기만 하는 방문은 어느 쇼핑몰에나 있습니다.</strong> 반면 장바구니까지 담고 안 사는 57.8%는 <strong>살 마음이 있었던 사람</strong>이라 개선 여지가 큽니다. <strong>이탈 숫자가 큰 곳 ≠ 고칠 곳.</strong></p></div>
+<div class="callout callout--tip"><div class="callout-label">💡 가장 크게 새는 곳은 세션</div><p>장바구니(78.8% 이탈)입니다. 그런데 여기서 흔한 오해 하나 — <em>"그럼 여기를 고쳐야겠네"</em> 가 항상 맞진 않습니다. <strong>둘러보기만 하는 방문은 어느 쇼핑몰에나 있습니다.</strong> 반면 장바구니까지 담고 안 사는 57.8%는 <strong>살 마음이 있었던 사람</strong>이라 개선 여지가 큽니다. <strong>이탈 숫자가 큰 곳 ≠ 고칠 곳.</strong></p></div>
 <ul><li>이어서: <em>"주중과 주말의 전환율(주문수 ÷ 세션수)을 비교해줘."</em></li></ul>
 <p><strong>→ 정답: 주중 9.59% vs 주말 6.66%</strong> — 주말엔 방문은 있는데 <strong>덜 삽니다.</strong></p>
-<div class="callout callout--tip"><p><span class="co-icon">💡</span> 이 한 줄이 실무에선 바로 액션이 됩니다: <em>"주말엔 신규 유치 광고비를 줄이고, 주중에 재방문 유도를 걸자."</em> 데이터가 <strong>돈 쓰는 순서</strong>를 바꾸는 순간이죠.</p></div>
+<ul><li>이어서: <em>"주중과 주말을 나눠서 세션→장바구니, 장바구니→주문 전환율을 각각 비교해줘."</em></li></ul>
+<p><strong>→ 정답:</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>단계</strong></th><th><strong>주중</strong></th><th><strong>주말</strong></th></tr></thead><tbody><tr><td>세션 → 장바구니</td><td>21.2%</td><td>21.1%</td></tr><tr><td>장바구니 → 주문</td><td><strong>45.3%</strong></td><td><strong>31.5%</strong></td></tr></tbody></table></div>
+<div class="callout callout--tip"><div class="callout-label">💡 숫자 하나보다 단계를 쪼개야 액션이 보입니다</div><p>주말 손님도 장바구니까지는 평일과 <strong>똑같이</strong> 담습니다. 차이는 <strong>담고 나서 결제하는 단계</strong>에서만 벌어집니다. C-3에서 5/18을 퍼널로 쪼개 본 방법 그대로죠.<br>그래서 "주말엔 광고를 줄이자"가 아니라 <em>"주말 장바구니 이탈 고객에게 결제 리마인드를 보내자"</em> 쪽이 데이터에 맞는 액션입니다. 단, 주말에 왜 결제를 덜 하는지는 데이터에 없으니 <strong>이유는 추정</strong>입니다(4.2절).</p></div>
 </section>
 <section class="lesson-section"><div class="section-head"><span class="section-mark">5</span><h2>매출·방문자 지표 사전 (읽고 말하기)</h2></div>
 <p>분석 결과를 받으면 이 용어들이 쏟아집니다. 뜻만 알면 됩니다 — 계산은 AI가 합니다.</p>
@@ -795,6 +799,7 @@
 
 </div>
 <script src="editor.js"></script>
+
 
 
 
