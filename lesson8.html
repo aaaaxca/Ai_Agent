@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>조사·요약·검토</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --paper:#F5F7FB;
+    --surface:#FFFFFF;
+    --surface-2:#EEF1F9;
+    --ink:#1B2333;
+    --ink-soft:#525C72;
+    --border:#DCE1EE;
+    --accent:#2954D6;
+    --accent-ink:#FFFFFF;
+    --accent-tint:#E7ECFB;
+    --amber:#8A5A10;
+    --amber-tint:#FBF0DC;
+    --amber-line:#E9CE9C;
+    --red:#B23434;
+    --red-tint:#FCE9E9;
+    --red-line:#EFC2C2;
+    --green:#1F8A5F;
+    --green-tint:#E5F5EE;
+    --shadow:0 1px 2px rgba(27,35,51,.04), 0 8px 24px -12px rgba(27,35,51,.12);
+    --term-bg:#12151E;
+    --term-ink:#DDE3F0;
+    --term-accent:#7C9BFF;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#10131B;
+      --surface:#171B26;
+      --surface-2:#1C2130;
+      --ink:#E7EAF2;
+      --ink-soft:#A7AFC2;
+      --border:#2B3143;
+      --accent:#89A6FF;
+      --accent-ink:#0B1020;
+      --accent-tint:#1E2740;
+      --amber:#E8B75D;
+      --amber-tint:#2E2716;
+      --amber-line:#4A3B1E;
+      --red:#E58888;
+      --red-tint:#3A1E1E;
+      --red-line:#4E2A2A;
+      --green:#5FD1A0;
+      --green-tint:#123326;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#10131B;
+    --surface:#171B26;
+    --surface-2:#1C2130;
+    --ink:#E7EAF2;
+    --ink-soft:#A7AFC2;
+    --border:#2B3143;
+    --accent:#89A6FF;
+    --accent-ink:#0B1020;
+    --accent-tint:#1E2740;
+    --amber:#E8B75D;
+    --amber-tint:#2E2716;
+    --amber-line:#4A3B1E;
+    --red:#E58888;
+    --red-tint:#3A1E1E;
+    --red-line:#4E2A2A;
+    --green:#5FD1A0;
+    --green-tint:#123326;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Noto Sans KR","Pretendard",sans-serif;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+    word-break:keep-all;
+    overflow-wrap:break-word;
+  }
+  h1,h2,h3{
+    font-family:"Nanum Myeongjo",serif;
+    color:var(--ink);
+    text-wrap:balance;
+    margin:0;
+  }
+  a{color:var(--accent);}
+  strong{color:var(--ink); font-weight:700;}
+  em{font-style:italic;}
+  code{
+    font-family:"JetBrains Mono",monospace;
+    font-size:.9em;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:4px;
+    padding:.1em .4em;
+  }
+  p{margin:0 0 1em;}
+  ul,ol{margin:0 0 1em; padding-left:1.3em;}
+  li{margin-bottom:.45em;}
+  .page-shell{
+    max-width:860px;
+    margin:0 auto;
+    padding:0 20px 96px;
+  }
+
+  /* ---------- Masthead ---------- */
+  .masthead{
+    padding:56px 0 40px;
+    border-bottom:1px solid var(--border);
+    margin-bottom:40px;
+  }
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.78rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--accent);
+    background:var(--accent-tint);
+    border:1px solid var(--border);
+    padding:5px 12px;
+    border-radius:999px;
+    margin-bottom:20px;
+  }
+  .masthead h1{
+    font-size:clamp(2.1rem, 4.5vw, 3.1rem);
+    font-weight:800;
+    margin-bottom:10px;
+  }
+  .masthead .lede{
+    color:var(--ink-soft);
+    font-size:1.05rem;
+    max-width:60ch;
+    margin-bottom:0;
+  }
+  .masthead .meta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px 24px;
+    margin-top:24px;
+    font-size:.9rem;
+    color:var(--ink-soft);
+  }
+  .masthead .meta-row span{display:flex; align-items:center; gap:6px;}
+  .masthead .meta-row b{color:var(--ink); font-weight:700;}
+
+  main{min-width:0;}
+
+  /* ---------- Sections ---------- */
+  .lesson-section{
+    padding-bottom:44px;
+    margin-bottom:44px;
+    border-bottom:1px solid var(--border);
+    scroll-margin-top:20px;
+  }
+  .lesson-section:last-of-type{border-bottom:none;}
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    margin-bottom:20px;
+  }
+  .section-mark{
+    font-family:"JetBrains Mono",monospace;
+    font-weight:700;
+    font-size:1rem;
+    color:var(--accent-ink);
+    background:var(--accent);
+    border-radius:8px;
+    padding:3px 9px;
+    flex-shrink:0;
+  }
+  .section-head h2{
+    font-size:clamp(1.35rem,2.6vw,1.7rem);
+    font-weight:700;
+  }
+  .section-head h2 small{
+    display:block;
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:500;
+    font-size:.85rem;
+    color:var(--ink-soft);
+    margin-top:4px;
+  }
+  h3.sub-head{
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:700;
+    font-size:1.02rem;
+    color:var(--accent);
+    margin:28px 0 10px;
+  }
+  h3.sub-head.first{margin-top:0;}
+  h4.mini-head{
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:700;
+    font-size:.96rem;
+    color:var(--ink);
+    margin:20px 0 8px;
+  }
+
+  /* ---------- Callouts ---------- */
+  .callout{
+    border:1px solid var(--border);
+    border-left:4px solid var(--accent);
+    background:var(--surface);
+    border-radius:10px;
+    padding:16px 18px;
+    margin:20px 0;
+    box-shadow:var(--shadow);
+  }
+  .callout p:last-child{margin-bottom:0;}
+  .callout ul:last-child, .callout ol:last-child{margin-bottom:0;}
+  .callout-label{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-weight:700;
+    font-size:.92rem;
+    margin-bottom:8px;
+    color:var(--ink);
+  }
+  .callout--scenario{border-left-color:var(--accent); background:var(--accent-tint);}
+  .callout--tip{border-left-color:var(--amber); background:var(--amber-tint);}
+  .callout--tip .callout-label{color:var(--amber);}
+  .callout--warning{border-left-color:var(--red); background:var(--red-tint);}
+  .callout--warning .callout-label{color:var(--red);}
+  .callout--summary{border-left-color:var(--accent); background:var(--surface);}
+  .callout--summary .callout-label{color:var(--accent);}
+  .callout--question{border-left-color:var(--ink-soft); background:var(--surface-2);}
+  .callout--practice{border-left-color:var(--green); background:var(--green-tint);}
+  .callout--practice .callout-label{color:var(--green);}
+  .co-icon{font-size:1.02em; margin-right:2px;}
+  .co-icon:empty{display:none;}
+  .callout-label:empty{display:none;}
+  .callout hr{border:none; border-top:1px dashed var(--border); margin:12px 0;}
+
+
+  /* ---------- Practice card ---------- */
+  .practice-title{display:flex;align-items:center;gap:8px;font-family:"Noto Sans KR",sans-serif;font-weight:700;font-size:1.05rem;color:var(--green);margin:0 0 10px;}
+  .practice-card{border:1px solid var(--border);border-left:4px solid var(--green);background:var(--green-tint);border-radius:12px;padding:18px 20px;margin:28px 0 18px;box-shadow:var(--shadow);}
+  .practice-card > p{margin:0 0 .4em;}
+  .practice-prep{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-top:14px;font-size:.92rem;}
+  .practice-prep .prep-label{font-weight:700;margin-bottom:6px;}
+  .practice-prep ul{list-style:none;padding-left:0;margin:0;}
+  .practice-prep li{margin-bottom:.3em;}
+  .practice-prep .meta{color:var(--ink-soft);}
+
+  /* ---------- Prepare chip ---------- */
+  .prep{
+    font-size:.9rem;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-left:4px solid var(--ink-soft);
+    border-radius:8px;
+    padding:11px 14px;
+    margin:0 0 14px;
+  }
+  .prep b{color:var(--ink);}
+
+  /* ---------- Terminal / prompt ---------- */
+  .terminal{
+    background:var(--term-bg);
+    color:var(--term-ink);
+    border-radius:10px;
+    padding:16px 18px;
+    margin:14px 0;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.84rem;
+    line-height:1.8;
+    overflow-x:auto;
+    white-space:pre-wrap;
+  }
+  .prompt{
+    background:var(--term-bg);
+    color:var(--term-ink);
+    border-radius:8px;
+    padding:10px 14px;
+    margin:10px 0;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.82rem;
+    line-height:1.8;
+    white-space:pre-wrap;
+    overflow-x:auto;
+  }
+  .prompt .note{color:#8892AC; font-family:"Noto Sans KR",sans-serif;}
+  .terminal code, .prompt code{background:none; border:none; padding:0; color:inherit;}
+
+  /* ---------- Tables ---------- */
+  .table-scroll{overflow-x:auto; margin:18px 0; border:1px solid var(--border); border-radius:12px;}
+  table{border-collapse:collapse; width:100%; min-width:480px; font-size:.92rem;}
+  th,td{
+    text-align:left;
+    padding:11px 14px;
+    border-bottom:1px solid var(--border);
+    vertical-align:top;
+  }
+  th{
+    background:var(--surface-2);
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:700;
+    color:var(--ink);
+    white-space:nowrap;
+  }
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:nth-child(even){background:var(--surface);}
+  tbody tr:nth-child(odd){background:transparent;}
+  td strong{color:var(--accent);}
+  .tag-bad{color:var(--red); font-weight:700;}
+  .tag-good{color:var(--green); font-weight:700;}
+
+  /* ---------- Lists with markers ---------- */
+  .steps{padding-left:0; list-style:none; counter-reset:step;}
+  .steps li{counter-increment:step; position:relative; padding-left:36px; margin-bottom:14px;}
+  .steps li::before{
+    content:counter(step);
+    position:absolute; left:0; top:-1px;
+    width:24px; height:24px;
+    border-radius:50%;
+    background:var(--accent);
+    color:var(--accent-ink);
+    font-family:"JetBrains Mono",monospace;
+    font-size:.78rem;
+    font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  /* ---------- Checklist ---------- */
+  .checklist{list-style:none; padding-left:0;}
+  .checklist li{position:relative; padding-left:28px; margin-bottom:.5em;}
+  .checklist li::before{
+    content:"";
+    position:absolute; left:0; top:.5em;
+    width:15px; height:15px;
+    border:1.5px solid var(--border);
+    border-radius:4px;
+    background:var(--surface);
+  }
+
+  /* ---------- Figure ---------- */
+  figure.fig{margin:20px 0; text-align:center;}
+  figure.fig img{max-width:100%; height:auto; border:1px solid var(--border); border-radius:10px; background:var(--surface);}
+  figure.fig figcaption{font-size:.85rem; color:var(--ink-soft); margin-top:8px;}
+
+  /* ---------- Toggle ---------- */
+  details.toggle{
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:var(--surface);
+    padding:12px 16px;
+    margin:18px 0;
+  }
+  details.toggle > summary{
+    cursor:pointer;
+    font-weight:700;
+    color:var(--accent);
+    font-size:.95rem;
+    list-style:none;
+  }
+  details.toggle > summary::-webkit-details-marker{display:none;}
+  details.toggle > summary::before{content:"\25B8 "; font-family:"JetBrains Mono",monospace;}
+  details.toggle[open] > summary::before{content:"\25BE ";}
+  details.toggle[open] > summary{margin-bottom:10px; padding-bottom:8px; border-bottom:1px dashed var(--border);}
+  .toggle-body > :last-child{margin-bottom:0;}
+  .toggle-body .lesson-section{border-bottom:none; padding-bottom:0; margin-bottom:0;}
+
+  /* ---------- FAQ / quiz ---------- */
+  .quiz-item{
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:14px 16px;
+    margin-bottom:12px;
+    background:var(--surface);
+  }
+  .quiz-item .q{font-weight:700; margin-bottom:0;}
+  .quiz-item details{margin-top:8px;}
+  .quiz-item summary{cursor:pointer; color:var(--accent); font-weight:700; font-size:.86rem;}
+  .quiz-item .ans{margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); color:var(--ink-soft); font-size:.9rem;}
+  .quiz-item .ans p{margin-bottom:0;}
+
+  /* ---------- Next lesson ---------- */
+  .next-lesson{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:22px 26px;
+    margin-top:8px;
+    box-shadow:var(--shadow);
+    text-decoration:none;
+    color:inherit;
+  }
+  a.next-lesson:hover{border-color:var(--accent);}
+  a.next-lesson:hover .arrow{transform:translateX(4px);}
+  .next-lesson .label{
+    font-family:"JetBrains Mono",monospace;
+    font-size:.76rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+    display:block;
+  }
+  .next-lesson h3{font-size:1.2rem; font-weight:700; font-family:"Nanum Myeongjo",serif;}
+  .next-lesson .arrow{
+    font-family:"JetBrains Mono",monospace;
+    font-size:1.4rem;
+    color:var(--accent);
+    display:inline-block;
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .next-lesson .arrow{transition:transform .15s ease;}
+  }
+
+  .page-footer{
+    margin-top:60px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    color:var(--ink-soft);
+    font-size:.84rem;
+  }
+
+  @media (prefers-reduced-motion:no-preference){
+    a{transition:background-color .15s ease, color .15s ease;}
+  }
+</style>
+</head>
+<body>
+<div class="page-shell">
+
+  <header class="masthead">
+    <a class="eyebrow" href="index.html" style="text-decoration:none;">← 그린컵 AI 에이전트 과정 · 8차시</a>
+    <h1>조사·요약·검토</h1>
+    <p class="lede">경쟁사 세 곳을 내일 회의 전까지 한 장으로 — 읽기만 몇 시간인 문서 더미를 <strong>몇 분 만에 정리하고, 그 결과가 정말 맞는지까지 검증합니다.</strong></p>
+    <div class="meta-row">
+      <span>📍 <b>오늘 배우는 것</b> — 목적에 맞는 요약 4종(압축·추출·변환·판단), 비교 기준을 내가 정하는 법, 1차/2차자료와 출처 사다리, AI 환각 3유형과 가장 위험한 &ldquo;단서 떼기&rdquo;, 자료가 어긋날 때의 삼각검증, SWOT·포지셔닝맵·TAM/SAM/SOM 같은 전략 기법, 조사 업무 용어</span>
+    </div>
+  </header>
+
+  <main>
+<div class="callout callout--scenario"><div class="callout-label">🎯 오늘의 가상 문제상황</div><p>팀장이 말합니다. <em>"경쟁사 세 곳 조사해서, 우리가 어디서 이기고 어디서 밀리는지 한 장으로 정리해와. 내일 회의 전까지."</em> 자료를 받아보니 회사마다 형식도 길이도 제각각인 문서 더미. 시장 리포트까지 합치면 읽기만 해도 몇 시간입니다. 정리해서 보고했더니 팀장이 한마디 더. <em>"이 내부 기획서 초안이랑 재무팀 의견이 서로 안 맞는 것 같은데, 그것도 좀 봐줘."</em> <strong>예전 같으면 리서처·기획팀에 부탁하고 며칠 기다릴 일. 오늘은 그걸 몇 분 만에, 직접 뽑습니다.</strong></p></div>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">📖</span><h2>오늘 나올 단어 8개 — 먼저 한 줄씩</h2></div>
+<p>오늘은 낯선 단어가 좀 나옵니다. <strong>지금 외울 필요 없습니다.</strong> 아래를 한 번 훑어두면, 본문에서 만났을 때 "아 아까 그거" 하고 넘어갈 수 있어요. 각 단어는 본문에서 다시 제대로 설명합니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>단어</strong></th><th><strong>한 줄로</strong></th></tr></thead><tbody><tr><td><strong>환각</strong></td><td>AI가 <strong>없는 걸 그럴듯하게 지어내는 것.</strong> 없는 통계, 가짜 인용</td></tr><tr><td><strong>1차자료</strong></td><td>내가(우리가) <strong>직접 모은 원본</strong> — 우리 판매 데이터, 자사 설문</td></tr><tr><td><strong>2차자료</strong></td><td><strong>남이 이미 가공한 것</strong> — 뉴스 기사, 시장 리포트, 타사 발표자료</td></tr><tr><td><strong>출처 사다리</strong></td><td>같은 사실도 <strong>어디서 왔느냐</strong>로 신뢰도가 갈린다는 개념 (4절)</td></tr><tr><td><strong>삼각검증</strong></td><td>서로 다른 방법으로 잰 결과 <strong>셋을 나란히 놓고</strong> 보는 것 (8절)</td></tr><tr><td><strong>생존 편향</strong></td><td><strong>떠난 사람은 응답하지 않아서</strong> 결과가 실제보다 좋게 나오는 현상</td></tr><tr><td><strong>SWOT</strong></td><td>강점·약점·기회·위협을 <strong>2×2 네 칸</strong>으로 정리하는 전략 기본틀 (7절)</td></tr><tr><td><strong>TAM/SAM/SOM</strong></td><td>시장 크기를 <strong>전체 → 접근 가능 → 현실적 목표</strong> 순으로 좁혀 잡는 것 (7절)</td></tr></tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 오늘 배우는 것의 절반은 <strong>AI 쓰는 법</strong>이 아니라 <strong>자료 읽는 법</strong>입니다. 그래서 단어가 나옵니다. 그런데 이 단어들, 알고 나면 회의에서 바로 써먹습니다.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">0</span><h2>자료 정리 — 받은 자료부터 훑어보기</h2></div>
+<div class="practice-card"><div class="practice-title">🛠 실습 A — 보도 클리핑 8건 정리 🥇최소 코스</div><p>순서는 <b>① 들어있는 것 확인</b> → <b>② 신뢰도 순 줄 세우기</b> → <b>③ 어긋나는 곳 찾기</b> → <b>④ 사람이 확인할 것 남기기</b>.<br>네 단계 모두 <b>한 대화</b>에서 이어갑니다.</p><div class="practice-prep"><div class="prep-label">📎 준비물</div><ul><li><b>보도 클리핑</b>(<code>press_clippings.docx</code>) <span class="meta">· Word · 기사 8건</span></li></ul></div></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 기사는 보통 <strong>PDF 스크랩 파일</strong>이나 <strong>Word 파일</strong>로 모아서 주고받습니다. 오늘 자료도 Word 파일이에요.</p></div>
+<h3 class="sub-head">① 뭐가 들어있는지 확인 — 요약하지 말고</h3>
+<p><strong>새 대화창</strong>을 열고 <strong>보도 클리핑 8건</strong>(<code>press_clippings.docx</code>)을 첨부합니다.</p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 문서에 기사가 몇 건이고, 각각 언제·어느 매체 것인지 표로 정리해줘. 아직 요약하지 마."</em></p></div>
+<div class="callout callout--tip"><div class="callout-label">💡 왜 "아직 요약하지 마"?</div><p>자료를 받자마자 요약부터 시키면, <strong>뭐가 들어있는지도 모른 채</strong> 결과를 받게 됩니다. 목록부터 보는 게 조사의 첫 단추예요.</p></div>
+<h3 class="sub-head">② 믿을 만한 순서로 줄 세우기 — 오늘의 진짜 시작점</h3>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 8건을 신뢰도 순으로 줄 세워줘. 각각 왜 그 순위인지 한 줄씩. 특히 '취재해서 쓴 기사'와 '회사가 준 보도자료를 옮긴 기사'를 구분해줘."</em></p></div>
+<div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — ①번 기사(보틀로 4만 점포)가 하위권인가?</div><p>①번은 <strong>회사 보도자료를 확인 없이 옮긴 기사</strong>라 하위권이 정상입니다. 틀려서가 아니라, <strong>검증이 안 됐기 때문</strong>이에요. 쓸 땐 <em>"보틀로 발표 기준 약 4만 곳"</em> 처럼 누구 주장인지 붙이면 됩니다.</p></div>
+<h3 class="sub-head">③ 서로 어긋나는 데 찾기</h3>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 8건 중 서로 어긋나는 내용이 있어? 있다면 어느 쪽을 믿어야 할지 근거와 함께."</em></p></div>
+<div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — ①(4만 점포)과 ②(2만 8천 곳)의 차이를 잡아냈나?</div><p>같은 회사, 같은 항목인데 <strong>숫자가 1.4배</strong> 차이 납니다. AI가 이 둘을 <strong>어긋나는 곳</strong>으로 짚어냈다면 성공이에요.</p></div>
+<h3 class="sub-head">④ 사람이 할 일만 남기기</h3>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 중에서 내가 원문을 직접 확인해야 하는 건은 뭐고, 그대로 인용해도 되는 건 뭔지 나눠줘."</em></p></div>
+<p><strong>방금 한 게 오늘 전부입니다.</strong></p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> 자료를 모으고 → 믿을 만한지 재고 → 어긋나는 걸 찾고 → 사람이 확인할 것을 남긴다.</p></div>
+<p>아래 본문과 실습은 이걸 <strong>더 많은 자료로, 더 정확한 이름을 붙여</strong> 반복하는 것뿐이에요. 지금 이 네 단계가 손에 잡혔다면 오늘의 절반은 이미 끝났습니다.</p>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> 만약 위 네 개 중 하나라도 이상한 답이 왔다면 — 정상입니다. <strong>14절 트러블슈팅</strong>에 증상별 대응이 정리돼 있으니 나중에 참고하세요. 지금은 넘어가도 됩니다.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">1</span><h2>조사 작업 4단계 — 오늘의 지도</h2></div>
+<p>오늘 실습에서 계속 이 순서로 돕니다. 0절에서 이미 한 바퀴 돌아본 그것입니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>단계</strong></th><th><strong>시킬 말 예시</strong></th><th><strong>초보가 흔히 건너뛰는 것</strong></th></tr></thead><tbody><tr><td>① <strong>수집·점검</strong></td><td>"자료 다 올렸어. 이 중 뭐가 1차자료고 뭐가 2차자료인지, 부족한 자료는 없는지 짚어줘"</td><td><strong>여길 건너뛰고 바로 ②로 감</strong> ← 가장 흔한 실수</td></tr><tr><td>② <strong>요약</strong></td><td>"이 리포트를 [목적]에 맞게, [길이]로, [관점]에서 요약해줘"</td><td>목적을 안 주고 "요약해줘"만 함</td></tr><tr><td>③ <strong>비교</strong></td><td>"이 기준으로 A·B·C를 한 표에 비교해줘"</td><td><strong>기준을 안 정하고</strong> 시킴 (5절)</td></tr><tr><td>④ <strong>검증</strong></td><td>"방금 나온 숫자·인용이 원문에 실제로 있는지 대조해줘"</td><td>시간 없다고 통째로 생략</td></tr></tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> ④를 빼먹지 마세요. <strong>비교·요약까지는 AI가 빠르고 정확하지만, "이 숫자 진짜 맞아?"는 사람이 짚어야</strong> 합니다. 조사 결과로 의사결정하는데 출처가 틀리면 손해가 큽니다.</p></div>
+<p><strong>요약 → 비교는 한 세트입니다.</strong> 각 자료를 먼저 목적에 맞게 소화한 뒤에 비교해야 기준이 명확해집니다. 자료를 제대로 안 읽고 바로 비교부터 시키면 뭉뚱그린 결과가 나옵니다.</p>
+<div class="callout callout--summary"><div class="callout-label">📌 1절 한 줄 요약</div><p>— <strong>점검 → 요약 → 비교 → 검증.</strong> 첫 단계와 마지막 단계가 제일 자주 잘리고, 사고는 거기서 난다.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">＊</span><h2>실습 준비 — 오늘 쓸 자료 10개</h2></div>
+<div class="callout callout--tip"><p><span class="co-icon">📍</span> 오늘도 <strong>3차시에서 만든 그린컵 Project 안에서</strong> 진행하면 좋습니다.</p></div>
+<p>여러분은 그린컵의 마케터입니다. 경쟁사 세 곳과 시장 리포트, 그리고 사내에서 도는 기획서·재무 의견·고객 인터뷰까지 받았습니다.</p>
+<h3 class="sub-head">준비물 — 내려받기</h3>
+<p><strong>경쟁·시장 자료:</strong></p>
+<ul><li><code>competitor_A_bottlo.docx</code> — 경쟁사 A · 보틀로</li><li><code>competitor_B_ecomy.docx</code> — 경쟁사 B · 에코마이</li><li><code>competitor_C_dailyzip.docx</code> — 경쟁사 C · 데일리집</li><li><code>market_trend_article.docx</code> — 시장 트렌드 리포트</li></ul>
+<p><strong>출처·검증용 자료:</strong></p>
+<ul><li><code>press_clippings.docx</code> — 보도 클리핑 8건</li><li><code>greencup_survey_2024.docx</code> — 자사 고객 설문 결과 (n=214)</li><li><code>review_dump.xlsx</code> — 리뷰 덤프 220건</li></ul>
+<p><strong>내부 검토·정성 자료:</strong></p>
+<ul><li><code>internal_proposal_draft.docx</code> — 내부 기획서 초안</li><li><code>finance_memo.docx</code> — 재무팀 검토 메모</li><li><code>customer_interview_notes.docx</code> — 고객 인터뷰 노트 6건</li></ul>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 자료가 10개입니다. 한 대화에 전부 올리지 마세요.</div><p>AI가 어느 자료 내용인지 헷갈립니다. <strong>PART마다 대화를 나누세요</strong> — PART1은 시장 리포트·보도 클리핑, PART2는 경쟁사 3개, PART3은 내부 문서·설문·리뷰. 그리고 지시할 때 <strong>파일명을 직접 지정</strong>하는 습관을 들이세요.</p></div>
+<div class="prep">📁 <b>자료마다 '누가 언제 어떻게 만들었는지'가 문서 첫머리에 붙어 있습니다.</b> 오늘 실습의 절반이 거기서 갈립니다 — 같은 사실을 말해도 <strong>자료마다 믿을 만한 정도가 다르거든요.</strong> </div>
+<div class="callout callout--scenario"><p><span class="co-icon">🎯</span> <strong>이 PART의 목표</strong>: <em>"자료를 받으면 본문보다 출처를 먼저 본다"</em> 는 습관을 만드는 것. <strong>쓰는 자료</strong>: 시장 리포트 · 경쟁사 3개 · 자사 설문 · 보도 클리핑</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">2</span><h2>"요약해줘"는 생각보다 별로다</h2></div>
+<p>긴 문서를 그냥 <em>"요약해줘"</em> 하면, 무난하지만 <strong>쓸모는 애매한</strong> 요약이 나옵니다. 왜냐면 <strong>무엇을 위한 요약인지</strong> 안 알려줬으니까요. (또 2차시입니다 — 맥락!)</p>
+<p>같은 문서라도 목적에 따라 요약이 달라야 합니다:</p>
+<ul><li>"<strong>가격 정책</strong> 관점에서만 요약해줘"</li><li>"우리 팀 <strong>회의에서 의사결정</strong>하는 데 필요한 핵심만"</li><li>"<strong>3줄로</strong>, 비전문가 임원도 이해하게"</li><li>"이 문서에서 <strong>우리에게 위협이 되는 부분</strong>만 뽑아줘"</li></ul>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 좋은 요약 = <strong>요약의 목적 + 길이 + 관점</strong>을 지정한 요약. "누구를 위해, 무엇에 쓰려고"를 먼저 말하세요.</p></div>
+<div class="callout callout--question"><div class="callout-label">🤔 왜 "요약해줘"만으론 약할까?</div><p>AI 입장에선 이 문서를 "누가, 왜" 읽는지 정보가 없습니다. 그래서 모든 문단을 조금씩 건드리는 <strong>평균적인 요약</strong>을 내놓습니다. 목적을 주면 AI가 <strong>뭘 버리고 뭘 남길지</strong> 기준이 생겨 훨씬 쓸모 있어집니다.</p></div>
+<h3 class="sub-head">2-1. 같은 문서, 다른 요약 — 이렇게 다릅니다</h3>
+<p>오늘 실습에 쓸 시장 리포트를 예로 들면:</p>
+<div class="table-scroll"><table><thead><tr><th><strong>지시</strong></th><th><strong>나오는 것</strong></th></tr></thead><tbody><tr><td>"요약해줘"</td><td><em>"리유저블 텀블러 시장은 성장 중이며 가격 양극화, 친환경 기본화, 채널 변화가 관찰된다…"</em> — <strong>틀리진 않지만 그래서 뭘 하라는 건지 없음</strong></td></tr><tr><td>"<strong>중간 가격대 브랜드 마케터</strong>가 <strong>하반기 전략 짤 때</strong> 쓰게, <strong>기회/위협</strong>으로 나눠 각 3개씩, <strong>근거 숫자와 함께</strong>"</td><td><em>"위협 ①: 중가대가 44%로 여전히 최대 구간이나, 정체성 없는 중가 브랜드는 재포지셔닝을 강요받는 사례가 관찰됨…"</em> — <strong>판단 재료가 됨</strong></td></tr></tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 차이를 만든 건 네 가지입니다 — <strong>누가 읽나 / 뭐에 쓰나 / 어떤 틀로 / 근거를 붙일까.</strong> 이 넷이 오늘 계속 나옵니다.</p></div>
+<h3 class="sub-head">2-2. 요약에는 네 종류가 있습니다</h3>
+<p>"요약"이라는 한 단어 안에 서로 다른 작업이 섞여 있습니다. <strong>뭘 원하는지 이름을 대면</strong> 결과가 확 달라져요.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>종류</strong></th><th><strong>뭘 하는가</strong></th><th><strong>시킬 말</strong></th></tr></thead><tbody><tr><td><strong>압축</strong></td><td>길이만 줄인다. 내용 비율은 유지</td><td>"전체 내용을 균형 있게 1/5 길이로"</td></tr><tr><td><strong>추출</strong></td><td>특정 주제만 골라낸다</td><td>"가격 정책에 관한 내용만 전부 뽑아줘"</td></tr><tr><td><strong>변환</strong></td><td>독자에 맞게 다시 쓴다</td><td>"비전문가 임원이 읽게 쉬운 말로"</td></tr><tr><td><strong>판단</strong></td><td>읽고 평가·결론을 낸다</td><td>"우리에게 위협이 되는 부분과 그 이유"</td></tr></tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 대부분의 실무 요구는 <strong>압축이 아니라 추출·판단</strong>입니다. 그런데 "요약해줘"라고 하면 AI는 <strong>압축</strong>을 합니다. 여기서 어긋나는 거예요.</p></div>
+<p><strong>헷갈리기 쉬운 것 — '추출'과 '판단'의 차이</strong></p>
+<p>초보가 제일 자주 섞는 둘입니다. 같은 문서에 시켜보면 확 다릅니다.</p>
+<div class="table-scroll"><table><thead><tr><th></th><th><strong>추출</strong></th><th><strong>판단</strong></th></tr></thead><tbody><tr><td>시킬 말</td><td><em>"경쟁사 가격에 관한 내용만 전부 뽑아줘"</em></td><td><em>"경쟁사 가격 정책이 우리에게 위협인지 평가해줘"</em></td></tr><tr><td>AI가 하는 일</td><td>문서에서 <strong>찾아서 옮김</strong></td><td>찾은 뒤 <strong>의견을 붙임</strong></td></tr><tr><td>결과에 있는 것</td><td>원문 문장들</td><td>원문 + <strong>AI의 해석</strong></td></tr><tr><td>검수 포인트</td><td><strong>빠뜨린 게 없나</strong></td><td><strong>해석 근거가 원문에 있나</strong> ⚠️</td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 판단을 시킬 땐 검수 부담이 커집니다.</div><p>AI의 해석 부분은 원문에 없는 말이니까요. 그래서 판단을 시킬 땐 항상 <em>"각 판단의 근거 문장을 인용해줘"</em> 를 붙입니다. 근거를 못 붙이는 항목은 AI가 일반론으로 채운 것이라 지우면 됩니다.</p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>초보에게 권하는 순서</strong>: 처음엔 <strong>추출</strong>부터 시키세요. 원문이 그대로 나오니 검수가 쉽습니다. 추출 결과가 믿을 만하면 그때 판단을 시키면 됩니다.</p></div>
+<h3 class="sub-head">2-3. 요약을 검수하는 법 — '빠진 것'을 물어라</h3>
+<p>요약은 <strong>버리는 작업</strong>이라, 잘못 버렸는지가 늘 문제입니다. 그래서 한 줄 더 붙이세요.</p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 요약에서 빠뜨린 중요한 내용이 있다면 뭐야? 그리고 원문에는 있지만 요약엔 안 들어간 숫자를 목록으로 알려줘."</em></p></div>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> 요약 검수의 핵심은 <strong>"들어간 게 맞나"보다 "빠진 게 없나"</strong> 입니다. 들어간 오류는 눈에 띄지만, <strong>빠진 건 눈에 안 보이거든요.</strong> 특히 나에게 불리한 내용이 조용히 빠졌을 때가 위험합니다.</p></div>
+<div class="callout callout--summary"><div class="callout-label">📌 2절 한 줄 요약</div><p>— 요약을 시킬 땐 <strong>목적·길이·관점</strong>을 주고, 받은 뒤엔 <strong>빠진 것</strong>을 물어라.</p></div>
+<div class="practice-card"><div class="practice-title">🛠 실습 B — "요약해줘" vs 목적 있는 요약 (대비 실험) 🥇최소 코스</div><p>순서는 <b>그냥 요약</b> → <b>목적 있는 요약</b> → <b>임원용 3줄 압축</b>.<br>같은 문서에 <b>두 번</b> 시켜서 결과를 나란히 비교합니다.</p><div class="practice-prep"><div class="prep-label">📎 준비물</div><ul><li><b>시장 트렌드 리포트</b>(<code>market_trend_article.docx</code>) <span class="meta">· Word · 협회 리포트</span></li></ul></div></div>
+<p><strong>1) 먼저 그냥:</strong></p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 리포트 요약해줘."</em></p></div>
+<p><strong>2) 그다음:</strong></p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 시장 리포트를, 중간 가격대 텀블러 브랜드의 마케터가 하반기 전략을 짤 때 쓰려고 해. 우리에게 기회가 되는 것과 위협이 되는 것으로 나눠 각 3개씩, 근거 숫자와 함께."</em></p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 두 결과를 나란히 놓고 보세요. 앞의 것은 <strong>리포트 목차를 되풀이</strong>하고, 뒤의 것은 <strong>판단 재료</strong>를 줍니다. 같은 문서, 같은 AI인데 차이가 나는 건 <strong>내가 준 정보량</strong> 때문입니다. 이게 2절 전체를 한 번에 체감하는 방법이에요.</p></div>
+<p><strong>3) 이어서 압축:</strong></p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"위 결과를 임원 보고용 3줄로 더 줄여줘. 버린 내용이 뭔지도 한 줄로 알려줘."</em></p></div>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> 마지막 문장(<strong>버린 내용을 알려줘</strong>)이 중요합니다. 요약은 <strong>버리는 작업</strong>인데, 뭘 버렸는지 모르면 나중에 "그 얘긴 왜 빠졌지?"에 답할 수 없습니다.</p></div>
+<p><strong>✅ 여기서 확인할 것</strong></p>
+<ul class="checklist"><li>두 요약의 <strong>첫 문장</strong>이 서로 다른가?</li><li>두 번째 요약에 <strong>숫자</strong>가 들어 있는가?</li><li>"버린 내용"이 실제로 원문에 있는 내용인가?</li></ul>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">3</span><h2>자료를 믿는 법 ① — 1차자료 vs 2차자료</h2></div>
+<p>여기서부터 두 절(3·4)이 <strong>"이 자료를 얼마나 믿을까"</strong> 를 다룹니다. 오늘의 중심이에요.</p>
+<h3 class="sub-head">3-1. 개념</h3>
+<ul><li><strong>1차자료</strong> = <strong>직접 관찰·수집한 원본.</strong> 설문 응답, 인터뷰, 우리 회사 판매 데이터</li><li><strong>2차자료</strong> = <strong>남이 이미 가공한 것.</strong> 뉴스 기사, 시장 리포트, 타사 발표자료</li></ul>
+<p>2차자료가 나쁘다는 뜻이 아닙니다. <strong>누가·언제·왜 만들었는지에 따라 신뢰도가 갈린다</strong>는 뜻이에요. 같은 2차자료여도 "취재해서 쓴 기사"와 "보도자료 베낀 기사"는 완전히 다릅니다.</p>
+<h3 class="sub-head">3-2. 초보용 판별 질문 3개</h3>
+<p>자료를 받았을 때 이 셋만 물어보면 대충 갈립니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>질문</strong></th><th><strong>그렇다면</strong></th></tr></thead><tbody><tr><td><strong>누가 만들었나?</strong> 우리? 남?</td><td>우리가 직접 = 1차 쪽</td></tr><tr><td><strong>직접 재거나 본 걸 적었나?</strong> 아니면 어디서 옮겨왔나?</td><td>옮겨왔다 = 2차</td></tr><tr><td><strong>"~에 따르면", "~로 알려져 있다"가 있나?</strong></td><td>있으면 <strong>그 안에 또 다른 출처</strong>가 숨어 있다 = 2차</td></tr></tbody></table></div>
+<div class="callout callout--tip"><div class="callout-label">💡 세 번째가 실전에서 제일 유용합니다.</div><p><em>"~에 따르면"</em> 이라는 표현은 <strong>"내가 직접 확인한 게 아니다"</strong> 라는 자백이에요. 이 표현이 붙은 문장은 원출처를 찾아 올라가야 합니다.</p></div>
+<h3 class="sub-head">3-3. AI에게 시키는 법</h3>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 자료들 중 1차자료와 2차자료를 구분해줘. 2차자료는 원출처와 발행일도 같이 표시해줘."</em></p></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ AI는 '오래된 것'과 '틀린 것'을 잘 구분 못 합니다.</div><p>3년 전 기사와 어제 기사가 똑같이 그럴듯하게 들리죠. 그래서 <strong>발행일 표기를 항상 요구</strong>하세요: <em>"각 내용 옆에 언제 자료인지 날짜를 붙여줘."</em></p></div>
+<div class="callout callout--summary"><div class="callout-label">📌 3절 한 줄 요약</div><p>— 본문을 읽기 전에 <strong>"누가 만들었나"</strong> 부터 봐라. 오늘 실습 자료들엔 그게 문서 첫머리에 붙어 있다.</p></div>
+<div class="practice-card"><div class="practice-title">🛠 실습 C — 1차/2차자료 구분</div><p>다섯 자료의 첫머리 <b>'자료 출처' 표</b>를 읽혀 <b>1차/2차자료</b>와 신뢰도를 판정합니다.<br>먼저 직접 해보고, 아래 정답과 대조하세요.</p><div class="practice-prep"><div class="prep-label">📎 준비물</div><ul><li><b>경쟁사 A 보틀로</b>(<code>competitor_A_bottlo.docx</code>) <span class="meta">· Word</span></li><li><b>경쟁사 B 에코마이</b>(<code>competitor_B_ecomy.docx</code>) <span class="meta">· Word</span></li><li><b>경쟁사 C 데일리집</b>(<code>competitor_C_dailyzip.docx</code>) <span class="meta">· Word</span></li><li><b>시장 트렌드 리포트</b>(<code>market_trend_article.docx</code>) <span class="meta">· Word · 협회 리포트</span></li><li><b>자사 고객 설문</b>(<code>greencup_survey_2024.docx</code>) <span class="meta">· Word · n=214</span></li></ul></div></div>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 다섯 자료의 첫머리에 있는 '자료 출처' 표를 읽고, 각각 1차자료인지 2차자료인지, 신뢰도가 어느 정도인지 표로 정리해줘. 판단 근거도 함께."</em><br>🔽 <strong>먼저 직접 해보고, 아래 정답과 대조하세요.</strong></p></div>
+<p><strong>→ 정답:</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>자료</strong></th><th><strong>판정</strong></th><th><strong>근거</strong></th></tr></thead><tbody><tr><td><strong>자사 설문 (n=214)</strong></td><td>🟢 <strong>1차자료</strong></td><td>그린컵이 직접 수집. 다만 응답률 11.6%, 이탈 고객 미포함</td></tr><tr><td><strong>보틀로 조사서</strong></td><td>🟡 <strong>혼합</strong></td><td>매장 12곳 직접 방문(1차) + 기사·보도자료 인용(2차)이 섞임</td></tr><tr><td><strong>에코마이 조사서</strong></td><td>🟠 <strong>2차 중심</strong></td><td>대행사가 공개 정보로 작성. <strong>매장·제품 검증 없음</strong></td></tr><tr><td><strong>데일리집 조사서</strong></td><td>🔴 <strong>2차, 신뢰도 낮음</strong></td><td><strong>인턴 초안, 검수 전.</strong> 수치가 방송 진행자 발언 받아적기</td></tr><tr><td><strong>시장 리포트</strong></td><td>🟠 <strong>2차자료</strong></td><td>협회 재가공. <strong>미가입 소규모 브랜드 누락</strong> 가능성을 스스로 밝힘</td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 데일리집 자료가 가장 위험합니다.</div><p>"매출 3배 성장"이라는 눈에 띄는 숫자가 있는데, 출처가 <strong>라이브 방송에서 진행자가 한 말</strong>이에요. 이걸 그대로 보고서에 옮기면 <em>"경쟁사가 3배 성장 중"</em> 이라는 문장이 임원 앞에 올라갑니다. 문서 안에 <em>"공식 확인된 자료는 아님"</em> 이라고 적혀 있는데도요.</p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 이어서 시켜보세요: <em>"이 자료들에서 '확인되지 않았다', '추정', '~로 알려져 있다' 같은 표현이 붙은 문장을 전부 뽑아줘."</em> → <strong>조심해서 다뤄야 할 문장 목록</strong>이 나옵니다. 보고서에 넣을 땐 이 표현을 지우면 안 돼요.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">4</span><h2>자료를 믿는 법 ② — 출처 사다리</h2></div>
+<p>조사에서 제일 자주 나는 사고는 <strong>거짓말을 믿는 것</strong>이 아니라, <strong>덜 믿을 만한 걸 더 믿을 만한 것처럼 옮기는 것</strong>입니다.</p>
+<h3 class="sub-head">4-1. 먼저 3단으로</h3>
+<p>6단 표는 그다음에 볼게요. 초보는 이 셋만 구분해도 사고의 90%를 막습니다.</p>
+<div class="table-scroll"><table><thead><tr><th></th><th><strong>무엇</strong></th><th><strong>예</strong></th></tr></thead><tbody><tr><td>🟢 <strong>위</strong></td><td><strong>직접 잰 것</strong></td><td>우리 판매 데이터, 시험 방법이 공개된 비교 시험</td></tr><tr><td>🟡 <strong>가운데</strong></td><td><strong>확인해서 옮긴 것</strong></td><td>"본지가 데이터를 확인한 결과…"</td></tr><tr><td>🔴 <strong>아래</strong></td><td><strong>그냥 옮긴 것</strong></td><td>보도자료 재탕 기사, "OO사에 따르면", 커뮤니티 글</td></tr></tbody></table></div>
+<h3 class="sub-head">4-2. 자세히 — 6단 사다리</h3>
+<div class="table-scroll"><table><thead><tr><th><strong>등급</strong></th><th><strong>무엇</strong></th><th><strong>예</strong></th></tr></thead><tbody><tr><td>🟢 <strong>1단</strong></td><td>내가 직접 재거나 본 것</td><td>우리 판매 데이터, 매장 방문 확인, 자사 설문</td></tr><tr><td>🟢 <strong>2단</strong></td><td>방법이 공개된 남의 측정</td><td>시험 방법·원데이터가 붙은 비교 시험 결과</td></tr><tr><td>🟡 <strong>3단</strong></td><td>직접 취재·검증한 보도</td><td>"본지가 데이터를 확인한 결과…"</td></tr><tr><td>🟠 <strong>4단</strong></td><td>원문을 인용한 보도</td><td>협회 리포트를 인용한 기사 (<strong>원문이 있으면 원문으로 올라가라</strong>)</td></tr><tr><td>🔴 <strong>5단</strong></td><td>이해관계자 발표를 옮긴 것</td><td>보도자료 재탕 기사, "OO사에 따르면"</td></tr><tr><td>🔴 <strong>6단</strong></td><td>출처 불명·개인 경험</td><td>커뮤니티 글, 협찬 표기 없는 후기</td></tr></tbody></table></div>
+<h3 class="sub-head">4-3. 세 가지 규칙만 지키면 됩니다</h3>
+<ol><li><strong>사다리는 위로 타라</strong> — 인용의 인용을 쓰지 말고 <strong>원문을 찾아라.</strong> 원문이 손에 있는데 기사를 인용하는 건 손해만 봅니다.</li><li><strong>누가 이득 보나를 보라</strong> — 그 숫자가 크게 나오면 이득 보는 사람이 만든 숫자인가? (보도자료·제휴 링크 기사)</li><li><strong>방법이 공개됐나를 보라</strong> — <em>"어떻게 쟀는지"</em> 를 알 수 있으면 위로 올라갑니다. 신뢰의 본질은 권위가 아니라 <strong>재현 가능성</strong>이에요.</li></ol>
+<div class="callout callout--tip"><div class="callout-label">💡 3번이 오늘 가장 중요한 문장입니다.</div><p>"유명한 기관이 말했으니까 맞겠지"가 아니라, <strong>"어떻게 쟀는지 알 수 있으니까 믿는다"</strong> 로 기준을 바꾸세요. 실습 D에서 이름 없는 소비자단체 시험이 1위가 되는 이유가 이것입니다.</p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>AI에게 시킬 때</strong>: <em>"이 자료들을 신뢰도 순으로 줄 세우고, '직접 검증한 것'과 '남이 준 자료를 옮긴 것'을 구분해줘. 각각 왜 그 순위인지도."</em> — 실습 D에서 그대로 해봅니다.</p></div>
+<div class="callout callout--summary"><div class="callout-label">📌 4절 한 줄 요약</div><p>— <strong>원문이 있으면 원문을 써라.</strong> 그리고 믿는 기준은 권위가 아니라 <strong>"어떻게 쟀는지 아는가"</strong> 다.</p></div>
+<div class="practice-card"><div class="practice-title">🛠 실습 D — 보도 클리핑으로 출처 사다리 타기 🥇최소 코스</div><p>0절 실습 A의 <b>완성판</b>입니다. 8건을 <b>신뢰도 순</b>으로 줄 세우고 정답과 대조합니다.<br>순위가 맞았는지보다 <b>이유가 맞았는지</b>를 보세요.</p><div class="practice-prep"><div class="prep-label">📎 준비물</div><ul><li><b>보도 클리핑</b>(<code>press_clippings.docx</code>) <span class="meta">· Word · 기사 8건</span></li></ul></div></div>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 8건을 신뢰도 순으로 줄 세우고, 각각 왜 그 순위인지 근거를 적어줘. '직접 취재/검증한 것'과 '남이 준 자료를 옮긴 것'을 구분해서."</em><br>🔽 <strong>먼저 직접 해보고, 아래 정답과 대조하세요.</strong> 순위가 몇 개나 맞았는지보다 <strong>이유가 맞았는지</strong>를 보세요.</p></div>
+<p><strong>→ 정답 (상위 → 하위):</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>순위</strong></th><th><strong>자료</strong></th><th><strong>이유</strong></th></tr></thead><tbody><tr><td>1</td><td>④ 소비자시민연대 보온력 시험</td><td><strong>시험 방법·조건·원데이터 공개.</strong> 검증 가능</td></tr><tr><td>2</td><td>② 경제일보 (진열 점포 2.8만)</td><td><strong>본지가 발주 데이터를 직접 확인</strong>했다고 명시</td></tr><tr><td>3</td><td>⑥ 보증금제 관련 기사</td><td>환경부 브리핑 인용. <strong>정책 원문 확인 가능</strong></td></tr><tr><td>4</td><td>⑦ 시장 3천억 기사</td><td>협회 리포트 인용 — <strong>우리는 원문을 이미 갖고 있음</strong></td></tr><tr><td>5</td><td>⑧ 개인 블로그 후기</td><td>협찬 없음(+) 이지만 <strong>1인 경험, 측정 기준 없음</strong></td></tr><tr><td>6</td><td>⑤ 커뮤니티 갈무리</td><td>개인 후기, 표본 아님. 다만 <strong>증가 추세는 신호</strong></td></tr><tr><td>7</td><td>③ 매거진 '갖고 싶은 텀블러 10선'</td><td><strong>제휴 마케팅 링크 포함</strong> — 편집 기사로 보기 어려움</td></tr><tr><td>8</td><td>① 업계신문 (4만 점포)</td><td><strong>보도자료 재탕.</strong> '보틀로에 따르면'만 세 번</td></tr></tbody></table></div>
+<div class="callout callout--tip"><div class="callout-label">💡 ④가 1위인 이유를 새기세요 — "방법이 공개되어 있어서"입니다.</div><p>어떻게 쟀는지 알 수 있으면 남이 다시 재볼 수 있고, 그게 신뢰의 본질이에요. 반대로 ①은 <strong>누가 어떻게 셌는지 알 수 없습니다.</strong><br>매체 이름의 크기가 순위를 정하지 않았다는 점도 보세요. <strong>소비자단체 시험이 업계신문 기사보다 위</strong>입니다.</p></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ ⑦번은 함정입니다.</div><p>기사 자체가 나쁜 게 아니라, <strong>우리가 이미 협회 리포트 원문을 갖고 있다</strong>는 게 핵심이에요. 원문이 있는데 그걸 인용한 기사를 재인용하면 — 전달 과정에서 왜곡될 여지만 늘어납니다. <strong>사다리는 항상 위로 올라가세요.</strong></p></div>
+<p><strong>✅ 여기서 확인할 것</strong></p>
+<ul class="checklist"><li>①번이 하위권으로 갔는가?</li><li>④번이 상위권으로 갔는가?</li><li>AI가 <strong>매체 이름의 유명세</strong>로 순위를 매기진 않았는가?</li></ul>
+<h3 class="sub-head">각 자료가 어떤 성격인지</h3>
+<div class="callout callout--summary"><div class="callout-label">📌 실습 C·D에서 직접 판별해봤다면, 이 표로 대조해보세요.</div><p>순위보다 <strong>판단 이유</strong>가 맞았는지가 중요합니다.</p></div>
+<div class="table-scroll"><table><thead><tr><th><strong>자료</strong></th><th><strong>누가 만들었나</strong></th><th><strong>성격</strong></th><th><strong>심어둔 것</strong></th></tr></thead><tbody><tr><td><strong>보틀로</strong></td><td>그린컵 영업팀 (매장 12곳 방문)</td><td><strong>1차 조사 + 2차 인용 혼합</strong></td><td>문장마다 <code>[직접확인]</code> <code>[기사]</code> <code>[보도자료]</code> <code>[추정]</code> 표시. <strong>같은 사실에 숫자가 3개</strong></td></tr><tr><td><strong>에코마이</strong></td><td>외부 리서치 대행사 (조사비 250만원)</td><td>2차자료 중심</td><td>매장 방문 검증 없음. 매출 비중이 <strong>관계자 인터뷰 기반 추정</strong></td></tr><tr><td><strong>데일리집</strong></td><td>영업팀 <strong>인턴</strong>, 팀장 검수 전 초안</td><td>신뢰도 주의</td><td>수치 상당수가 <strong>라이브 방송 진행자 발언 받아적기</strong></td></tr><tr><td><strong>시장 리포트</strong></td><td>업계 협회 (회원사 48개사 설문)</td><td>2차자료</td><td><strong>시장 규모·구성비 숫자표</strong> 있음(TAM/SAM/SOM 재료). 단 <strong>미가입 소규모 브랜드 누락</strong></td></tr><tr><td><strong>보도 클리핑</strong></td><td>마케팅팀 모니터링</td><td>2차자료 8건</td><td><strong>① 보도자료 재탕 기사</strong> vs <strong>② 직접 취재 기사</strong>가 같은 사실에 다른 숫자 / 제휴 링크 기사 / 개인 블로그</td></tr><tr><td><strong>자사 설문</strong></td><td>그린컵 마케팅팀</td><td><strong>1차자료</strong> (n=214)</td><td>응답률 11.6%, <strong>이탈 고객 미포함</strong>(생존 편향)을 문서가 스스로 밝힘</td></tr><tr><td><strong>리뷰 덤프</strong></td><td>마케팅팀 수기 취합</td><td>1차·2차 혼합</td><td><strong>그린컵만 자사몰 리뷰가 수집됨</strong> → 별점 단순 비교가 불공정</td></tr><tr><td><strong>기획서 초안</strong></td><td>사업부</td><td>내부 문서</td><td>근거 없는 단정·논리 공백 다수</td></tr><tr><td><strong>재무팀 메모</strong></td><td>재무팀</td><td>내부 문서</td><td>기획서와 <strong>원가·인력·예산·일정 4곳이 충돌</strong></td></tr><tr><td><strong>인터뷰 노트</strong></td><td>마케팅팀</td><td><strong>1차자료</strong> (n=6)</td><td>비정형 메모. 구독 반응이 6명 중 갈림</td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 오늘 자료엔 '그린컵 뚜껑 실리콘 냄새' 이야기가 세 군데에서 따로 나옵니다</div><p>— 설문(214명 중 40.7%), 인터뷰(6명 중 여러 명), 리뷰(220건 중 13건). <strong>세 자료가 같은 말을 하는지 확인하는 것</strong>을 삼각검증이라 하고, 8·11절과 실습 N에서 다룹니다.</p></div>
+<div class="callout callout--scenario"><p><span class="co-icon">🎯</span> <strong>이 PART의 목표</strong>: 비교 기준을 내가 정하고, 실무 분석 틀을 이름으로 시켜보는 것. <strong>쓰는 자료</strong>: 경쟁사 3개 + 시장 리포트 (한 대화에 함께 올려도 됩니다)</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">5</span><h2>비교표 만들기 — 기준이 8할</h2></div>
+<p>조사의 결과물은 대개 <strong>비교표</strong>입니다. 그런데 여기서 품질을 가르는 건 AI 실력이 아니라 <strong>비교 기준</strong>이에요.</p>
+<h3 class="sub-head">5-1. 기준은 제안받고, 확정은 내가</h3>
+<p>바로 <em>"세 회사 비교해줘"</em> 라고 하면 AI가 알아서 기준을 정합니다. 그러면 <strong>뻔한 표</strong>가 나와요 — 회사명·설립연도·주력제품 같은 것들.</p>
+<p>두 단계로 나누세요.</p>
+<p><strong>1단계 — 제안받기</strong></p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"세 경쟁사를 비교할 좋은 기준 6~8개를 먼저 제안해줘. 아직 표는 만들지 마."</em></p></div>
+<p><strong>2단계 — 내가 고치고 확정</strong></p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"거기서 '설립연도'는 빼고 '최근 3개월 이슈' 와 '주 고객층' 을 넣어줘. 그 기준으로 표를 만들어줘."</em></p></div>
+<div class="callout callout--tip"><div class="callout-label">💡 이 한 단계가 결과물의 질을 결정합니다.</div><p>기준을 내가 정한다는 건 <em>"내가 뭘 알고 싶은지 안다"</em> 는 뜻이고, 그게 조사의 본질이거든요. AI는 기준을 <strong>제안</strong>할 수 있지만, <strong>뭐가 중요한지는 모릅니다.</strong></p></div>
+<h3 class="sub-head">5-2. 좋은 비교 기준의 조건 4가지</h3>
+<div class="table-scroll"><table><thead><tr><th><strong>조건</strong></th><th><strong>나쁜 예</strong></th><th><strong>좋은 예</strong></th></tr></thead><tbody><tr><td><strong>모든 대상에 답이 있나</strong></td><td>"IR 자료 공개 여부" (한 곳만 해당)</td><td>"가격대"</td></tr><tr><td><strong>의사결정에 쓰이나</strong></td><td>"설립연도"</td><td>"우리와 겹치는 고객층"</td></tr><tr><td><strong>자료에서 확인되나</strong></td><td>"실제 수익률" (자료에 없음)</td><td>"상시 할인율"</td></tr><tr><td><strong>비교가 가능한 형태인가</strong></td><td>"브랜드 감성" (막연함)</td><td>"최저가~최고가 범위"</td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 세 번째가 실전에서 제일 많이 걸립니다.</div><p>자료에 없는 항목을 기준으로 넣으면, AI가 그 칸을 <strong>추정으로 채웁니다</strong>(12-2절). 기준을 정할 때 <em>"이거 자료에 있나?"</em> 를 먼저 확인하세요.</p></div>
+<h3 class="sub-head">5-3. 칸이 비었을 때</h3>
+<p>비교표를 만들면 반드시 빈 칸이 생깁니다. 이때 지시를 미리 주세요.</p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"자료에 없는 항목은 '자료에 없음' 이라고 쓰고, 추정으로 채우지 마. 그리고 마지막에 빈 칸이 많은 항목이 뭔지 알려줘."</em></p></div>
+<div class="callout callout--tip"><div class="callout-label">💡 마지막 문장이 보너스입니다.</div><p>빈 칸이 많은 항목 = <strong>다음에 더 조사해야 할 것.</strong> 비교표가 조사 계획을 낳는 순간이에요.</p></div>
+<h3 class="sub-head">5-4. 벤치마킹 프레임 — 기능·가격·경험·채널 축 비교</h3>
+<ul><li><strong>개념</strong>: 경쟁사 대비 <strong>기능 / 가격 / 고객경험 / 채널</strong> 같은 항목별로 점수를 매겨 표로 비교하는 방법</li><li><strong>전통 방식</strong>: 각 회사 사이트·리뷰·매장을 돌며 항목별로 점수를 채점</li><li><strong>AI에게</strong>: <em>"우리 회사와 경쟁사를 기능·가격·고객경험·채널 4개 축으로 5점 척도 벤치마킹표를 만들어줘. 각 점수의 근거도."</em></li><li>⚠️ <strong>초보가 착각하는 것</strong>: <strong>점수는 근거가 있을 때만 의미가 있습니다.</strong> 근거 없는 5점 척도는 AI의 인상비평이에요. <em>"각 점수의 근거 문장을 인용해줘"</em> 를 반드시 붙이세요</li></ul>
+<div class="callout callout--summary"><div class="callout-label">📌 5절 한 줄 요약</div><p>— 기준은 <strong>AI에게 제안받고 내가 확정한다.</strong> 자료에 없는 기준은 넣지 말고, 빈 칸은 비워두게 시켜라.</p></div>
+<div class="practice-card"><div class="practice-title">🛠 실습 E — 비교 기준 정하고 표 만들기</div><p>순서는 <b>기준 제안받기</b> → <b>내가 고쳐서 표 만들기</b> → <b>표에서 결론 뽑기</b>.<br>5절의 두 단계를 그대로 씁니다.</p><div class="practice-prep"><div class="prep-label">📎 준비물</div><ul><li><b>경쟁사 A 보틀로</b>(<code>competitor_A_bottlo.docx</code>) <span class="meta">· Word</span></li><li><b>경쟁사 B 에코마이</b>(<code>competitor_B_ecomy.docx</code>) <span class="meta">· Word</span></li><li><b>경쟁사 C 데일리집</b>(<code>competitor_C_dailyzip.docx</code>) <span class="meta">· Word</span></li></ul></div></div>
+<p><strong>1) 기준 제안받기</strong></p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"세 경쟁사를 비교할 좋은 기준 6~8개를 먼저 제안해줘. 아직 표는 만들지 마."</em></p></div>
+<p>→ 가격·채널·마케팅방식·강점·약점·최근이슈·고객세그먼트 등이 나올 것</p>
+<p><strong>2) 내가 고치고 확정</strong></p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"그 기준으로 보틀로·에코마이·데일리집을 한 표에 비교해줘. 각 칸은 짧게. 자료에 없는 항목은 '자료에 없음'이라고 쓰고 추정하지 마."</em></p></div>
+<p>→ 형식이 다른 문서들이 <strong>하나의 표</strong>로 정렬되는 걸 확인</p>
+<p><strong>3) 표에서 결론 뽑기</strong></p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"세 회사의 '최근 이슈'만 따로 모아서, 어느 회사가 지금 가장 취약한 상태인지 짚어줘."</em></p></div>
+<p><strong>✅ 여기서 확인할 것</strong></p>
+<ul class="checklist"><li>'자료에 없음' 칸이 실제로 있는가? (하나도 없으면 <strong>의심하세요</strong> — 추정으로 채웠을 수 있습니다)</li><li>내가 기준을 하나라도 고쳤는가?</li></ul>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">6</span><h2>첨부 자료 밖 정보가 필요할 때 — 웹 검색 시키기</h2></div>
+<p>받은 자료만으론 부족할 때가 있죠 — "요즘 이 경쟁사 무슨 일 있었지?" 같은 <strong>최신 정보</strong>. Claude는 <strong>웹 검색</strong>을 할 수 있습니다 (대화에서 검색을 요청하거나, 검색 기능을 켜고 물으면 됩니다).</p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"보틀로의 최근 소식을 웹에서 검색해서, 우리 비교표에 '최근 동향' 열로 추가해줘. 각 내용의 출처 링크도 붙여줘."</em></p></div>
+<p><strong>웹 검색 결과를 쓸 때의 규칙 3가지</strong></p>
+<ol><li><strong>출처 링크를 요구</strong>하고, 중요한 건 직접 클릭해 확인</li><li><strong>언제 정보인지</strong>(발행일) 확인 — 검색됐다고 최신은 아님</li><li>첨부 자료(내부)와 웹 정보(외부)를 <strong>섞지 말고 구분 표시</strong>하게 하기 → <em>"내부 자료 근거와 웹 검색 근거를 구분해서 표시해줘"</em></li></ol>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 3번을 안 지키면 나중에 출처 추적이 안 됩니다.</div><p>표가 완성된 뒤 <em>"이 숫자 어디서 나왔죠?"</em> 라는 질문에 답을 못 하게 돼요. 표에 <strong>'출처' 열을 하나 더</strong> 만드는 게 가장 확실합니다.</p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 3절에서 배운 <strong>1차/2차자료 구분</strong>의 실전판입니다. 웹 검색 결과는 대부분 2차자료 — 신뢰도 확인이 더 필요합니다.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">7</span><h2>실무에서 쓰는 조사·전략 기법 — 그리고 AI가 다 해준다</h2></div>
+<p>여기가 오늘의 실무 파트입니다. 조사·전략 업무를 하는 사람들은 정해진 <strong>분석 틀</strong>들을 씁니다. 원래는 리서처나 전략기획팀이 워크숍·통계로 하던 일이죠. <strong>이 틀이 뭔지 개념만 알면, 실행은 Claude에게 한 문장으로 시킬 수 있습니다.</strong></p>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 이 장의 목표는 여러분을 전략기획 전문가로 만드는 게 아닙니다. <strong>"이런 틀이 있다"는 걸 알고, AI에게 정확한 이름으로 시키는 것</strong>입니다. 용어를 알면 시킬 수 있고, 결과도 검수할 수 있습니다.</p></div>
+<div class="callout callout--summary"><p><span class="co-icon">📌</span> 각 항목을 <strong>개념 / 전통 방식 / AI에게 / 초보가 착각하는 것</strong> 네 줄로 정리했습니다. 마지막 줄이 오늘 새로 넣은 부분이에요.</p></div>
+<h3 class="sub-head">7-1. SWOT 분석 — 강점/약점/기회/위협</h3>
+<ul><li><strong>개념</strong>: 내부 요인(<strong>S</strong>trength 강점 / <strong>W</strong>eakness 약점)과 외부 요인(<strong>O</strong>pportunity 기회 / <strong>T</strong>hreat 위협)을 2×2로 정리하는 전략 기본틀</li><li><strong>전통 방식</strong>: 관계자들이 모여 브레인스토밍, 화이트보드에 4칸 채우기</li><li><strong>AI에게</strong>: <em>"첨부 자료 근거로 그린컵 기준 SWOT을 만들어줘. 각 칸 3개씩, 근거 문장도 같이."</em></li><li>⚠️ <strong>초보가 착각하는 것</strong>: <strong>4칸을 채우면 끝난 게 아닙니다.</strong> SWOT은 결과물이 아니라 <strong>재료</strong>예요. "강점(S)으로 기회(O)를 잡으려면 뭘 해야 하나"까지 가야 씁니다. 4칸만 채운 SWOT은 회의에서 <em>"그래서요?"</em> 를 듣습니다</li></ul>
+<div class="practice-card"><div class="practice-title">🛠 실습 F — SWOT &amp; 결론·전략</div><p>순서는 <b>SWOT 만들기</b> → <b>빈틈·전략 3가지</b> → <b>가장 위협적인 경쟁사</b>.<br>실습 E와 <b>같은 대화</b>에서 이어갑니다.</p><div class="practice-prep"><div class="prep-label">📎 준비물</div><ul><li><b>실습 E의 비교표</b> <span class="meta">· 같은 대화에 있음</span></li><li><b>시장 트렌드 리포트</b>(<code>market_trend_article.docx</code>) <span class="meta">· Word · 협회 리포트</span></li></ul></div></div>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 비교표와 시장 리포트를 종합해서, 그린컵(중간 가격·친환경·디자인 강조) 기준 SWOT을 만들어줘. 각 칸 근거 문장도."</em></p></div>
+<p>이어서 — <strong>7-1절에서 말한 "4칸 채우면 끝이 아니다"</strong> 를 실행합니다:</p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"SWOT을 바탕으로 그린컵이 노릴 만한 빈틈과 전략 3가지를 제안해줘. 각 전략의 근거도."</em><br><em>"세 경쟁사 중 우리에게 가장 위협적인 곳과 이유를 말해줘. 각 사의 '고객 세그먼트' 설명을 근거로 써줘."</em></p></div>
+<div class="callout callout--tip"><div class="callout-label">💡 근거 문장을 못 붙인 SWOT 항목이 있다면 지우세요.</div><p>그건 AI가 일반론으로 채운 것입니다. 4칸을 꽉 채우는 것보다 <strong>근거 있는 2개</strong>가 낫습니다.</p></div>
+<h3 class="sub-head">7-2. 경쟁 포지셔닝 맵 — 가격 vs 가치 좌표</h3>
+<ul><li><strong>개념</strong>: 가로축(가격), 세로축(디자인·친환경 등 핵심 가치)에 경쟁사들을 점으로 찍는 지도. 아무도 없는 <strong>빈 자리(white space)</strong> 가 우리가 노릴 기회</li><li><strong>전통 방식</strong>: 손으로 좌표축을 그리고 각 브랜드 위치를 추정해 배치</li><li><strong>AI에게</strong>: <em>"가격(저~고)과 친환경 이미지(약~강)를 두 축으로, 네 브랜드의 포지셔닝을 표로 만들어줘. 비어 있는 자리가 어딘지도 짚어줘."</em></li><li>⚠️ <strong>초보가 착각하는 것</strong>: <strong>빈 자리 = 기회가 아닙니다.</strong> 아무도 없는 데는 <strong>아무도 안 가는 이유</strong>가 있을 수 있어요 (수요가 없거나, 원가가 안 맞거나). 빈 자리를 찾은 다음엔 <em>"여기가 왜 비어 있을까?"</em> 를 반드시 물으세요</li></ul>
+<h3 class="sub-head">7-3. TAM/SAM/SOM — 시장 크기 추정</h3>
+<ul><li><strong>개념</strong>: <strong>TAM</strong>(전체 시장, Total Addressable Market) &gt; <strong>SAM</strong>(우리가 실제 접근 가능한 시장, Serviceable Available Market) &gt; <strong>SOM</strong>(현실적으로 획득 가능한 시장, Serviceable Obtainable Market) 순으로 좁혀갑니다</li><li><strong>전통 방식</strong>: 통계청·업계 리포트 숫자를 모아 손으로 계산하고 가정을 문서화</li><li><strong>AI에게</strong>: <em>"이 시장 리포트 숫자로 텀블러 시장의 TAM/SAM/SOM을 대략 추정해줘. 사용한 가정은 명확히 표시해줘."</em></li><li>⚠️ <strong>초보가 착각하는 것</strong>: <strong>정답이 하나가 아닙니다.</strong> 중요한 건 숫자가 아니라 <strong>"각 단계에서 무엇을 왜 곱했는가"</strong> 예요. 가정이 안 적힌 TAM/SAM/SOM은 <strong>숫자가 혼자 걸어다니게</strong> 됩니다</li></ul>
+<div class="practice-card"><div class="practice-title">🛠 실습 G — 포지셔닝맵 &amp; 시장 규모</div><p>순서는 <b>포지셔닝맵</b> → <b>가격 정답표 대조</b> → <b>TAM/SAM/SOM 추정</b>.<br>각 문서의 <b>가격표·시장 규모 표</b> 숫자만 근거로 씁니다.</p><div class="practice-prep"><div class="prep-label">📎 준비물</div><ul><li><b>경쟁사 A 보틀로</b>(<code>competitor_A_bottlo.docx</code>) <span class="meta">· Word</span></li><li><b>경쟁사 B 에코마이</b>(<code>competitor_B_ecomy.docx</code>) <span class="meta">· Word</span></li><li><b>경쟁사 C 데일리집</b>(<code>competitor_C_dailyzip.docx</code>) <span class="meta">· Word</span></li><li><b>시장 트렌드 리포트</b>(<code>market_trend_article.docx</code>) <span class="meta">· Word · 협회 리포트</span></li></ul></div></div>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"가격(저~고)과 친환경 이미지(약~강)를 두 축으로 네 브랜드(그린컵 포함)의 포지셔닝을 표로 만들어줘. 각 브랜드의 실제 가격표 숫자를 근거로 쓰고, 비어 있는 자리가 어딘지도 짚어줘."</em><br>🔽 <strong>먼저 해보고 대조하세요.</strong></p></div>
+<p><strong>→ 가격 정답표 (각 문서의 가격표 시트에서 확인 가능):</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>브랜드</strong></th><th><strong>최저가</strong></th><th><strong>최고가(상시)</strong></th><th><strong>한정판</strong></th><th><strong>그린컵 대비</strong></th></tr></thead><tbody><tr><td><strong>보틀로</strong></td><td>9,000원 (키즈)</td><td>26,000원 (보온병 750ml)</td><td>—</td><td>베이직 라인이 <strong>16~37% 저렴</strong></td></tr><tr><td><strong>그린컵</strong></td><td>15,000원 (미니 머그)</td><td>29,000원 (써모 보온병)</td><td>—</td><td>기준</td></tr><tr><td><strong>데일리집</strong></td><td>18,000원 (정가)</td><td>32,000원 (듀오세트)</td><td>—</td><td>정가는 비슷하나 <strong>상시 30~40% 할인</strong></td></tr><tr><td><strong>에코마이</strong></td><td>24,000원 (미니)</td><td>39,000원 (보온)</td><td>45,000~52,000원</td><td>시그니처가 <strong>47~79% 비쌈</strong></td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 데일리집을 어디에 찍을 건가요?</div><p>정가(18,000~24,000원)로 찍으면 그린컵 바로 옆이고, 실판매가(12,600~19,200원)로 찍으면 보틀로 쪽입니다. <strong>둘 중 무엇이 진짜 포지션인가</strong> — 고객이 체감하는 건 실판매가죠.<br><strong>이런 판단은 AI가 대신 못 합니다.</strong> 시켜보세요: <em>"데일리집을 정가로 찍었을 때와 실판매가로 찍었을 때 포지셔닝맵이 어떻게 달라지는지 두 버전으로 보여줘."</em> → <strong>두 버전을 놓고 고르는 게 사람의 일</strong>입니다.</p></div>
+<p><strong>이어서 시장 규모:</strong></p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"<strong><code>market_trend_article.docx</code></strong>의 시장 규모 표를 근거로 텀블러 시장의 TAM/SAM/SOM을 추정해줘. 각 단계에서 어느 숫자를 왜 썼는지 명시하고, 내가 정해야 할 가정은 질문해줘."</em></p></div>
+<p><strong>→ 리포트에 실제로 있는 숫자 (여기서만 가져와야 합니다):</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>항목</strong></th><th><strong>값</strong></th></tr></thead><tbody><tr><td>2024년 전체 시장(전망)</td><td><strong>3,650억원</strong></td></tr><tr><td>2023년 전체 시장</td><td>3,210억원 (성장률 13.7% 전망)</td></tr><tr><td>온라인 채널 비중</td><td>42% (2023년 1,348억원)</td></tr><tr><td>중가대(1.5만~2.5만원) 비중</td><td>44% (1,412억원)</td></tr><tr><td>프리미엄(2.5만원 이상)</td><td>21% (674억원)</td></tr><tr><td>20~30대 여성 세그먼트</td><td>전체 구매액의 약 38%</td></tr></tbody></table></div>
+<div class="callout callout--tip"><div class="callout-label">💡 TAM/SAM/SOM은 정답이 하나가 아닙니다.</div><p>예를 들어 <em>TAM 3,650억 → SAM = 온라인(42%) × 중가대(44%) → SOM = SAM의 2% 점유 목표</em> 같은 식이죠. 중요한 건 숫자가 아니라 <strong>각 단계에서 무엇을 왜 곱했는지</strong>입니다. AI가 가정을 안 밝히고 숫자만 내놨다면 다시 시키세요.</p></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 온라인 42% × 중가 44%를 그냥 곱해도 되나요?</div><p>두 비중이 서로 독립이라는 보장이 없습니다(중가 제품이 온라인에서 더 팔릴 수도, 덜 팔릴 수도). 리포트엔 교차표가 없죠. <strong>그래서 이건 '가정'이고, 가정이라고 써야 합니다.</strong> 이 한 줄을 빠뜨리면 나중에 숫자가 혼자 걸어다닙니다.</p></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 여기가 사람이 꼭 개입할 곳.</div><p>기법 실행(분류·표·좌표)은 AI가 빠르고 꼼꼼하게 하지만, <strong>"그래서 우리 전략을 어떻게 바꿀까"라는 해석과 결정</strong>은 맥락을 아는 사람 몫입니다.</p></div>
+<h3 class="sub-head">결론 — 기법은 알되, 실행은 AI</h3>
+<p>전에는 이 표 하나 뽑으려면 리서처에게 부탁하거나 워크숍을 열어 며칠 걸렸습니다. <strong>지금은 자료 붙이고 정확한 이름("SWOT으로 정리해줘")만 대면 몇 분입니다.</strong></p>
+<p>여러분이 할 일은 셋뿐이에요.</p>
+<ol><li>어떤 조사 틀이 있는지 <strong>알고</strong></li><li>정확한 이름으로 <strong>시키고</strong></li><li>핵심 근거·출처를 <strong>검수하는 것</strong></li></ol>
+<div class="callout callout--summary"><div class="callout-label">📌 7절 한 줄 요약</div><p>— 틀의 <strong>이름을 아는 것</strong>이 실력이다. 실행은 몇 초, 검수가 진짜 일.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">8</span><h2>자료가 서로 다른 말을 할 때 — 삼각검증</h2></div>
+<h3 class="sub-head">8-1. 초보가 하는 두 가지 잘못된 대응</h3>
+<p>조사를 하다 보면 자료들이 <strong>다른 소리</strong>를 합니다. 여기서 초보는 둘 중 하나를 합니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>대응</strong></th><th><strong>왜 틀렸나</strong></th></tr></thead><tbody><tr><td><strong>하나만 고른다</strong></td><td>대개 <strong>자기 주장에 유리한 걸</strong> 고르게 됨. 그리고 왜 그걸 골랐는지 설명 못 함</td></tr><tr><td><strong>평균을 낸다</strong></td><td>4만과 2.8만의 평균 3.4만 — <strong>어느 자료에도 없는 숫자</strong>가 태어남. 출처를 못 댐</td></tr></tbody></table></div>
+<p>둘 다 <strong>정보를 버리는</strong> 대응입니다. 자료가 다르다는 사실 자체가 정보인데요.</p>
+<h3 class="sub-head">8-2. 삼각검증이란</h3>
+<p><strong>삼각검증(triangulation)</strong> — 서로 다른 방법으로 잰 결과를 나란히 놓고 보는 것.</p>
+<p>목적이 중요합니다. <strong>숫자를 하나로 합치는 게 아니라</strong>, 셋이 <strong>같은 방향을 가리키는지</strong> 확인하는 것이에요.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>상황</strong></th><th><strong>어떻게 읽나</strong></th></tr></thead><tbody><tr><td>세 자료가 <strong>같은 결론</strong></td><td>🟢 신뢰도 크게 올라감. 방법이 달라도 같으면 진짜</td></tr><tr><td>세 자료가 <strong>크기만 다르고 방향은 같음</strong></td><td>🟡 정상. <strong>왜 크기가 다른지</strong>를 설명에 넣으면 됨</td></tr><tr><td>세 자료가 <strong>반대 방향</strong></td><td>🔴 여기서 멈춰라. 셋 중 하나는 다른 걸 재고 있다</td></tr></tbody></table></div>
+<div class="callout callout--tip"><div class="callout-label">💡 실무에서 가장 흔한 건 가운데 줄입니다.</div><p>그리고 초보는 가운데 줄을 세 번째 줄(모순)로 착각합니다. 크기가 다른 건 <strong>모순이 아니에요.</strong></p></div>
+<div class="practice-card"><div class="practice-title">🛠 실습 H — 자료가 서로 다른 말을 할 때</div><p><b>보틀로 입점 점포 수</b>에 대한 숫자 셋을 모아, 보고서에 쓸 표기법을 정합니다.<br>8절 삼각검증의 실전입니다.</p><div class="practice-prep"><div class="prep-label">📎 준비물</div><ul><li><b>경쟁사 A 보틀로</b>(<code>competitor_A_bottlo.docx</code>) <span class="meta">· Word</span></li><li><b>보도 클리핑</b>(<code>press_clippings.docx</code>) <span class="meta">· Word · 기사 8건</span></li></ul></div></div>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"보틀로의 편의점 입점 점포 수에 대해 자료마다 뭐라고 하는지 전부 찾아서, 출처와 함께 표로 정리해줘. 그리고 보고서에 쓴다면 어떻게 표기해야 할지 제안해줘."</em><br>🔽 <strong>먼저 해보고 대조하세요.</strong></p></div>
+<p><strong>→ 정답:</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>출처</strong></th><th><strong>숫자</strong></th><th><strong>성격</strong></th></tr></thead><tbody><tr><td>보틀로 보도자료 (경쟁사 문서 인용)</td><td>약 40,000곳</td><td><strong>회사 자기 발표</strong></td></tr><tr><td>경제일보 6/18 기사</td><td>약 28,000곳</td><td><strong>발주 데이터 직접 확인</strong></td></tr><tr><td>그린컵 영업팀 방문 조사</td><td>방문 12곳 중 <strong>9곳 진열 확인</strong></td><td><strong>1차 조사, 표본 12</strong></td></tr></tbody></table></div>
+<div class="callout callout--tip"><div class="callout-label">💡 셋 다 틀리지 않았습니다.</div><p>'입점 계약 점포'와 '실제 진열 점포'가 다르고, 우리 표본은 12곳뿐이죠.<br>보고서에 쓸 때 정답은 하나입니다 — <strong>"약 2.8만~4만 곳 (자료별 상이, 계약 기준 4만 / 진열 기준 2.8만)"</strong> 처럼 <strong>범위와 기준을 함께</strong> 적는 것.<br>최악은 <strong>"4만 곳"만 적는 것</strong>입니다. 가장 큰 숫자를, 가장 편향된 출처에서, 아무 단서 없이 가져오는 셈이니까요.</p></div>
+<div class="callout callout--scenario"><div class="callout-label">🎯 이 PART의 목표<strong>: 사내 문서끼리 대조하고, 텍스트 자료에서 패턴을 뽑는 것. </strong>오늘의 하이라이트(실습 L·N)가 여기 있습니다.</div><p><strong>쓰는 자료</strong>: 기획서 초안 · 재무 메모 · 인터뷰 노트 · 자사 설문 · 리뷰 덤프</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">9</span><h2>초보가 흔히 하는 실수 6가지</h2></div>
+<p>PART 3 실습에 들어가기 전에, <strong>미리 알고 가면 안 겪을 것들</strong>만 모았습니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>#</strong></th><th><strong>실수</strong></th><th><strong>왜 문제인가</strong></th><th><strong>대신 이렇게</strong></th></tr></thead><tbody><tr><td>1</td><td><strong>자료를 한 번에 다 올린다</strong></td><td>AI가 어느 자료 내용인지 헷갈림. 출처를 잘못 붙임</td><td><strong>3~4개씩</strong> 나눠 올리고, 지시할 때 <strong>파일명을 직접 지정</strong></td></tr><tr><td>2</td><td><strong>첫머리 출처 정보를 건너뛴다</strong></td><td>자료의 성격과 한계가 거기 다 적혀 있음</td><td><em>"먼저 '자료 출처' 표를 읽고 이 자료의 성격과 한계를 알려줘"</em> 로 시작</td></tr><tr><td>3</td><td><strong>결과가 그럴듯하면 그냥 믿는다</strong></td><td>환각은 <strong>그럴듯하게 생겼다</strong>는 게 특징</td><td>숫자·인용은 <strong>원문 대조</strong>. 특히 눈에 띄는 숫자일수록</td></tr><tr><td>4</td><td><strong>비교 기준을 AI에게 맡긴다</strong></td><td>뻔한 표가 나옴</td><td>기준을 <strong>제안받고 내가 확정</strong>(5절)</td></tr><tr><td>5</td><td><strong>표본 수를 안 본다</strong></td><td>6명을 67%로 옮기는 사고</td><td><em>"표본 수를 함께 쓰고, 30 미만이면 비율로 표현하지 마"</em></td></tr><tr><td>6</td><td><strong>결론을 먼저 정하고 자료를 찾는다</strong></td><td>유리한 자료만 고르게 됨</td><td><em>"이 결론에 반대되는 근거도 자료에서 찾아줘"</em> 를 꼭 시켜보기</td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 6번이 가장 안 보이는 실수입니다.</div><p><em>"경쟁사가 위협적이다"</em> 를 이미 믿고 있으면, 그 근거만 눈에 들어와요. AI도 시키는 대로 하니까 확신만 커집니다. <strong>반대 근거를 일부러 시키는 것</strong>이 유일한 방어예요.</p></div>
+<div class="practice-card"><div class="practice-title">🛠 실습 I — 기획서 논리 검토</div><p>순서는 <b>논리 약점 지적</b> → <b>반대 입장의 반박 준비</b>.<br><b>새 대화</b>에서 시작하고, 실습 J까지 이어갑니다.</p><div class="practice-prep"><div class="prep-label">📎 준비물</div><ul><li><b>내부 기획서 초안</b>(<code>internal_proposal_draft.docx</code>) <span class="meta">· Word · 12개 섹션</span></li></ul></div></div>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 기획서에서 논리가 약하거나 근거가 빠진 부분을 지적해줘. 특히 '시장 분석'·'조직·인력'·'리스크' 섹션을 자세히 봐줘."</em></p></div>
+<p>이어서 — <strong>9절 6번(반대 근거 시키기)</strong> 의 실전입니다:</p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 기획안에 반대하는 입장이라면 어떤 반박을 할까? 미리 대비하게 정리해줘."</em></p></div>
+<div class="practice-card"><div class="practice-title">🛠 실습 J — 두 자료 모순 찾기</div><p>순서는 <b>항목별 대조</b> → <b>재검토 우선순위 3가지</b>.<br>실습 I와 <b>같은 대화</b>에 재무 메모를 이어서 올립니다.</p><div class="practice-prep"><div class="prep-label">📎 준비물</div><ul><li><b>재무팀 검토 메모</b>(<code>finance_memo.docx</code>) <span class="meta">· Word</span></li><li><b>실습 I의 기획서</b> <span class="meta">· 같은 대화에 있음</span></li></ul></div></div>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"방금 본 기획서와 이 재무팀 메모가 서로 어긋나는 부분이 있어? 항목별로 대조해서 짚어줘."</em></p></div>
+<p>→ <strong>원가·인력·마케팅예산·출시일정 4곳</strong>이 어긋나 있을 것</p>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 사람이 다 읽으면 오래 걸리는 <strong>숫자·일정 대조를 AI가 표로</strong> 정리하는 걸 확인하세요. 이게 AI가 압도적으로 강한 영역입니다 — 지루하고, 꼼꼼해야 하고, 정답이 있는 일.</p></div>
+<p>이어서:</p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 두 자료를 종합해서, 기획안을 실행하려면 무엇을 먼저 재검토해야 하는지 우선순위 3가지로 정리해줘."</em></p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">10</span><h2>정성 자료 읽기 — 인터뷰·리뷰·설문에서 무엇이 보이고 무엇이 안 보이나</h2></div>
+<h3 class="sub-head">10-1. 정성 자료 종합 — 인터뷰·리뷰에서 패턴 뽑기</h3>
+<ul><li><strong>개념</strong>: 숫자가 아니라 <strong>텍스트</strong>(인터뷰, 리뷰, 설문 주관식)에서 반복되는 주제를 찾아 묶는 것을 <strong>정성 분석(thematic analysis)</strong> 이라 합니다. "몇 명 중 몇 명이 이 얘기를 했나"까지 세면 정성 자료도 근거가 생깁니다</li><li><strong>전통 방식</strong>: 인터뷰 기록을 한 줄씩 읽으며 주제별로 태그를 달고 엑셀에 분류</li><li><strong>AI에게</strong>: <em>"이 인터뷰 노트 6개에서 반복적으로 나오는 불만·호감 테마를 뽑고, 몇 명이 언급했는지 표로 만들어줘."</em></li><li>⚠️ <strong>초보가 착각하는 것</strong>: <strong>표본이 작으면 %로 말하면 안 됩니다.</strong> "6명 중 4명"을 "67%"로 옮기는 순간 통계처럼 보이지만, 6명은 통계가 아니에요</li></ul>
+<div class="practice-card"><div class="practice-title">🛠 실습 K — 고객 인터뷰 정성 종합</div><p>순서는 <b>테마 뽑기</b> → <b>최다 불만 효과</b> → <b>구독 반응 따로 모으기</b>.<br>실습 I·J의 구독 기획안과 실제 고객 반응을 대조하는 흐름입니다.</p><div class="practice-prep"><div class="prep-label">📎 준비물</div><ul><li><b>고객 인터뷰 노트</b>(<code>customer_interview_notes.docx</code>) <span class="meta">· Word · 6명</span></li></ul></div></div>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 인터뷰 노트 6개에서 반복적으로 나오는 불만·호감 테마를 뽑고, 몇 명이 언급했는지 표로 만들어줘."</em><br><em>"가장 많이 언급된 불만 하나를 골라, 이걸 해결하면 어떤 효과가 있을지 한 문단으로."</em><br><em>"인터뷰이들이 '구독 서비스'에 대해 언급한 부분만 따로 모아서, 긍정·부정 반응이 각각 몇 명인지와 이유를 정리해줘."</em></p></div>
+<p>→ 방금 본 구독 기획안(실습 I·J)과 실제 고객 반응을 <strong>교차 대조</strong>하는 흐름</p>
+<div class="callout callout--warning"><div class="callout-label">⚠️ n=6입니다.</div><p>"6명 중 4명이 냄새를 언급"을 <strong>"고객의 67%가 불만"</strong> 으로 옮기면 안 됩니다. 인터뷰는 <strong>비율을 재는 도구가 아니라 '왜'를 캐는 도구</strong>예요.<br>시켜보세요: <em>"이 인터뷰 결과를 보고서에 쓸 때, 표본 수 때문에 조심해야 할 표현을 알려줘."</em></p></div>
+<div class="practice-card"><div class="practice-title">🛠 실습 L — 리뷰 220건, 1위가 뒤집힌다 🥇최소 코스</div><p>순서는 <b>수집안내 시트 읽기</b> → <b>겉보기 별점</b> → <b>채널별로 쪼개기</b> → <b>테마 뽑기</b>.<br>시간이 없어도 이건 하세요 — 오늘 실습 중 가장 강력한 한 방입니다.</p><div class="practice-prep"><div class="prep-label">📎 준비물</div><ul><li><b>리뷰 덤프</b>(<code>review_dump.xlsx</code>) <span class="meta">· Excel · 220건 · <code>수집안내</code> 시트 포함</span></li></ul></div></div>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"<strong><code>수집안내</code></strong> 시트를 먼저 읽고, 이 데이터로 브랜드를 비교할 때 조심할 점을 알려줘. 그다음 브랜드별 리뷰 수와 평균 별점을 표로."</em></p></div>
+<p><strong>→ 정답 (겉보기):</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>브랜드</strong></th><th><strong>리뷰 수</strong></th><th><strong>평균 별점</strong></th></tr></thead><tbody><tr><td><strong>그린컵</strong></td><td>89</td><td><strong>4.09</strong> ← 1위처럼 보임</td></tr><tr><td>보틀로</td><td>45</td><td>3.47</td></tr><tr><td>에코마이</td><td>45</td><td>3.18</td></tr><tr><td>데일리집</td><td>41</td><td>2.90</td></tr></tbody></table></div>
+<p><strong>우리가 1위네요. 여기서 멈추면 안 됩니다.</strong></p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"브랜드별 × 수집채널별로 평균 별점을 다시 내줘. 그리고 채널 구성이 브랜드마다 같은지 확인해줘."</em></p></div>
+<p><strong>→ 정답 (실체):</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>브랜드</strong></th><th><strong>자사몰</strong></th><th><strong>네이버쇼핑</strong></th><th><strong>인스타그램</strong></th><th><strong>커뮤니티</strong></th></tr></thead><tbody><tr><td><strong>그린컵</strong></td><td><strong>55건 · 4.49</strong></td><td>15건 · 4.00</td><td>8건 · 4.00</td><td>11건 · 2.27</td></tr><tr><td>보틀로</td><td>—</td><td>21건 · 3.71</td><td>9건 · 3.78</td><td>15건 · 2.93</td></tr><tr><td>에코마이</td><td>—</td><td>14건 · 3.57</td><td>16건 · 3.12</td><td>15건 · 2.87</td></tr><tr><td>데일리집</td><td>—</td><td>14건 · 2.79</td><td>8건 · 4.12</td><td>19건 · 2.47</td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 그린컵만 자사몰 리뷰가 있습니다</div><p>— 89건 중 55건(62%)이요. 당연하죠, <strong>남의 회사 자사몰 리뷰는 긁을 수 없으니까요.</strong> 그런데 자사몰 리뷰는 구매 고객이 적립금 받고 쓰는 경우가 많아 <strong>후합니다</strong>(4.49).<br><strong>자사몰을 빼고 다시 계산하면 그린컵은 34건 평균 3.44</strong> — 보틀로(3.47)와 사실상 같고, <strong>1위가 아닙니다.</strong></p></div>
+<div class="callout callout--tip"><div class="callout-label">💡 이게 오늘 배운 '자료 성격 확인'의 결정판입니다.</div><p>숫자는 하나도 안 틀렸어요. 계산도 정확합니다. <strong>그런데 비교 조건이 달라서 결론이 뒤집힙니다.</strong><br>그리고 이 함정은 <code>수집안내</code> 시트에 <strong>미리 적혀 있었습니다</strong> — <em>"브랜드별로 수집 조건이 동일하지 않아 별점 단순 비교는 공정하지 않을 수 있습니다."</em> <strong>안 읽으면 못 봅니다.</strong></p></div>
+<p><strong>테마 뽑기:</strong></p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"리뷰 내용에서 반복되는 주제를 뽑아 브랜드별로 몇 건인지 표로 만들어줘. 긍정 주제와 부정 주제를 나눠서."</em></p></div>
+<p><strong>→ 주요 테마 (참고값 — 분류 기준에 따라 ±몇 건 차이는 정상):</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>테마</strong></th><th><strong>총 건수</strong></th><th><strong>어느 브랜드에 몰렸나</strong></th></tr></thead><tbody><tr><td>디자인 (긍정)</td><td>51</td><td>그린컵 29</td></tr><tr><td>보온력 (긍정)</td><td>41</td><td>그린컵 33</td></tr><tr><td>가격</td><td>25</td><td>데일리집 11 / 에코마이 7</td></tr><tr><td><strong>정가 저항</strong> (부정)</td><td>17</td><td><strong>데일리집 17 — 전부</strong></td></tr><tr><td>무게 (부정)</td><td>16</td><td>에코마이 10 / 그린컵 6</td></tr><tr><td><strong>뚜껑 냄새</strong> (부정)</td><td>13</td><td><strong>그린컵 13 — 전부</strong></td></tr><tr><td>접근성 (긍정)</td><td>10</td><td>보틀로 10 — 전부</td></tr></tbody></table></div>
+<div class="callout callout--tip"><div class="callout-label">💡 "한 브랜드에만 몰린 테마"가 가장 값집니다.</div><p>데일리집의 <em>정가 저항</em>, 그린컵의 <em>뚜껑 냄새</em>, 보틀로의 <em>접근성</em> — 이건 그 브랜드의 <strong>구조적 특징</strong>이에요. 여러 브랜드에 골고루 퍼진 '가격' 같은 테마보다 훨씬 많은 걸 말해줍니다.</p></div>
+<p><strong>✅ 여기서 확인할 것</strong></p>
+<ul class="checklist"><li>AI가 <strong>먼저</strong> <code>수집안내</code> 시트의 경고를 짚었는가?</li><li>채널별로 쪼갠 뒤 <strong>그린컵이 1위가 아니게</strong> 됐는가?</li><li>이 결과를 보고서에 어떻게 쓸지 한 문장으로 적어봤는가?</li></ul>
+<h3 class="sub-head">10-2. 1차자료 vs 2차자료 (3절 복습)</h3>
+<ul><li><strong>개념</strong>: 3절에서 다뤘습니다. 여기선 <strong>기법으로서</strong> 다시 봅니다 — 자료 목록을 받으면 <strong>가장 먼저 하는 작업</strong>이에요</li><li><strong>전통 방식</strong>: 자료 목록을 하나하나 살펴보며 출처·발행일·이해관계를 손으로 태깅</li><li><strong>AI에게</strong>: <em>"이 자료들 중 1차자료와 2차자료를 구분해줘. 2차자료는 원출처와 발행일도 같이 표시해줘."</em></li><li>⚠️ <strong>초보가 착각하는 것</strong>: <strong>1차자료라고 다 믿을 수 있는 건 아닙니다.</strong> 오늘 자사 설문(1차자료)도 응답률 11.6%에 이탈 고객이 빠져 있어요. 1차/2차는 <strong>출처의 거리</strong>이지 <strong>품질 등급이 아닙니다</strong></li></ul>
+<h3 class="sub-head">10-3. 자료마다 '안 보이는 것'이 다르다</h3>
+<div class="table-scroll"><table><thead><tr><th><strong>자료 유형</strong></th><th><strong>잘 보이는 것</strong></th><th><strong>구조적으로 안 보이는 것</strong></th></tr></thead><tbody><tr><td>자사 설문</td><td>우리 고객의 생각</td><td><strong>떠난 고객, 안 산 사람</strong></td></tr><tr><td>리뷰</td><td>강한 만족·불만</td><td><strong>조용한 다수, 못 산 사람</strong></td></tr><tr><td>인터뷰</td><td>'왜' 그런지의 맥락</td><td><strong>비율</strong> (표본이 작음)</td></tr><tr><td>판매 데이터</td><td>실제로 일어난 일</td><td><strong>사려다 만 이유</strong></td></tr><tr><td>경쟁사 조사</td><td>겉으로 드러난 것</td><td><strong>내부 사정·수익성</strong></td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 오른쪽 열이 오늘 배울 것의 핵심입니다.</div><p>리뷰 220건을 아무리 잘 분석해도 <em>"매장이 없어서 못 산 사람"</em> 은 절대 안 나옵니다 — <strong>산 사람만 리뷰를 쓰니까요.</strong> "한 자료로 결론 내지 말라"는 말이 이런 뜻이에요.</p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 이걸 <strong>생존 편향</strong>이라고 부릅니다. 살아남은 것만 보이고, 사라진 것은 자료에 안 남는 현상이에요. 오늘 자사 설문에도 똑같이 걸려 있습니다 — <strong>이미 떠난 고객은 설문에 답하지 않습니다.</strong></p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> AI에게 시키는 법: <em>"이 자료로는 알 수 없는 것이 뭔지 목록으로 알려줘."</em> — 놀랍도록 잘 답합니다. 그리고 그 목록이 <strong>다음에 무슨 자료를 구해야 하는지</strong>를 알려줍니다.</p></div>
+<div class="practice-card"><div class="practice-title">🛠 실습 M — 자사 설문 읽기 (1차자료의 힘과 한계)</div><p>순서는 <b>한계부터 짚고 요약</b> → <b>불만 상위 3개</b> → <b>구독 의향</b>.<br>마지막에 기획안(실습 I)과 정면충돌하는 지점을 확인합니다.</p><div class="practice-prep"><div class="prep-label">📎 준비물</div><ul><li><b>자사 고객 설문</b>(<code>greencup_survey_2024.docx</code>) <span class="meta">· Word · n=214</span></li></ul></div></div>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 설문 결과를 요약해줘. 단, 이 조사의 한계를 먼저 짚고 시작해."</em></p></div>
+<p><strong>→ 반드시 나와야 할 한계 3가지</strong> (문서가 스스로 밝히고 있습니다):</p>
+<ol><li><strong>응답률 11.6%</strong> (1,840명 중 214명) — 응답한 사람과 안 한 사람이 다를 수 있음</li><li><strong>자사몰 구매 고객만</strong> 대상 — 비구매자·타사 고객 미포함</li><li><strong>이미 이탈한 고객은 응답하지 않음</strong> — <strong>생존 편향.</strong> 실제 불만은 이 결과보다 클 수 있음</li></ol>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 문서 마지막 '담당자 코멘트'에 이 셋이 다 적혀 있습니다. <strong>자기 조사의 한계를 스스로 적어둔 자료가 좋은 자료</strong>예요. 한계를 안 밝힌 자료가 더 무섭습니다.<br><em>"불만 항목 중 상위 3개를 뽑고, 각각을 해결했을 때 어느 정도 파급이 있을지 응답자 수 기준으로 계산해줘."</em></p></div>
+<p><strong>→ 정답: 뚜껑 실리콘 냄새 87명(40.7%) / 고객센터 응대 63명(29.4%) / 컬러 선택지 48명(22.4%)</strong></p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"구독 서비스 의향 결과를 보여주고, '조건에 따라 고려'라고 답한 71명이 꼽은 조건을 정리해줘."</em></p></div>
+<p><strong>→ 정답: 가입 10.7% / 조건부 33.2% / 미가입 56.1%.</strong> 조건부의 조건은 각인·개인화 43.7%, 월 5,000원 이하 38.0%, 건너뛰기 가능 31.0%.</p>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 여기서 기획안(실습 I)과 정면충돌합니다.</div><p>기획안은 <strong>월 9,900원</strong>에 첫 해 <strong>5,000명</strong>을 목표로 잡았죠. 그런데 조건부 고려층조차 <strong>월 5,000원 이하</strong>를 원하고, 가장 원하는 건 매달 새 컬러가 아니라 <strong>각인</strong>입니다.<br><strong>이 자료가 사내에 있었는데 기획서엔 인용조차 안 됐어요</strong> — <em>"별도의 구독 서비스 수요 조사는 진행하지 않았으나"</em> 라고 적혀 있죠. 실무에서 자주 벌어지는 일입니다.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">11</span><h2>삼각검증 실전 — 40.7% vs 14.6%, 왜 이렇게 다른가</h2></div>
+<p>오늘 실습의 하이라이트입니다. "그린컵 뚜껑 실리콘 냄새"가 세 자료에 다 나오는데, 숫자가 이렇습니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>자료</strong></th><th><strong>표본</strong></th><th><strong>냄새 언급</strong></th><th><strong>비율</strong></th></tr></thead><tbody><tr><td>자사 설문</td><td>214명</td><td>87명</td><td><strong>40.7%</strong></td></tr><tr><td>리뷰 덤프</td><td>그린컵 89건</td><td>13건</td><td><strong>14.6%</strong></td></tr><tr><td>인터뷰 노트</td><td>6명</td><td>여러 명</td><td>비율로 말하면 안 됨</td></tr></tbody></table></div>
+<p>40.7%와 14.6%는 거의 <strong>3배 차이</strong>입니다. 어느 쪽이 맞을까요?</p>
+<p><strong>둘 다 맞습니다.</strong> 다른 걸 재고 있을 뿐이에요.</p>
+<div class="table-scroll"><table><thead><tr><th></th><th><strong>설문</strong></th><th><strong>리뷰</strong></th></tr></thead><tbody><tr><td>어떻게 나온 숫자인가</td><td><strong>물어봤다</strong> — "이런 불만이 있었습니까?"</td><td><strong>아무도 안 물어봤다</strong> — 자발적으로 씀</td></tr><tr><td>그래서 재는 것</td><td><em>"떠올려보니 그랬다"</em> 를 포함한 <strong>인지된 불만</strong></td><td><em>"글을 쓸 만큼 불편했다"</em> 는 <strong>행동으로 드러난 불만</strong></td></tr><tr><td>숫자가 큰가 작은가</td><td>항목을 보여주니 <strong>커진다</strong></td><td>굳이 안 쓰는 사람이 많아 <strong>작아진다</strong></td></tr></tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 그래서 보고서엔 이렇게 씁니다 — <strong>"물어보면 40.7%, 안 물어봐도 쓸 만큼 불편한 사람은 14.6%"</strong><br>두 숫자를 다 살리면 <strong>문제의 크기와 심각도가 동시에</strong> 보입니다. 하나만 쓰면 둘 중 하나를 잃어요.</p></div>
+<div class="callout callout--tip"><div class="callout-label">💡 그리고 삼각검증의 진짜 결론은 숫자가 아닙니다.</div><p><em>"세 자료 모두에서 이 문제가 1순위로 나온다"</em> — 이 <strong>일관성</strong>이 결론이에요. 서로 다른 방법으로 재도 같은 게 1등이면, 그건 진짜입니다.</p></div>
+<div class="practice-card"><div class="practice-title">🛠 실습 N — 삼각검증 (오늘의 하이라이트)</div><p><b>'뚜껑 실리콘 냄새'</b> 하나를 세 자료에서 찾아 나란히 놓고 → <b>사각지대 찾기</b>까지.<br>세 자료를 <b>한 대화</b>에 함께 올립니다.</p><div class="practice-prep"><div class="prep-label">📎 준비물</div><ul><li><b>자사 고객 설문</b>(<code>greencup_survey_2024.docx</code>) <span class="meta">· Word · n=214</span></li><li><b>고객 인터뷰 노트</b>(<code>customer_interview_notes.docx</code>) <span class="meta">· Word · 6명</span></li><li><b>리뷰 덤프</b>(<code>review_dump.xlsx</code>) <span class="meta">· Excel · 220건 · <code>수집안내</code> 시트 포함</span></li></ul></div></div>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"'그린컵 뚜껑 실리콘 냄새' 문제에 대해 ① 설문 결과 ② 인터뷰 노트 ③ 리뷰 데이터가 각각 뭐라고 하는지 찾아서, 자료별 표본 수와 비율을 표로 정리해줘. 세 자료의 결과가 일치하는지, 다르다면 왜 다를 수 있는지도."</em></p></div>
+<p><strong>→ 정답:</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>자료</strong></th><th><strong>표본</strong></th><th><strong>냄새 언급</strong></th><th><strong>비율</strong></th></tr></thead><tbody><tr><td>자사 설문</td><td>214명</td><td>87명</td><td><strong>40.7%</strong></td></tr><tr><td>인터뷰 노트</td><td>6명</td><td>여러 명 (1·4·6번 등)</td><td>표본이 작아 비율 산출 부적절</td></tr><tr><td>리뷰 덤프</td><td>그린컵 89건</td><td>13건</td><td><strong>14.6%</strong></td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 왜 40.7%와 14.6%가 이렇게 다를까요?</div><p>셋 다 맞습니다. 다른 걸 재고 있을 뿐이에요.</p><ul><li><strong>설문</strong>은 <em>"이런 불만이 있었습니까?"</em> 라고 <strong>물어봤습니다.</strong> 항목을 보여주면 "아 맞아 그거"가 됩니다</li><li><strong>리뷰</strong>는 아무도 안 물어봤는데 <strong>자발적으로 쓴 것</strong>입니다. 그래서 낮게 나오죠</li><li><strong>인터뷰</strong>는 대화 중에 나온 것이고, 표본이 6명이라 <strong>비율로 말하면 안 됩니다</strong></li></ul><p>즉 <strong>"물어보면 40.7%, 안 물어봐도 쓸 만큼 불편한 사람은 14.6%"</strong> 로 읽어야 합니다.</p></div>
+<div class="callout callout--tip"><div class="callout-label">💡 삼각검증의 결론은 "숫자를 하나로 합치는 것"이 아닙니다.</div><p><em>"세 자료 모두에서 이 문제가 1순위로 나온다"</em> — 이 <strong>일관성</strong>이 결론이에요.</p></div>
+<p><strong>반대 연습도 해보세요 — 사각지대 찾기:</strong></p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"세 자료 중 한 곳에만 나오고 다른 곳엔 없는 이야기를 찾아줘."</em></p></div>
+<p>→ 예를 들어 <strong>'오프라인 매장이 없다'</strong> 는 설문(13.6%)·인터뷰(5번)엔 나오는데 리뷰엔 거의 없습니다. <strong>리뷰는 산 사람이 쓰니까요</strong> — 매장이 없어서 못 산 사람은 리뷰를 안 씁니다. <strong>자료마다 안 보이는 사각지대가 다릅니다.</strong></p>
+<div class="callout callout--summary"><div class="callout-label">📌 8·10·11절 한 줄 요약</div><p>— 숫자가 다르면 하나 고르지도 평균 내지도 말고, <strong>범위와 기준을 함께</strong> 적어라. 자료마다 못 보는 것이 다르다.</p></div>
+<div class="callout callout--scenario"><p><span class="co-icon">🎯</span> <strong>이 PART의 목표</strong>: 지금까지 만든 것을 <strong>사람이 확인 가능한 형태</strong>로 바꾸는 것. 조사가 보고서가 되는 마지막 구간입니다.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">12</span><h2>AI가 조사에서 틀리는 지점 — 환각</h2></div>
+<h3 class="sub-head">12-1. 환각이 뭔가</h3>
+<p><strong>환각(hallucination)</strong> — AI가 <strong>사실이 아닌 걸 사실처럼 말하는 것</strong>입니다. 조사 업무에서 특히 위험한데, 이유가 하나 있어요. <strong>틀린 티가 안 납니다.</strong></p>
+<p>문법도 자연스럽고, 형식도 완벽하고, 숫자도 그럴듯합니다. 오타나 깨진 문장처럼 눈에 띄지 않아요. 그래서 그냥 복사해서 보고서에 붙이게 됩니다.</p>
+<p>조사에서 나오는 대표적인 모습:</p>
+<ul><li><strong>없는 통계·수치 생성</strong> — "시장 규모가 500억"처럼 그럴듯한 숫자를 자료에 없어도 만들어냄</li><li><strong>출처 불명 인용</strong> — 누가 한 말인지, 어느 자료인지 확인 없이 인용문처럼 씀</li><li><strong>오래된 정보를 최신처럼</strong> — 학습 시점 지식과 첨부 자료가 섞여 헷갈림</li><li><strong>빈칸을 그럴듯하게 채움</strong> — 비교표 만들 때 한 회사 정보가 부족하면 추정으로 채워 넣음</li><li><strong>인과 단정</strong> — "경쟁사 매출이 늘었다"는 사실일 수 있어도, "그 마케팅 때문"은 <em>추정</em></li></ul>
+<h3 class="sub-head">12-2. 왜 그러나</h3>
+<div class="callout callout--question"><p><span class="co-icon">🤔</span> AI는 검색엔진이 아니라 <strong>"그럴듯한 다음 말"을 예측</strong>하는 기계입니다. 표의 빈 칸, 확인 안 된 통계처럼 <strong>채워야 할 것 같은 자리</strong>가 있으면 그럴듯한 값을 슬쩍 내놓곤 합니다.</p></div>
+<p>여기서 실전 대응이 하나 나옵니다 — <strong>빈칸을 만들지 마세요.</strong> 정확히는, <strong>빈칸을 어떻게 처리할지 미리 정해주세요.</strong></p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"자료에 없는 항목은 반드시 '자료에 없음' 이라고 쓰고, 절대 추정으로 채우지 마."</em></p></div>
+<p>이 한 줄이 환각의 상당 부분을 막습니다. AI에게 <strong>"비워두는 것도 정답"</strong> 이라고 알려주는 셈이거든요.</p>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 원칙은 7차시와 같습니다: <strong>조사·요약·비교는 AI, 출처 확인과 "그래서 뭘 하나"는 사람.</strong> 특히 외부에 나갈 보고서 숫자·인용은 반드시 원문 대조.</p></div>
+<h3 class="sub-head">12-3. 조사에서 특히 위험한 환각 3유형</h3>
+<p>환각이라고 다 같은 게 아닙니다. <strong>잡기 쉬운 것과 어려운 것</strong>이 있어요.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>유형</strong></th><th><strong>왜 위험한가</strong></th><th><strong>잡는 법</strong></th></tr></thead><tbody><tr><td>🟡 <strong>없는 걸 만듦</strong></td><td>자료를 뒤지면 없으니 <strong>비교적 잡기 쉬움</strong></td><td><em>"이 문장이 어느 자료 몇 번째 항목에 있는지 표시해줘"</em></td></tr><tr><td>🟠 <strong>있는 걸 부풀림</strong></td><td>"일부 브랜드가" → "대부분의 브랜드가". <strong>원문에 비슷한 말이 있어서 잘 안 걸림</strong></td><td><em>"원문 표현을 그대로 인용하고, 네가 바꿔 쓴 부분은 표시해줘"</em></td></tr><tr><td>🔴 <strong>단서를 떼어냄</strong></td><td>"추정된다", "확인되지 않았다"를 지우고 단정문으로. <strong>가장 안 걸리고 가장 위험</strong></td><td><em>"원문에 '추정·알려짐·확인 안 됨' 같은 표현이 있었다면 그대로 유지해줘"</em></td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 세 번째가 진짜 문제입니다.</div><p>데일리집 자료엔 이렇게 적혀 있습니다:<br><em>"매출이 전년 대비 3배 이상 성장한 것으로 알려져 있다. (※ 방송 중 진행자가 언급한 수치로, 공식 확인된 자료는 아님)"</em><br>요약하면서 괄호가 떨어지면 <strong>"데일리집 매출 3배 성장"</strong> 이라는 단정문이 남죠.<br>여기서 무서운 건 — <strong>아무도 거짓말을 안 했다</strong>는 겁니다. 원문 작성자도 정직하게 단서를 달았고, AI도 없는 말을 지어내지 않았어요. 그저 <strong>줄이는 과정에서 괄호가 떨어졌을 뿐</strong>입니다. 그런데 보고서엔 틀린 문장이 올라갑니다.</p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 그래서 조사용 지시엔 이 한 줄을 항상 넣으세요: <strong>"원문에 붙어 있던 조건·단서·출처 표시를 요약에서도 유지해줘."</strong><br>오늘 배우는 문장 중 딱 하나만 외운다면 이걸 외우세요.</p></div>
+<h3 class="sub-head">12-4. 검증은 세 단계로</h3>
+<div class="table-scroll"><table><thead><tr><th><strong>단계</strong></th><th><strong>무엇을 보나</strong></th><th><strong>시킬 말</strong></th></tr></thead><tbody><tr><td><strong>① 존재 확인</strong></td><td>이 내용이 자료에 <strong>있기는 한가</strong></td><td>"각 주장 옆에 근거 자료명과 위치를 붙여줘"</td></tr><tr><td><strong>② 표현 대조</strong></td><td>원문과 <strong>강도가 같은가</strong></td><td>"원문 문장을 그대로 인용해 나란히 보여줘"</td></tr><tr><td><strong>③ 출처 등급</strong></td><td>그 자료를 <strong>믿어도 되나</strong></td><td>"그 근거 자료가 1차인지 2차인지, 누가 만든 건지"</td></tr></tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 대부분은 ①에서 멈춥니다. 하지만 오늘 자료처럼 <strong>출처의 질이 제각각</strong>일 땐 ③까지 가야 해요. <strong>"자료에 있다"와 "믿을 만하다"는 다른 얘기입니다.</strong></p></div>
+<div class="callout callout--summary"><div class="callout-label">📌 12절 한 줄 요약</div><p>— 가장 위험한 환각은 지어내기가 아니라 <strong>단서 떼기</strong>. 요약 지시에 <em>"원문의 단서를 유지해"</em> 를 항상 붙여라.</p></div>
+<div class="practice-card"><div class="practice-title">🛠 실습 O — 환각 점검 훈련 (3단계 검증 실전)</div><p>순서는 <b>① 존재 확인</b> → <b>② 표현 대조</b> → <b>③ 출처 등급</b>.<br>12-4절의 3단계 검증을 그대로 돌립니다.</p><div class="practice-prep"><div class="prep-label">📎 준비물</div><ul><li><b>지금까지 만든 표·요약</b> <span class="meta">· 같은 대화에 있음</span></li><li><b>경쟁사 A 보틀로</b>(<code>competitor_A_bottlo.docx</code>) <span class="meta">· Word</span></li><li><b>경쟁사 B 에코마이</b>(<code>competitor_B_ecomy.docx</code>) <span class="meta">· Word</span></li><li><b>경쟁사 C 데일리집</b>(<code>competitor_C_dailyzip.docx</code>) <span class="meta">· Word</span></li></ul></div></div>
+<p><strong>① 존재 확인</strong></p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"지금까지 나온 표의 가격·숫자가 각 원문 자료에 실제로 있는지 확인하고, '주장 | 근거 자료 | 위치 | 있음/없음' 표로 만들어줘."</em></p></div>
+<p><strong>② 표현 대조</strong> — 여기가 진짜입니다</p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"내가 요약한 문장과 원문 문장을 나란히 놓고 비교해줘. 원문에 있던 '추정', '알려져 있다', '확인되지 않았다' 같은 단서가 요약에서 사라진 곳이 있으면 전부 표시해줘."</em></p></div>
+<p><strong>→ 반드시 걸려야 할 3곳:</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>요약에서 이렇게 되기 쉬움</strong></th><th><strong>원문은 이렇게</strong></th></tr></thead><tbody><tr><td>"데일리집 매출 3배 성장"</td><td><em>"…성장한 것으로 알려져 있다. (※ 방송 중 진행자 언급, 공식 확인된 자료 아님)"</em></td></tr><tr><td>"에코마이 온라인 매출 70%"</td><td><em>"…추정된다. (업계 관계자 인터뷰 기반 추정치이며 공식 발표 자료는 확인되지 않음)"</em></td></tr><tr><td>"보틀로 편의점 4만 점포"</td><td><em>"보틀로 보도자료는 '약 4만 점포'라고 밝히고 있으나, 경제일보 보도는 '약 2만 8천 곳'"</em></td></tr></tbody></table></div>
+<p><strong>③ 출처 등급</strong></p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"위 표에 '근거 자료가 1차인지 2차인지', '누가 만든 자료인지' 열을 추가해줘. 그리고 이 중 임원 보고에 그대로 쓰면 위험한 항목을 골라줘."</em></p></div>
+<div class="callout callout--tip"><div class="callout-label">💡 ③까지 가야 검증이 끝납니다.</div><p>"자료에 있음"으로 통과시킨 항목 중에 *데일리집 인턴 초안*이 근거인 게 섞여 있거든요. <strong>있다 ≠ 믿을 만하다.</strong></p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">13</span><h2>붙여넣기용 마스터 프롬프트</h2></div>
+<h3 class="sub-head">13-1. 초보용 짧은 버전 — 자료 하나로 시작할 때</h3>
+<p>처음엔 이걸 쓰세요. 세 줄이면 충분합니다.</p>
+<div class="prompt">첨부 자료를 [내 목적]에 맞게 정리해줘.
+- 자료에 없는 내용은 "자료에 없음"이라고 쓰고 지어내지 마.
+- 원문에 '추정·확인되지 않음·~로 알려짐'이 붙어 있으면 그 표현을 그대로 유지해.
+- 각 내용 옆에 어느 자료의 어느 부분인지 표시해줘.</div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>세 줄이 각각 오늘의 핵심 셋</strong>입니다 — 지어내기 방지(12절) · 단서 유지(12-3절) · 출처 표시(12-4절). 이것만 붙여도 결과가 확 달라집니다.</p></div>
+<h3 class="sub-head">13-2. 전체 버전 — 여러 자료를 종합할 때</h3>
+<p>여러 자료가 준비됐을 때 이걸 붙이면 조사 업무 한 세트가 나옵니다.</p>
+<div class="prompt">첨부한 자료로 아래를 순서대로 해줘. 각 항목은 표 또는 목록 + 두 줄 해석.
+1) 자료 분류: 각 자료가 1차자료인지 2차자료인지 구분, 발행일·출처 표시
+2) 목적별 요약: [내 목적]에 필요한 핵심만 5줄로
+3) 비교: [비교 대상들]을 [내가 정한 기준]으로 한 표에 비교
+4) SWOT: 우리 회사 기준 강점/약점/기회/위협 각 3개, 근거 문장 인용
+5) 전략 제안: 위 내용을 종합해 우리가 노릴 빈틈(기회) 3가지, 근거와 함께
+규칙:
+- 자료에 없는 내용은 "자료에 없음"이라 표시하고 지어내지 마.
+- 숫자·인용은 어느 자료의 어느 부분인지 근거를 표시해줘.
+- 원문에 붙어 있던 조건·단서(추정, 확인되지 않음, ~로 알려짐)를 요약에서도 그대로 유지해.
+- 자료마다 값이 다르면 하나를 고르지 말고, 범위와 각각의 기준을 함께 적어줘.
+- 상관과 인과를 구분하고, 추정이면 추정이라 표시해줘.
+마지막에 '출처 검증표'(주장 | 근거 자료 | 자료 성격(1차/2차) | 확인여부)를 붙여줘.</div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 마지막 줄이 포인트: <strong>AI에게 자기 주장의 검증표를 만들게</strong> 하면 사람이 대조하기 쉽습니다 (4·7차시 복습). 오늘은 여기에 <strong>'자료 성격' 열</strong>을 하나 더 넣었습니다 — "자료에 있다"와 "믿을 만하다"는 다른 얘기니까요(4절).</p></div>
+<h3 class="sub-head">13-3. 요약 전용 프롬프트 — 자료 하나를 깊게 읽을 때</h3>
+<p>위 프롬프트는 여러 자료를 종합할 때 쓰고, <strong>자료 하나를 제대로 소화할 땐</strong> 이걸 씁니다.</p>
+<div class="prompt">첨부 자료를 아래 순서로 읽어줘.
+
+0) 먼저 문서 맨 앞의 '자료 출처' 정보를 읽고, 이 자료의 성격과 한계를 3줄로 알려줘.
+1) 나는 [중간 가격대 텀블러 브랜드의 마케터]이고, [하반기 전략 수립]에 쓸 거야.
+2) 이 목적에 맞게 [기회 / 위협]으로 나눠 각 3개씩, 근거 숫자와 함께.
+3) 원문에 '추정·확인되지 않음·~로 알려짐' 표현이 붙은 내용은 그 표현을 유지해줘.
+4) 마지막에 두 가지를 붙여줘.
+   - 이 요약에서 빠뜨린 중요한 내용
+   - 이 자료로는 알 수 없는 것 (다음에 무슨 자료를 구해야 하나)</div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>4번 블록이 이 프롬프트의 핵심</strong>입니다. 요약은 버리는 작업이라 <em>"뭘 버렸는지"</em> 와 <em>"애초에 이 자료로 알 수 없는 게 뭔지"</em> 를 같이 받아야 안심하고 쓸 수 있어요.</p></div>
+<div class="practice-card"><div class="practice-title">🛠 실습 P — 마스터 프롬프트로 종합</div><p>13-2절 <b>전체 마스터 프롬프트</b>를 붙여넣어 분류·요약·비교·SWOT·전략을 <b>한 번에</b> 뽑고, 출처 검증표를 원문과 대조합니다.<br>B~O는 조각 연습, 이건 실무에서 실제로 쓰게 될 한 번에 돌리기입니다.</p><div class="practice-prep"><div class="prep-label">📎 준비물</div><ul><li><b>경쟁사 A 보틀로</b>(<code>competitor_A_bottlo.docx</code>) <span class="meta">· Word</span></li><li><b>경쟁사 B 에코마이</b>(<code>competitor_B_ecomy.docx</code>) <span class="meta">· Word</span></li><li><b>경쟁사 C 데일리집</b>(<code>competitor_C_dailyzip.docx</code>) <span class="meta">· Word</span></li><li><b>시장 트렌드 리포트</b>(<code>market_trend_article.docx</code>) <span class="meta">· Word · 협회 리포트</span></li><li><b>13-2절 마스터 프롬프트</b> <span class="meta">· 복사해서 붙여넣기</span></li></ul></div></div>
+<ul><li>13-2절의 <strong>전체 마스터 프롬프트</strong>를 경쟁사 3개+시장 리포트에 그대로 붙여넣어, 자료분류·요약·비교·SWOT·전략을 <strong>한 번에</strong> 뽑아보세요</li><li>나온 결과 끝의 <strong>'출처 검증표'</strong> 를 원문과 대조해보세요</li></ul>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> B~O를 하나씩 해본 뒤에 이걸 돌리면, <strong>"아 아까 그거구나"</strong> 하고 결과가 읽힙니다. 반대로 이것부터 하면 결과가 너무 많아서 뭘 봐야 할지 모릅니다. 순서가 그래서 이렇습니다.</p></div>
+<div class="practice-card"><div class="practice-title">🛠 실습 Q — 보고용으로 변신</div><p>순서는 <b>한 장 요약 만들기</b> → <b>원문 대조할 숫자 3개 고르기</b>.<br>실습 P와 <b>같은 대화</b>에서 이어갑니다.</p><div class="practice-prep"><div class="prep-label">📎 준비물</div><ul><li><b>실습 P의 분석 결과</b> <span class="meta">· 같은 대화에 있음</span></li></ul></div></div>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"위 분석을 팀장 보고용 한 장짜리 요약으로 만들어줘. 제목 → 핵심 결론 3줄 → 비교표 → 추천 전략 순서로."</em></p></div>
+<p>(4차시의 '형식 재활용'이 여기서도!)</p>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 마지막에 한 줄 더: <em>"이 보고서에서 내가 원문 대조를 꼭 해야 할 숫자 3개를 골라줘."</em> → 검수할 곳이 3개로 좁혀집니다.</p></div>
+<h3 class="sub-head">🎓 도전 과제 (빨리 끝낸 사람용)</h3>
+<ul><li><strong>4번째 경쟁사 추가</strong>: 직접 아는 브랜드 정보를 몇 줄 입력해 추가하고, <em>"비교표에 넣어서 갱신해줘"</em></li><li><strong>웹 검색 결합</strong>: 실제 존재하는 텀블러 브랜드 하나를 골라 <em>"이 브랜드 최근 소식을 웹에서 검색해 출처 링크·발행일과 함께 정리하고, 내부 자료 근거와 구분 표시해줘"</em> — 6절 규칙 3가지 지키며</li><li><strong>기획안 다시 쓰기</strong>: 설문(실습 M)과 재무 메모(실습 J)를 근거로 <em>"구독 기획안을 현실적인 가격·목표·일정으로 다시 써줘. 바꾼 항목마다 근거 자료를 명시하고."</em> → <strong>자료가 기획을 고치는</strong> 흐름을 끝까지 체험</li><li><strong>반대 심문</strong>: <em>"이 조사 결과 전체에 대해, 회의에서 나올 만한 날카로운 반박 5가지와 그에 대한 답변을 준비해줘. 반박은 근거가 약한 곳을 정확히 찌르게."</em></li><li><strong>사각지대 메우기</strong>: <em>"지금 가진 10개 자료로는 알 수 없는 것을 목록으로 뽑고, 각각을 알아내려면 어떤 조사를 해야 하는지 방법과 비용감을 제안해줘."</em> → <strong>다음 조사 계획</strong>이 나옵니다</li><li><strong>리뷰 시계열</strong>: <code>review_dump.xlsx</code>로 <em>"월별로 브랜드별 평균 별점 추이를 보여줘. 특정 시점에 급변한 브랜드가 있나?"</em> → 정성 자료를 시간축으로 보는 연습</li><li><strong>대응 계획</strong>: <em>"가장 위협적인 경쟁사에 대응하는 3개월 실행 계획을 우선순위와 함께 제안해줘."</em></li><li><strong>내 자료로</strong>: 내가 다루는 실제 조사·기획 자료(민감정보 지우고)로 마스터 프롬프트를 돌려보기</li></ul>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 위 항목 중 <strong>'기획안 다시 쓰기'</strong> 가 오늘 배운 것의 최종 형태입니다. 조사는 보고서를 만드는 게 목적이 아니라 <strong>결정을 바꾸는 게</strong> 목적이에요. 기획안의 9,900원이 자료를 근거로 바뀐다면, 그날 조사는 값을 한 겁니다.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">14</span><h2>안 될 때 — 트러블슈팅</h2></div>
+<div class="table-scroll"><table><thead><tr><th><strong>증상</strong></th><th><strong>원인</strong></th><th><strong>대응</strong></th></tr></thead><tbody><tr><td><strong>없는 통계·수치를 지어냄</strong></td><td>자료 밖 지식 사용(환각)</td><td><em>"첨부 자료 안에서만 답하고, 없으면 '자료에 없음'이라고 해"</em></td></tr><tr><td><strong>비교 기준이 애매하고 뻔함</strong></td><td>기준을 안 정하고 바로 시킴</td><td>기준부터 <strong>제안받아 확정</strong>한 뒤 비교 지시 (5절)</td></tr><tr><td><strong>요약이 뭉뚱그려짐</strong></td><td>목적·길이·관점 미지정</td><td><em>"누구를 위해, 몇 줄로, 어떤 관점에서"</em> 명시</td></tr><tr><td><strong>출처를 안 밝힘</strong></td><td>인용 근거를 요구 안 함</td><td><em>"어느 자료의 어느 부분인지 표시해줘"</em> 요구</td></tr><tr><td><strong>두 자료의 모순을 못 찾음</strong></td><td>직접 대조를 안 시킴</td><td><em>"A와 B를 항목별로 대조해서, 다른 부분만 짚어줘"</em></td></tr><tr><td><strong>SWOT·포지셔닝이 뻔한 소리만</strong></td><td>근거 문장 인용을 안 시킴</td><td><em>"각 항목에 근거가 된 문장을 인용해줘"</em> 요구</td></tr><tr><td><strong>요약에서 '추정·확인 안 됨'이 사라짐</strong></td><td>단서 유지를 안 시킴</td><td><em>"원문의 조건·단서·출처 표시를 요약에서도 유지해"</em> — <strong>가장 위험한 유형</strong></td></tr><tr><td><strong>자료마다 숫자가 달라 뭘 쓸지 모름</strong></td><td>하나를 고르려 함</td><td>8절 — <strong>범위와 기준을 함께</strong> 표기 ("계약 기준 4만 / 진열 기준 2.8만")</td></tr><tr><td><strong>자료 첫머리 출처 표를 안 읽음</strong></td><td>본문부터 요약</td><td><em>"먼저 '자료 출처' 표를 읽고 이 자료의 성격과 한계를 알려줘"</em> 로 시작</td></tr><tr><td><strong>엑셀 리뷰의 브랜드 비교가 이상함</strong></td><td>수집 조건이 브랜드마다 다름</td><td><em>"채널별로 쪼개서 다시 비교해줘"</em> — 실습 L 참고</td></tr><tr><td><strong>표본이 6명인데 %로 말함</strong></td><td>표본 수를 안 알려줌</td><td><em>"표본 수를 함께 쓰고, 30 미만이면 비율로 표현하지 마"</em></td></tr><tr><td><strong>오래된 정보를 최신처럼 말함</strong></td><td>발행일 확인 안 함</td><td><em>"각 내용 옆에 언제 자료인지 날짜를 붙여줘"</em></td></tr><tr><td><strong>자료가 여러 개인데 하나만 봄</strong></td><td>한 대화에 너무 많이 올림</td><td>PART별로 대화를 나누고, 자료명을 <strong>직접 지정</strong>해서 지시</td></tr><tr><td><strong>비교표에 빈 칸이 하나도 없음</strong></td><td>추정으로 채웠을 가능성</td><td><em>"자료에 없는 항목은 '자료에 없음'이라고 쓰고 추정하지 마"</em> 후 재요청</td></tr></tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 공통 원칙: 결과가 이상하면 <strong>어느 자료·어느 부분·어느 기준</strong>인지 좁혀서 다시 지시. 모호함이 줄면 오류도 줍니다.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">15</span><h2>자주 묻는 질문 (FAQ)</h2></div>
+<p><strong>Q. 자료를 한 번에 몇 개까지 올려도 되나요?</strong> A. 실무 감각으론 <strong>3~4개</strong>가 한계입니다. 그 이상이면 AI가 어느 자료의 내용인지 헷갈리기 시작해요. 오늘 실습을 PART로 나눈 이유가 이겁니다. 많은 자료를 다뤄야 한다면 ① 각각 따로 요약 → ② 요약본들만 모아 비교, 두 단계로 가세요.</p>
+<p><strong>Q. 첫 시도부터 결과가 이상해요. 제가 뭘 잘못한 건가요?</strong> A. 대개 <strong>자료를 너무 많이 올렸거나, 목적을 안 줬거나</strong> 둘 중 하나입니다. 파일 <strong>하나만</strong> 올리고 목적을 한 줄 붙여 다시 해보세요 — 0절의 4단계처럼요. 그래도 이상하면 14절 트러블슈팅에서 증상을 찾으세요.</p>
+<p><strong>Q. AI가 낸 표가 그럴듯한데, 이걸 어디까지 믿어야 할지 모르겠어요.</strong> A. 딱 하나만 하세요 — <em>"이 표의 숫자가 각각 어느 자료 어느 부분에 있는지 표시해줘."</em> 근거를 못 붙이는 칸이 나오면 <strong>그게 지어낸 것</strong>입니다. 전부 검증할 필요 없이, <strong>근거 없는 칸만</strong> 보면 됩니다.</p>
+<p><strong>Q. 웹 검색 결과와 첨부 자료를 같이 쓰면 뭐가 문제죠?</strong> A. <strong>섞이면 출처 추적이 안 됩니다.</strong> 나중에 "이 숫자 어디서 나온 거죠?"에 답을 못 해요. 그래서 6절처럼 <em>"내부 자료 근거와 웹 검색 근거를 구분해서 표시해줘"</em> 를 꼭 붙입니다. 표에 <strong>'출처' 열을 하나 더 만드는 것</strong>이 가장 확실합니다.</p>
+<p><strong>Q. AI가 "자료에 없음"이라고 하는데 분명 있는 것 같아요.</strong> A. 두 가지를 확인하세요. ① 파일이 제대로 읽혔는지 (<em>"이 파일에 섹션이 몇 개고 제목이 뭔지 알려줘"</em>). ② 표현이 달라서 못 찾는 건 아닌지 — "재구매율"을 찾는데 문서엔 "다시 구매한 적 있다"로 적혀 있을 수 있죠. <strong>동의어를 알려주며 다시</strong> 물어보세요.</p>
+<p><strong>Q. 경쟁사 자료를 AI에 올려도 되나요? 저작권 문제는요?</strong> A. <strong>공개 자료를 내부 분석에 쓰는 건 일반적</strong>이지만, 두 가지를 지키세요. ① 사내 미공개 문서(기획서·계약서)는 <strong>회사 보안 정책 먼저 확인.</strong> ② 외부 리포트를 <strong>원문 그대로 대량 인용해 재배포</strong>하지 마세요. 요약·인용은 되지만 <strong>출처를 밝히는 게 기본</strong>입니다. 오늘 시장 리포트에도 <em>"외부 인용 시 출처 표기 필요"</em> 라고 적혀 있죠.</p>
+<p><strong>Q. SWOT이 매번 뻔한 소리만 나옵니다.</strong> A. 근거를 안 시켜서 그렇습니다. <em>"각 항목마다 어느 자료의 어느 문장이 근거인지 인용해줘"</em> 를 붙이면 확 달라져요. 근거를 못 찾는 항목은 <strong>AI가 일반론으로 채운 것</strong>이라 지우면 됩니다. 그리고 SWOT은 <strong>4칸 채우기가 목적이 아니라</strong> "그래서 뭘 할까"의 재료입니다.</p>
+<p><strong>Q. 조사 결과를 어디까지 믿고 의사결정해도 되나요?</strong> A. 판단 기준 하나만 기억하세요 — <strong>"이 결정이 틀리면 되돌릴 수 있나."</strong> 되돌릴 수 있는 결정(콘텐츠 소재, A/B 테스트)은 AI 조사만으로 빠르게 가도 됩니다. 되돌리기 어려운 결정(생산 발주, 채용, 계약)은 <strong>핵심 숫자를 반드시 원문·1차자료로 확인</strong>하세요.</p>
+<p><strong>Q. 표본이 작은 자료(인터뷰 6명)는 쓸모가 없나요?</strong> A. 아뇨, <strong>용도가 다를 뿐</strong>입니다. 인터뷰는 <strong>비율을 재는 도구가 아니라 '왜'를 캐는 도구</strong>예요. "40%가 불만"은 설문이 알려주고, "왜 불만인지, 어떤 상황에서 그런지"는 인터뷰가 알려줍니다. 둘을 함께 쓰는 게 8절의 삼각검증입니다.</p>
+<p><strong>Q. 이 자료들로 알 수 없는 게 뭔지 어떻게 알죠?</strong> A. 그냥 물어보세요: <em>"이 자료로는 알 수 없는 것이 뭔지 목록으로 알려줘."</em> AI가 의외로 잘 답합니다. 그리고 그 목록이 <strong>다음에 무슨 자료를 구해야 하는지</strong>를 알려줘요. 조사 계획을 세우는 가장 빠른 방법입니다.</p>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">16</span><h2>내 업무라면? — 자동화 후보 찾기</h2></div>
+<p>1~2분, 오늘 배운 걸 내 일에 대입해 보세요.</p>
+<ul><li>내가 매번 <strong>손으로 만드는 비교자료·조사보고서</strong>는? (경쟁사 동향, 시장 리포트 요약, 벤치마킹표…) → 요약+비교 자동화 후보</li><li>우리 팀이 매번 참고하는 <strong>뉴스·리포트</strong>는? → 목적별 요약을 정기적으로 시키기</li><li><strong>다른 팀에 부탁하고 기다리던 조사</strong>는? → 이제 이름 대고 직접 시키기</li><li>결과에서 <strong>꼭 사람이 확인해야 할 출처·숫자·해석</strong>은? → 출처 검증표 항목으로 고정</li></ul>
+<div class="callout callout--summary"><p><span class="co-icon"></span> 예: 상품기획팀 — 트렌드 리포트 정기 요약. 영업팀 — 경쟁사 견적 비교. 법무팀 — 규제 발표문 모니터링. 전부 <strong>"자료 + 정확한 조사 틀 이름"</strong> 구조라 오늘 방식이 그대로 먹힙니다.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">17</span><h2>직무별 '내 업무에 이렇게 붙인다' 레시피</h2></div>
+<p>오늘 배운 게 마케팅·전략기획만의 얘기 같나요? <strong>아닙니다.</strong> "여러 자료를 읽고 비교·판단해야 하는" 모든 직무에 그대로 붙습니다. 내 직무를 찾아, <strong>가진 자료 → 시킬 말 → 검수할 것</strong> 세 칸으로 바로 써먹으세요.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>직무</strong></th><th><strong>내가 가진 자료</strong></th><th><strong>오늘 기법 대입</strong></th><th><strong>시킬 말 (붙여넣기)</strong></th></tr></thead><tbody><tr><td><strong>영업</strong></td><td>경쟁사 견적서·제안서</td><td>벤치마킹</td><td><em>"우리와 경쟁사 제안서를 가격·납기·조건 축으로 벤치마킹표로 비교해줘."</em></td></tr><tr><td><strong>마케팅</strong></td><td>경쟁사 SNS·광고 캡처</td><td>포지셔닝맵</td><td><em>"가격과 톤앤매너를 축으로 브랜드 포지셔닝 표를 만들고 빈 자리를 짚어줘."</em></td></tr><tr><td><strong>상품기획</strong></td><td>트렌드 리포트·고객 리뷰</td><td>정성종합·SWOT</td><td><em>"리뷰에서 반복 테마를 뽑고, 이를 반영한 SWOT을 만들어줘."</em></td></tr><tr><td><strong>HR</strong></td><td>채용시장 리포트·타사 공고</td><td>1차/2차·벤치마킹</td><td><em>"이 리포트가 1차·2차자료 중 뭔지 표시하고, 타사 대비 처우를 벤치마킹표로."</em></td></tr><tr><td><strong>재무</strong></td><td>산업 리포트·시장 규모 자료</td><td>TAM/SAM/SOM</td><td><em>"이 리포트 숫자로 우리 사업의 TAM/SAM/SOM을 추정하고 가정을 명시해줘."</em></td></tr><tr><td><strong>법무</strong></td><td>규제 발표문·공지</td><td>1차/2차자료 구분</td><td><em>"이 공지가 원문(1차)인지 보도(2차)인지 확인하고, 핵심 변경사항만 요약해줘."</em></td></tr><tr><td><strong>CS/운영</strong></td><td>경쟁사 리뷰·후기</td><td>정성 종합</td><td><em>"경쟁사 리뷰에서 우리 대비 자주 나오는 불만·강점 테마를 뽑아줘."</em></td></tr></tbody></table></div>
+<h3 class="sub-head">3단계로 내 것으로 만들기</h3>
+<ol><li><strong>찾기</strong> — 내가 매번 <strong>손으로 읽고 비교하는 자료 하나</strong>를 고른다. (제일 오래 걸리는 것)</li><li><strong>시키기</strong> — 그 자료를 붙이고, 위 표의 '시킬 말'을 내 상황으로 바꿔 넣는다.</li><li><strong>고정하기</strong> — 잘 나오면 그 프롬프트를 <strong>그린컵 Project(또는 메모)</strong> 에 저장. 다음번엔 자료만 갈아끼운다. (3·4차시 복습)</li></ol>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>핵심 판별법</strong>: "형식은 매번 다르지만 비교·판단할 기준은 같다" → 오늘 방식 100% 적용 대상. 경쟁사 동향, 시장 리포트, 채용 공고 비교, 리뷰 분석 전부 여기 속합니다.</p></div>
+<h3 class="sub-head">⚠️ 붙이기 전 체크 (실무 주의)</h3>
+<ul><li><strong>기밀·저작권</strong> — 사내 미공개 기획서·계약서는 회사 보안 정책을 먼저 확인하고, 외부 자료는 인용 범위를 지키세요</li><li><strong>원문 대조</strong> — 보고서에 들어갈 숫자·인용은 반드시 <strong>원문과 대조.</strong> "자료 안에서만" 답하게 하는 게 기본</li><li><strong>출처 표기</strong> — 어느 자료에서 나온 내용인지 표시해두면, 나중에 검수도 협업도 쉬워집니다</li><li><strong>인과 금지</strong> — "왜 그런가"는 맥락 아는 내가 판단. AI엔 "추정" 표시만 시킨다</li></ul>
+<h3 class="sub-head">🎯 오늘의 숙제 (한 개만)</h3>
+<p>내가 실제로 읽어야 하는 자료 하나(뉴스, 경쟁사 자료, 사내 문서)로, <strong>13-1절의 초보용 짧은 프롬프트</strong>를 그대로 돌려보세요. 결과의 숫자·인용을 원문과 대조까지. <strong>"이거 되네?" 한 번</strong>이 업무 전이의 시작입니다.</p>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">18</span><h2>부록 — 조사 업무 용어 사전 (읽고 말하기)</h2></div>
+<p>조사 결과를 받으면 이 용어들이 쏟아집니다. 뜻만 알면 됩니다 — 실행은 AI가 합니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>용어</strong></th><th><strong>뜻</strong></th><th><strong>시킬 말</strong></th></tr></thead><tbody><tr><td><strong>1차자료 / 2차자료</strong></td><td>직접수집 원본 / 남이 가공한 자료</td><td>"1차·2차자료로 구분해줘"</td></tr><tr><td><strong>SWOT</strong></td><td>강점·약점·기회·위협 2×2 정리</td><td>"SWOT으로 정리해줘"</td></tr><tr><td><strong>포지셔닝맵</strong></td><td>가격×가치 등 좌표에 경쟁사 배치</td><td>"포지셔닝맵으로 표 만들어줘"</td></tr><tr><td><strong>TAM/SAM/SOM</strong></td><td>전체/유효/획득가능 시장 규모</td><td>"TAM SAM SOM 추정해줘"</td></tr><tr><td><strong>벤치마킹</strong></td><td>경쟁사 대비 항목별 점수 비교</td><td>"벤치마킹표 만들어줘"</td></tr><tr><td><strong>정성 분석</strong></td><td>텍스트에서 반복 주제(테마) 추출</td><td>"인터뷰에서 테마 뽑아줘"</td></tr><tr><td><strong>삼각검증</strong></td><td>서로 다른 방법의 결과 셋을 대조</td><td>"세 자료가 같은 말을 하는지 대조해줘"</td></tr><tr><td><strong>생존 편향</strong></td><td>떠난 사람이 빠져 결과가 좋게 나옴</td><td>"이 조사에서 누가 빠졌을지 알려줘"</td></tr><tr><td><strong>표본 수 (n)</strong></td><td>조사에 참여한 사람·건수</td><td>"표본 수를 함께 적어줘"</td></tr><tr><td><strong>CAC</strong> (고객획득비용)</td><td>고객 1명 확보에 드는 비용</td><td>"목표 고객수 기준 CAC 추정"</td></tr></tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 회의에서 "우리 포지셔닝이 애매하다"는 말을 알아듣고, 자리에서 바로 AI에게 물어 답을 뽑는 것 — 그게 오늘의 목표입니다.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">✅</span><h2>오늘 자가진단</h2></div>
+<p>다음 차시로 넘어가기 전에 확인하세요. <strong>✗가 있으면 그 절로 돌아가세요.</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>#</strong></th><th><strong>확인</strong></th><th><strong>못 하면</strong></th></tr></thead><tbody><tr><td>1</td><td>요약 4종류(압축·추출·변환·판단)를 구분하고, 실무 요구가 대개 어느 쪽인지 안다</td><td>2-2절</td></tr><tr><td>2</td><td><strong>추출</strong>과 <strong>판단</strong> 중 어느 쪽이 검수가 더 어려운지 안다</td><td>2-2절</td></tr><tr><td>3</td><td>요약을 검수할 때 <strong>"빠진 게 없나"</strong> 를 먼저 묻는 이유를 안다</td><td>2-3절</td></tr><tr><td>4</td><td>자료를 받으면 <strong>본문보다 '누가 언제 어떻게 만들었나'를 먼저</strong> 본다</td><td>3절·실습 C</td></tr><tr><td>5</td><td><strong>"~에 따르면"</strong> 이 왜 2차자료 신호인지 안다</td><td>3-2절</td></tr><tr><td>6</td><td>출처 사다리 3규칙(위로 타라 / 누가 이득 보나 / 방법이 공개됐나)을 말할 수 있다</td><td>4-3절</td></tr><tr><td>7</td><td>환각 3유형 중 <strong>가장 안 걸리고 위험한 것</strong>이 뭔지 안다</td><td>12-3절</td></tr><tr><td>8</td><td>요약 지시에 <em>"원문의 단서를 유지해"</em> 를 왜 넣는지 안다</td><td>12-3절·실습 O</td></tr><tr><td>9</td><td>자료끼리 숫자가 다를 때 <strong>하나를 고르지 않고</strong> 어떻게 쓰는지 안다</td><td>8-1절·실습 H</td></tr><tr><td>10</td><td>자료 유형마다 <strong>구조적으로 안 보이는 것</strong>이 다르다는 걸 예로 들 수 있다</td><td>10-3절</td></tr><tr><td>11</td><td>비교표를 만들 때 <strong>기준을 누가 정해야 하는지</strong> 안다</td><td>5절</td></tr><tr><td>12</td><td>SWOT·포지셔닝맵·TAM/SAM/SOM을 한 줄로 설명하고 시킬 수 있다</td><td>7절</td></tr><tr><td>13</td><td>리뷰 220건 비교에서 <strong>왜 그린컵이 1위처럼 보였는지</strong> 설명할 수 있다</td><td>실습 L</td></tr><tr><td>14</td><td>설문 40.7%와 리뷰 14.6%가 <strong>둘 다 맞는 이유</strong>를 설명할 수 있다</td><td>11절·실습 N</td></tr><tr><td>15</td><td>내 실제 자료 하나로 한 줄이라도 돌려봤다</td><td>17절 숙제</td></tr></tbody></table></div>
+<div class="callout callout--tip"><div class="callout-label">💡 7·9·13·14번이 오늘의 진짜 성적표<strong>입니다. 표를 만들고 SWOT을 뽑는 건 AI가 몇 초면 합니다. 여러분이 챙길 건 </strong>어느 자료를 얼마나 믿을지 정하는 것</div><p>— 그건 넘길 수 없어요.</p></div>
+<h3 class="sub-head">오늘의 결과물 체크리스트</h3>
+<div class="table-scroll"><table><thead><tr><th><strong>결과물</strong></th><th><strong>어느 실습에서</strong></th></tr></thead><tbody><tr><td>[ ] 목적 있는 요약 (그냥 요약과 비교본 포함)</td><td>실습 B 🥇</td></tr><tr><td>[ ] 자료 신뢰도 판정표 (1차/2차 + 등급 + 근거)</td><td>실습 C·D 🥇</td></tr><tr><td>[ ] 경쟁사 비교표 (빈 칸이 '자료에 없음'으로 표시된)</td><td>실습 E</td></tr><tr><td>[ ] SWOT + 포지셔닝맵 + TAM/SAM/SOM(가정 명시)</td><td>실습 F·G</td></tr><tr><td>[ ] 자료별 숫자 차이 정리표 (범위·기준 표기)</td><td>실습 H</td></tr><tr><td>[ ] 기획서 ↔ 재무메모 <strong>모순 대조표</strong></td><td>실습 J</td></tr><tr><td>[ ] 리뷰 브랜드 비교 (<strong>채널별로 쪼갠 버전 포함</strong>)</td><td>실습 L 🥇</td></tr><tr><td>[ ] 삼각검증표 (설문 · 인터뷰 · 리뷰)</td><td>실습 N</td></tr><tr><td>[ ] <strong>출처 검증표</strong> (주장 | 근거 자료 | 위치 | 출처 등급)</td><td>실습 O·P</td></tr><tr><td>[ ] 팀장 보고용 한 장 요약</td><td>실습 Q</td></tr></tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 🥇 표시 세 개만 있어도 오늘은 성공입니다.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">＊</span><h2>오늘 정리</h2></div>
+<h3 class="sub-head">🎯 세 개만 기억한다면</h3>
+<ol><li><strong>자료는 본문보다 출처를 먼저 본다.</strong> 누가·언제·어떻게 만들었나</li><li><strong>가장 위험한 환각은 지어내기가 아니라 '단서 떼기'</strong> — <em>"원문의 단서를 유지해줘"</em> 를 항상 붙여라</li><li><strong>숫자가 다르면 고르지도 평균 내지도 말고, 범위와 기준을 함께 적어라</strong></li></ol>
+<h3 class="sub-head">전체 정리</h3>
+<ul><li><em>"요약해줘"</em> 는 약하다. <strong>목적 + 길이 + 관점</strong>을 지정하라</li><li>요약은 네 종류다 — <strong>압축 / 추출 / 변환 / 판단.</strong> 실무가 원하는 건 대개 뒤의 둘인데, "요약해줘"는 앞의 것을 부른다</li><li>요약 검수는 <strong>"들어간 게 맞나"보다 "빠진 게 없나"</strong>. 빠진 건 눈에 안 보인다</li><li>조사는 <strong>점검 → 요약 → 비교 → 검증</strong> 네 단계. 첫 단계와 마지막 단계가 제일 자주 잘린다</li><li><strong>1차자료 = 직접 모은 원본, 2차자료 = 남이 가공한 것.</strong> <em>"~에 따르면"</em> 은 2차자료의 신호다</li><li><strong>출처 사다리는 위로 타라.</strong> 원문이 있으면 인용 기사를 쓰지 마라. 신뢰의 본질은 권위가 아니라 <strong>방법이 공개됐는가</strong>다</li><li><strong>가장 위험한 환각은 '단서를 떼는 것'.</strong> "확인되지 않았다"가 사라지면 아무도 거짓말을 안 했는데 틀린 문장이 남는다</li><li>검증은 세 단계 — <strong>있나 / 강도가 같나 / 믿을 만한 자료인가.</strong> 대부분 첫 단계에서 멈춘다</li><li>자료끼리 숫자가 다르면 <strong>하나를 고르거나 평균 내지 말고, 범위와 기준을 함께</strong> 적어라</li><li><strong>자료마다 안 보이는 사각지대가 다르다.</strong> 리뷰는 '못 산 사람'을, 설문은 '떠난 고객'을 구조적으로 못 본다. 그래서 삼각검증한다</li><li>삼각검증의 결론은 숫자를 합치는 게 아니라 <strong>셋이 같은 방향을 가리키는지</strong> 확인하는 것</li><li><strong>비교표의 품질은 기준이 8할.</strong> 기준은 AI에게 제안받고 <strong>내가 확정</strong>한다</li><li>실무 조사 기법 — <strong>SWOT / 포지셔닝맵 / TAM·SAM·SOM / 벤치마킹 / 정성 종합.</strong> 개념만 알면 실행은 <strong>AI에게 한 문장</strong></li><li><strong>SWOT은 4칸 채우기가 끝이 아니다.</strong> "그래서 뭘 할까"까지 가야 쓴 것</li><li><strong>환각 주의</strong>: "자료 안에서만", 숫자·인용은 원문 대조. 외부 자료일수록, 외부로 나갈 보고서일수록 검증</li><li>판단 기준 하나 — <strong>되돌릴 수 있는 결정이면 빠르게, 되돌리기 어려운 결정이면 1차자료까지</strong></li></ul>
+</section>
+<a class="next-lesson" href="lesson9.html"><div><span class="label">다음 차시</span><h3>AI로 더 나은 이미지 만들기 (+Adobe for Creativity 추가 실습).</h3></div><span class="arrow">→</span></a>
+  </main>
+
+  <footer class="page-footer">
+    <p>그린컵 AI 에이전트 과정 · 8차시 조사·요약·검토</p>
+  </footer>
+
+</div>
+</body>
+</html>
