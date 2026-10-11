@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이미지 만들기와 보정</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --paper:#F5F7FB;
+    --surface:#FFFFFF;
+    --surface-2:#EEF1F9;
+    --ink:#1B2333;
+    --ink-soft:#525C72;
+    --border:#DCE1EE;
+    --accent:#2954D6;
+    --accent-ink:#FFFFFF;
+    --accent-tint:#E7ECFB;
+    --amber:#8A5A10;
+    --amber-tint:#FBF0DC;
+    --amber-line:#E9CE9C;
+    --red:#B23434;
+    --red-tint:#FCE9E9;
+    --red-line:#EFC2C2;
+    --green:#1F8A5F;
+    --green-tint:#E5F5EE;
+    --shadow:0 1px 2px rgba(27,35,51,.04), 0 8px 24px -12px rgba(27,35,51,.12);
+    --term-bg:#12151E;
+    --term-ink:#DDE3F0;
+    --term-accent:#7C9BFF;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#10131B;
+      --surface:#171B26;
+      --surface-2:#1C2130;
+      --ink:#E7EAF2;
+      --ink-soft:#A7AFC2;
+      --border:#2B3143;
+      --accent:#89A6FF;
+      --accent-ink:#0B1020;
+      --accent-tint:#1E2740;
+      --amber:#E8B75D;
+      --amber-tint:#2E2716;
+      --amber-line:#4A3B1E;
+      --red:#E58888;
+      --red-tint:#3A1E1E;
+      --red-line:#4E2A2A;
+      --green:#5FD1A0;
+      --green-tint:#123326;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#10131B;
+    --surface:#171B26;
+    --surface-2:#1C2130;
+    --ink:#E7EAF2;
+    --ink-soft:#A7AFC2;
+    --border:#2B3143;
+    --accent:#89A6FF;
+    --accent-ink:#0B1020;
+    --accent-tint:#1E2740;
+    --amber:#E8B75D;
+    --amber-tint:#2E2716;
+    --amber-line:#4A3B1E;
+    --red:#E58888;
+    --red-tint:#3A1E1E;
+    --red-line:#4E2A2A;
+    --green:#5FD1A0;
+    --green-tint:#123326;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Noto Sans KR","Pretendard",sans-serif;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+    word-break:keep-all;
+    overflow-wrap:break-word;
+  }
+  h1,h2,h3{
+    font-family:"Nanum Myeongjo",serif;
+    color:var(--ink);
+    text-wrap:balance;
+    margin:0;
+  }
+  a{color:var(--accent);}
+  strong{color:var(--ink); font-weight:700;}
+  em{font-style:italic;}
+  code{
+    font-family:"JetBrains Mono",monospace;
+    font-size:.9em;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:4px;
+    padding:.1em .4em;
+  }
+  p{margin:0 0 1em;}
+  ul,ol{margin:0 0 1em; padding-left:1.3em;}
+  li{margin-bottom:.45em;}
+  .page-shell{
+    max-width:860px;
+    margin:0 auto;
+    padding:0 20px 96px;
+  }
+
+  /* ---------- Masthead ---------- */
+  .masthead{
+    padding:56px 0 40px;
+    border-bottom:1px solid var(--border);
+    margin-bottom:40px;
+  }
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.78rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--accent);
+    background:var(--accent-tint);
+    border:1px solid var(--border);
+    padding:5px 12px;
+    border-radius:999px;
+    margin-bottom:20px;
+  }
+  .masthead h1{
+    font-size:clamp(2.1rem, 4.5vw, 3.1rem);
+    font-weight:800;
+    margin-bottom:10px;
+  }
+  .masthead .lede{
+    color:var(--ink-soft);
+    font-size:1.05rem;
+    max-width:60ch;
+    margin-bottom:0;
+  }
+  .masthead .meta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px 24px;
+    margin-top:24px;
+    font-size:.9rem;
+    color:var(--ink-soft);
+  }
+  .masthead .meta-row span{display:flex; align-items:center; gap:6px;}
+  .masthead .meta-row b{color:var(--ink); font-weight:700;}
+
+  main{min-width:0;}
+
+  /* ---------- Sections ---------- */
+  .lesson-section{
+    padding-bottom:44px;
+    margin-bottom:44px;
+    border-bottom:1px solid var(--border);
+    scroll-margin-top:20px;
+  }
+  .lesson-section:last-of-type{border-bottom:none;}
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    margin-bottom:20px;
+  }
+  .section-mark{
+    font-family:"JetBrains Mono",monospace;
+    font-weight:700;
+    font-size:1rem;
+    color:var(--accent-ink);
+    background:var(--accent);
+    border-radius:8px;
+    padding:3px 9px;
+    flex-shrink:0;
+  }
+  .section-head h2{
+    font-size:clamp(1.35rem,2.6vw,1.7rem);
+    font-weight:700;
+  }
+  .section-head h2 small{
+    display:block;
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:500;
+    font-size:.85rem;
+    color:var(--ink-soft);
+    margin-top:4px;
+  }
+  h3.sub-head{
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:700;
+    font-size:1.02rem;
+    color:var(--accent);
+    margin:28px 0 10px;
+  }
+  h3.sub-head.first{margin-top:0;}
+  h4.mini-head{
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:700;
+    font-size:.96rem;
+    color:var(--ink);
+    margin:20px 0 8px;
+  }
+
+  /* ---------- Callouts ---------- */
+  .callout{
+    border:1px solid var(--border);
+    border-left:4px solid var(--accent);
+    background:var(--surface);
+    border-radius:10px;
+    padding:16px 18px;
+    margin:20px 0;
+    box-shadow:var(--shadow);
+  }
+  .callout p:last-child{margin-bottom:0;}
+  .callout ul:last-child, .callout ol:last-child{margin-bottom:0;}
+  .callout-label{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-weight:700;
+    font-size:.92rem;
+    margin-bottom:8px;
+    color:var(--ink);
+  }
+  .callout--scenario{border-left-color:var(--accent); background:var(--accent-tint);}
+  .callout--tip{border-left-color:var(--amber); background:var(--amber-tint);}
+  .callout--tip .callout-label{color:var(--amber);}
+  .callout--warning{border-left-color:var(--red); background:var(--red-tint);}
+  .callout--warning .callout-label{color:var(--red);}
+  .callout--summary{border-left-color:var(--accent); background:var(--surface);}
+  .callout--summary .callout-label{color:var(--accent);}
+  .callout--question{border-left-color:var(--ink-soft); background:var(--surface-2);}
+  .callout--practice{border-left-color:var(--green); background:var(--green-tint);}
+  .callout--practice .callout-label{color:var(--green);}
+  .co-icon{font-size:1.02em; margin-right:2px;}
+  .co-icon:empty{display:none;}
+  .callout-label:empty{display:none;}
+  .callout hr{border:none; border-top:1px dashed var(--border); margin:12px 0;}
+
+  /* ---------- Practice card (공통 양식) ---------- */
+  .practice-title{display:flex;align-items:center;gap:8px;font-family:"Noto Sans KR",sans-serif;font-weight:700;font-size:1.05rem;color:var(--green);margin:0 0 10px;}
+  .practice-card{border:1px solid var(--border);border-left:4px solid var(--green);background:var(--green-tint);border-radius:12px;padding:18px 20px;margin:28px 0 18px;box-shadow:var(--shadow);}
+  .practice-card > p{margin:0 0 .4em;}
+  .practice-prep{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-top:14px;font-size:.92rem;}
+  .practice-prep .prep-label{font-weight:700;margin-bottom:6px;}
+  .practice-prep ul{list-style:none;padding-left:0;margin:0;}
+  .practice-prep li{margin-bottom:.3em;}
+  .practice-prep .meta{color:var(--ink-soft);}
+  .lesson-section > .practice-card:first-child{margin-top:0;}
+
+  /* ---------- Prepare chip ---------- */
+  .prep{
+    font-size:.9rem;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-left:4px solid var(--ink-soft);
+    border-radius:8px;
+    padding:11px 14px;
+    margin:0 0 14px;
+  }
+  .prep b{color:var(--ink);}
+
+  /* ---------- Terminal / prompt ---------- */
+  .terminal{
+    background:var(--term-bg);
+    color:var(--term-ink);
+    border-radius:10px;
+    padding:16px 18px;
+    margin:14px 0;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.84rem;
+    line-height:1.8;
+    overflow-x:auto;
+    white-space:pre-wrap;
+  }
+  .prompt{
+    background:var(--term-bg);
+    color:var(--term-ink);
+    border-radius:8px;
+    padding:10px 14px;
+    margin:10px 0;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.82rem;
+    line-height:1.8;
+    white-space:pre-wrap;
+    overflow-x:auto;
+  }
+  .prompt .note{color:#8892AC; font-family:"Noto Sans KR",sans-serif;}
+  .terminal code, .prompt code{background:none; border:none; padding:0; color:inherit;}
+
+  /* ---------- Tables ---------- */
+  .table-scroll{overflow-x:auto; margin:18px 0; border:1px solid var(--border); border-radius:12px;}
+  table{border-collapse:collapse; width:100%; min-width:480px; font-size:.92rem;}
+  th,td{
+    text-align:left;
+    padding:11px 14px;
+    border-bottom:1px solid var(--border);
+    vertical-align:top;
+  }
+  th{
+    background:var(--surface-2);
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:700;
+    color:var(--ink);
+    white-space:nowrap;
+  }
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:nth-child(even){background:var(--surface);}
+  tbody tr:nth-child(odd){background:transparent;}
+  td strong{color:var(--accent);}
+  .tag-bad{color:var(--red); font-weight:700;}
+  .tag-good{color:var(--green); font-weight:700;}
+
+  /* ---------- Lists with markers ---------- */
+  .steps{padding-left:0; list-style:none; counter-reset:step;}
+  .steps li{counter-increment:step; position:relative; padding-left:36px; margin-bottom:14px;}
+  .steps li::before{
+    content:counter(step);
+    position:absolute; left:0; top:-1px;
+    width:24px; height:24px;
+    border-radius:50%;
+    background:var(--accent);
+    color:var(--accent-ink);
+    font-family:"JetBrains Mono",monospace;
+    font-size:.78rem;
+    font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  /* ---------- Checklist ---------- */
+  .checklist{list-style:none; padding-left:0;}
+  .checklist li{position:relative; padding-left:28px; margin-bottom:.5em;}
+  .checklist li::before{
+    content:"";
+    position:absolute; left:0; top:.5em;
+    width:15px; height:15px;
+    border:1.5px solid var(--border);
+    border-radius:4px;
+    background:var(--surface);
+  }
+
+  /* ---------- Figure ---------- */
+  figure.fig{margin:20px 0; text-align:center;}
+  figure.fig img{max-width:100%; height:auto; border:1px solid var(--border); border-radius:10px; background:var(--surface);}
+  figure.fig figcaption{font-size:.85rem; color:var(--ink-soft); margin-top:8px;}
+
+  /* ---------- Toggle ---------- */
+  details.toggle{
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:var(--surface);
+    padding:12px 16px;
+    margin:18px 0;
+  }
+  details.toggle > summary{
+    cursor:pointer;
+    font-weight:700;
+    color:var(--accent);
+    font-size:.95rem;
+    list-style:none;
+  }
+  details.toggle > summary::-webkit-details-marker{display:none;}
+  details.toggle > summary::before{content:"\25B8 "; font-family:"JetBrains Mono",monospace;}
+  details.toggle[open] > summary::before{content:"\25BE ";}
+  details.toggle[open] > summary{margin-bottom:10px; padding-bottom:8px; border-bottom:1px dashed var(--border);}
+  .toggle-body > :last-child{margin-bottom:0;}
+  .toggle-body .lesson-section{border-bottom:none; padding-bottom:0; margin-bottom:0;}
+
+  /* ---------- FAQ / quiz ---------- */
+  .quiz-item{
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:14px 16px;
+    margin-bottom:12px;
+    background:var(--surface);
+  }
+  .quiz-item .q{font-weight:700; margin-bottom:0;}
+  .quiz-item details{margin-top:8px;}
+  .quiz-item summary{cursor:pointer; color:var(--accent); font-weight:700; font-size:.86rem;}
+  .quiz-item .ans{margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); color:var(--ink-soft); font-size:.9rem;}
+  .quiz-item .ans p{margin-bottom:0;}
+
+  /* ---------- Next lesson ---------- */
+  .next-lesson{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:22px 26px;
+    margin-top:8px;
+    box-shadow:var(--shadow);
+    text-decoration:none;
+    color:inherit;
+  }
+  a.next-lesson:hover{border-color:var(--accent);}
+  a.next-lesson:hover .arrow{transform:translateX(4px);}
+  .next-lesson .label{
+    font-family:"JetBrains Mono",monospace;
+    font-size:.76rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+    display:block;
+  }
+  .next-lesson h3{font-size:1.2rem; font-weight:700; font-family:"Nanum Myeongjo",serif;}
+  .next-lesson .arrow{
+    font-family:"JetBrains Mono",monospace;
+    font-size:1.4rem;
+    color:var(--accent);
+    display:inline-block;
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .next-lesson .arrow{transition:transform .15s ease;}
+  }
+
+  .page-footer{
+    margin-top:60px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    color:var(--ink-soft);
+    font-size:.84rem;
+  }
+
+  @media (prefers-reduced-motion:no-preference){
+    a{transition:background-color .15s ease, color .15s ease;}
+  }
+</style>
+</head>
+<body>
+<div class="page-shell">
+
+  <header class="masthead">
+    <a class="eyebrow" href="index.html" style="text-decoration:none;">← 그린컵 AI 에이전트 과정 · 9차시</a>
+    <h1>이미지 만들기와 보정</h1>
+    <p class="lede">밋밋한 스톡사진, 손가락 여섯 개, 깨진 한글 — <strong>문제는 AI가 아니라 내 지시입니다.</strong> 배너·카드뉴스·포스터 한 세트를 오늘 직접 뽑고, Adobe 커넥터로 보정까지 합니다.</p>
+    <div class="meta-row">
+      <span>📍 <b>오늘 배우는 것</b> — 내 업무용 벤치마크 3장 만들기, 이미지 도구별 강점과 선택 기준, 프롬프트 6요소와 네거티브 프롬프트, Claude로 프롬프트를 뽑아 이미지 도구에 넣는 워크플로, Claude Design으로 글자·레이아웃 마감, 생성→비평→수정 루프, 저작권·초상권 주의점, Adobe for Creativity 커넥터로 사진 보정·배경 제거·리사이즈</span>
+    </div>
+  </header>
+
+  <main>
+<div class="callout callout--scenario"><div class="callout-label">🎯 오늘의 가상 문제상황</div><p>그린컵이 신제품 <strong>데일리 텀블러</strong>를 다음 주에 올립니다. 필요한 건 상세페이지 상단 배너 1장, SNS 카드뉴스 5장, 사내 공지 포스터 1장. 외주 디자이너에게 물으니 <em>"2주 뒤에나 가능하고, 견적은 이 정도"</em> 랍니다. 출시일은 다음 주죠. 이미지 생성 AI에 <em>"텀블러 홍보 이미지 그려줘"</em> 라고 넣어봤습니다. 나온 건 — 어디서 본 듯한 밋밋한 스톡사진, <strong>손가락이 여섯 개</strong>인 손, 브랜드 톤과 안 맞는 형광색, 그리고 <strong>한글 제목이 외계어로 깨진</strong> 배너. 몇 번을 다시 넣어도 비슷합니다. <strong>문제는 AI가 아니라 내 지시입니다.</strong> 오늘 그걸 고칩니다.</p></div>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">＊</span><h2>이번 차시에서 얻어갈 것</h2></div>
+<ol><li>AI의 그림 실력을 사람들이 <strong>어떻게 판별하는지</strong>(벤치마크) 알고, <strong>내 업무용 벤치마크 3장</strong>을 만든다</li><li>이미지 도구들이 각각 뭘 잘하는지 알고, <strong>언제 뭘 쓸지</strong> 고른다</li><li>이미지 프롬프트의 <strong>6요소</strong>를 알고, 한 줄짜리 지시를 한 문단짜리로 바꾼다</li><li><strong>Claude로 이미지 프롬프트를 뽑아</strong> ChatGPT 등 이미지 도구에 넣는 워크플로를 익힌다 — 오늘의 핵심</li><li><strong>Claude Design</strong>으로 글자·레이아웃까지 얹어 <strong>결과물</strong>로 마감한다</li><li>첫 장이 안 나올 때 <strong>생성 → 비평 → 수정</strong> 루프로 끌어올린다</li><li>저작권·초상권·표기 등 <strong>실무에서 사고 나는 지점</strong>을 안다</li><li>(실습) 그린컵 신제품 배너 · 카드뉴스 5장 · 사내 포스터를 <strong>한 세트로</strong> 완성한다</li></ol>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">📖</span><h2>오늘 나올 단어 8개 — 먼저 한 줄씩</h2></div>
+<p><strong>지금 외울 필요 없습니다.</strong> 한 번 훑어두면 본문에서 만났을 때 "아 아까 그거" 하고 넘어갈 수 있어요.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>단어</strong></th><th><strong>한 줄로</strong></th></tr></thead><tbody><tr><td><strong>벤치마크</strong></td><td>성능을 재려고 <strong>정해놓고 반복하는 시험문제</strong>. 오늘의 주인공은 '펠리컨 자전거' (1절)</td></tr><tr><td><strong>프롬프트 6요소</strong></td><td>좋은 이미지 지시가 갖추는 여섯 칸 — 주제·구도·스타일·조명색·분위기·용도 (3절)</td></tr><tr><td><strong>네거티브 프롬프트</strong></td><td><em>"이건 넣지 마"</em> 목록. 글자·워터마크·손 클로즈업 같은 것 (3-4절)</td></tr><tr><td><strong>화면비</strong></td><td>가로:세로 비율. 1:1(정사각) · 3:4(포스터) · 16:9(배너). <strong>먼저 정해야 다시 안 뽑음</strong></td></tr><tr><td><strong>레퍼런스 이미지</strong></td><td>참고로 첨부하는 이미지. <em>"이 느낌으로"</em> 를 말 대신 그림으로 전달 (4-4절)</td></tr><tr><td><strong>텍스트 렌더링</strong></td><td>이미지 안에 <strong>글자를 그려 넣는 능력</strong>. 한글은 여전히 잘 깨진다 (3-5절)</td></tr><tr><td><strong>일관성</strong></td><td>여러 장의 <strong>톤·스타일이 하나로 묶이는 것</strong>. 카드뉴스·시리즈의 생명 (4-5절)</td></tr><tr><td><strong>출처 표식</strong></td><td>AI가 만든 이미지임을 파일에 남기는 표시(워터마크·메타데이터). 대외 발행물에서 중요 (7절)</td></tr></tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 오늘 배우는 것의 절반은 <strong>'도구 쓰는 법'이 아니라 '무엇을 원하는지 말로 정확히 옮기는 법'</strong> 입니다. 2차시에서 배운 그 능력의 확장판입니다.</p></div>
+</section>
+
+<!-- ===== 실습 A ===== -->
+<section class="lesson-section">
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 A — 같은 그림을 두 번 시켜보기 (5분 맛보기)</div>
+  <p>순서는 <b>① 프롬프트 A 넣기</b> → <b>② 프롬프트 B 넣기</b> → <b>③ 두 결과 나란히 보기</b>.<br>이미지 도구의 <b>새 대화</b>에서 시작합니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>이미지 생성 도구</b> <span class="meta">· ChatGPT의 이미지 생성 등 · 별도 파일 없음</span></li>
+    </ul>
+  </div>
+</div>
+<p>이론부터 가면 길을 잃습니다. <strong>프롬프트 두 개</strong>로 오늘 배울 걸 한 바퀴 돌아봅시다.</p>
+<p><strong>A — 우리가 보통 쓰는 지시</strong></p>
+<div class="prompt">텀블러 홍보 이미지 그려줘</div>
+<p><strong>B — 오늘 배울 지시</strong></p>
+<div class="prompt">플랫 벡터 일러스트. 흰 책상 위에 놓인 민트색 스테인리스 텀블러 한 개,
+옆에 작은 화분과 노트. 정면에서 살짝 위로 본 각도, 텀블러가 화면 중앙.
+아침 자연광, 따뜻하고 차분한 톤, 민트·아이보리·연회색 위주.
+분위기: 조용하고 단정한 일상. 광고 같지 않게.
+가로:세로 = 16:9, 오른쪽 1/3은 글자가 들어갈 여백으로 비울 것.
+이미지 안에 글자·로고·워터마크는 넣지 말 것.</div>
+<div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 두 결과는 무엇이 다른가?</div><p>두 결과를 나란히 놓고 보세요. <strong>같은 AI, 같은 순간, 다른 지시</strong>입니다.</p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 여기서 이미 오늘의 결론이 나옵니다. <strong>"AI가 그림을 못 그린다"가 아니라 "내가 뭘 원하는지 안 알려줬다"</strong> 였던 겁니다. B가 왜 그렇게 생겼는지는 3절에서 뜯어봅니다.</p></div>
+</section>
+
+<!-- ===== 이론 1 ===== -->
+<section class="lesson-section"><div class="section-head"><span class="section-mark">1</span><h2>잠깐 — AI 그림 실력, 사람들은 어떻게 재나?</h2></div>
+<p>새 AI 모델이 나오면 사람들이 가장 먼저 시켜보는 게 있습니다.</p>
+<div class="callout callout--summary"><div class="callout-label"> "펠리컨이 자전거를 타는 그림을 SVG 코드로 그려줘."</div></div>
+<p>개발자 사이먼 윌리슨(Simon Willison)이 반쯤 장난으로 시작한 시험문제인데, 지금은 새 모델이 나올 때마다 사람들이 결과부터 찾아보는 <strong>비공식 표준</strong>이 됐습니다. (<a href="https://simonwillison.net/tags/pelican-riding-a-bicycle/" target="_blank" rel="noopener">결과 모음</a>)</p>
+<h3 class="sub-head">1-1. 왜 하필 펠리컨이고, 왜 자전거인가</h3>
+<p><strong>어렵기 때문입니다.</strong> 이 한 문장을 그리려면 AI는 이걸 다 해야 합니다.</p>
+<ul><li>펠리컨의 생김새를 안다 — 큰 부리, 목 아래 물주머니</li><li>자전거의 구조를 안다 — 바퀴 2개, 프레임, 페달, 핸들</li><li>둘을 <strong>말이 되게 합친다</strong> — 날개는 핸들 위, 물갈퀴는 페달 위, 부리는 앞쪽</li><li>그걸 <strong>그림판 없이, 좌표와 선으로 된 코드만으로</strong> 쓴다 (SVG는 텍스트로 된 그림 형식입니다)</li><li>게다가 <strong>한 번에.</strong> 그려놓고 눈으로 보며 고칠 수가 없습니다</li></ul>
+<p>즉 이 시험은 그림 실력이 아니라 <strong>"세상이 어떻게 생겼는지 알고, 그걸 조립하는 능력"</strong> 을 봅니다. 예전 모델은 바퀴가 세 개거나 새가 자전거를 뚫고 떠 있었습니다. 요즘 모델은 꽤 그럴듯하게 그립니다.</p>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 비슷한 고전이 하나 더 있습니다. GPT-4를 분석한 유명 논문에서 연구자들이 시킨 <strong>"코드로 유니콘을 그려봐"</strong> 입니다. 이유는 같아요 — 못 보고 그려야 하니까, <strong>아는 만큼만 그려집니다.</strong></p></div>
+<h3 class="sub-head">1-2. 사진풍 이미지 모델의 '단골 시험문제'</h3>
+<p>펠리컨이 언어모델용이라면, <strong>사진처럼 그리는 이미지 모델</strong>에는 이런 함정 문제들이 있습니다. 이게 곧 <strong>AI가 아직 약한 지점</strong>이고, 여러분이 검수할 지점입니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>시험문제</strong></th><th><strong>무엇을 보나</strong></th><th><strong>왜 어려운가</strong></th></tr></thead><tbody><tr><td>손 클로즈업</td><td>해부학적 정확도</td><td>손가락 개수·관절이 자주 무너진다</td></tr><tr><td><strong>간판에 한글 쓰기</strong></td><td>텍스트 렌더링</td><td>한글·한자는 학습량이 적어 글자가 뭉개진다</td></tr><tr><td>"<strong>가득 찬</strong> 와인잔"</td><td>지시 준수</td><td>세상의 와인잔 사진 대부분이 반쯤 차 있어서 그쪽으로 끌린다</td></tr><tr><td>"<strong>3시 15분</strong>을 가리키는 시계"</td><td>지시 준수</td><td>시계 광고 사진이 대부분 10시 10분이라 그쪽으로 끌린다</td></tr><tr><td>"사람 4명, 각자 다른 색 옷"</td><td>개수·다중 지시</td><td>요소가 늘수록 하나씩 빠지거나 섞인다</td></tr><tr><td>특정 각도에서 본 제품</td><td>공간 이해</td><td>"위에서 45도" 같은 지시가 자주 무시된다</td></tr></tbody></table></div>
+<h3 class="sub-head">1-3. 관통하는 원리 하나 — AI는 '흔한 그림'으로 끌려간다</h3>
+<p>위 표의 공통점이 보이나요? 실패는 전부 <strong>"세상에 흔한 쪽으로 미끄러지는 것"</strong> 입니다.</p>
+<p>이미지 AI는 수많은 이미지에서 <strong>평균적인 패턴</strong>을 배웠습니다. 그래서 지시가 애매하면 <strong>가장 흔한 답</strong>을 그립니다. 반쯤 찬 와인잔, 10시 10분 시계, 웃고 있는 스톡사진 모델.</p>
+<div class="callout callout--tip"><div class="callout-label">💡 결론은 하나입니다. 흔하지 않은 걸 원하면, 그만큼 더 구체적으로 말해야 합니다.</div><p>2차시에서 배운 원칙이 그림에서도 똑같이 작동합니다. <em>"보고서 좀 써와"</em> 가 안 통하는 것과 같은 이유로 <em>"텀블러 이미지 그려줘"</em> 가 안 통합니다.</p></div>
+<h3 class="sub-head">1-4. 그래서 — 나만의 벤치마크 3장을 만드세요</h3>
+<p>인터넷의 모델 순위는 <strong>몇 달마다 바뀝니다.</strong> 그리고 1등 모델이 <strong>내 업무에서도 1등이라는 보장은 없습니다.</strong> 중요한 건 <em>"내가 쓸 그림에서 잘 되느냐"</em> 죠.</p>
+<p>여러분 업무를 대표하는 <strong>고정 프롬프트 3개</strong>를 정해두세요. 새 도구가 나올 때마다 그것만 돌려보면 10분 만에 판단이 섭니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>#</strong></th><th><strong>어떤 것으로</strong></th><th><strong>그린컵이라면</strong></th></tr></thead><tbody><tr><td>1</td><td>제일 자주 쓰는 <strong>주력 컷</strong></td><td>흰 배경 위 텀블러 제품컷</td></tr><tr><td>2</td><td><strong>사람이 들어간</strong> 장면</td><td>텀블러를 든 손, 카페 테이블</td></tr><tr><td>3</td><td><strong>한글 글자가 들어간</strong> 것</td><td>"데일리 텀블러 신제품" 배너</td></tr></tbody></table></div>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> 3번을 꼭 넣으세요. 도구별 실력 차이가 <strong>가장 크게 벌어지는 지점</strong>이고, 실무에서 제일 자주 발목 잡히는 지점입니다.</p></div>
+<p>채점은 세 가지만 봅니다: <strong>① 지시대로 나왔나 ② 손·얼굴·글자가 멀쩡한가 ③ 여러 장의 톤이 일관되나.</strong></p>
+</section>
+
+<!-- ===== 실습 B ===== -->
+<section class="lesson-section">
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 B — 나만의 벤치마크 3장 (10분) 🥇최소 코스</div>
+  <p>순서는 <b>① 고정 프롬프트 3개 적기</b> → <b>② 이미지 도구에 넣기</b> → <b>③ 채점표에 ○/△/✕</b>.<br>이미지 도구의 <b>새 대화</b>에서 시작합니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>이미지 프롬프트 키트</b>(<code>image_prompt_kit.zip</code>) <span class="meta">· ZIP · 워크시트 4종 — 벤치마크 채점표, 6요소 워크시트, 복붙용 지시문 모음, 실습 브리프</span></li>
+      <li><b>벤치마크 워크시트</b>(<code>01_나만의_벤치마크.md</code>) <span class="meta">· Markdown · 키트 안</span></li>
+    </ul>
+  </div>
+</div>
+<ol><li><code>01_나만의_벤치마크.md</code>에 <strong>고정 프롬프트 3개</strong>를 적습니다 (하나는 반드시 <strong>한글 글자</strong>가 들어가게)</li><li>쓰는 이미지 도구에 그대로 넣고 채점표에 ○/△/✕</li></ol>
+<div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 뭐가 되고 뭐가 안 되나?</div><p><strong>뭐가 되고 뭐가 안 되는지</strong> 감이 잡힙니다. 이 표는 새 도구가 나올 때마다 재사용하세요.</p></div>
+</section>
+
+<!-- ===== 이론 2 · 3 · 4 ===== -->
+<section class="lesson-section"><div class="section-head"><span class="section-mark">2</span><h2>도구 지도 — 뭘 언제 쓰나</h2></div>
+<h3 class="sub-head">2-1. 이미지 생성 도구</h3>
+<p>2026년 8월 기준으로 자주 쓰이는 것들입니다. <strong>순위는 자주 바뀌니 이름보다 '강점의 종류'를 기억하세요.</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>도구 계열</strong></th><th><strong>강한 지점</strong></th><th><strong>이럴 때</strong></th></tr></thead><tbody><tr><td><strong>GPT Image</strong> (ChatGPT)</td><td>지시 준수, <strong>글자 렌더링</strong>, 대화로 수정</td><td>배너·썸네일, 지시가 복잡할 때</td></tr><tr><td><strong>Gemini 이미지</strong>(나노 바나나)</td><td><strong>사진 편집·합성</strong>, 기존 이미지 수정</td><td>"이 제품 사진 배경만 바꿔줘"</td></tr><tr><td><strong>Midjourney</strong></td><td>예술적 완성도·분위기</td><td>무드컷, 브랜드 비주얼</td></tr><tr><td><strong>Ideogram</strong></td><td>타이포그래피</td><td>글자가 주인공인 이미지</td></tr><tr><td><strong>Flux</strong> 계열</td><td>속도·가성비</td><td>많이 뽑아 고를 때</td></tr></tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 도구를 다 살 필요 없습니다. <strong>쓰던 것 하나 + 1-4절의 벤치마크 3장</strong>이면 충분합니다. 구글 계열 도구(무드보드·영상)는 <strong>24차시 부록(구글 AI 도구 둘러보기)</strong> 에서 따로 둘러봅니다.</p></div>
+<h3 class="sub-head">2-2. 그런데 Claude는?</h3>
+<p><strong>Claude는 사진풍 이미지를 만들지 않습니다.</strong> 일부러 그 길을 안 갔습니다. 대신 이 세 가지를 합니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>Claude가 하는 것</strong></th><th><strong>설명</strong></th></tr></thead><tbody><tr><td><strong>프롬프트 설계</strong></td><td>내 의도를 이미지 AI가 알아듣는 문장으로 옮긴다 — <strong>오늘의 4절</strong></td></tr><tr><td><strong>도형·다이어그램(SVG)</strong></td><td>흐름도·조직도·아이콘처럼 <strong>선과 도형으로 된 그림</strong>은 직접 그린다</td></tr><tr><td><strong>Claude Design</strong></td><td>포스터·슬라이드·한 장 보고서의 <strong>레이아웃과 글자</strong> — <strong>오늘의 5절</strong></td></tr></tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 그래서 오늘의 그림은 이렇게 됩니다. <strong>Claude = 아트 디렉터(기획·지시·검수)</strong> / <strong>이미지 도구 = 손(생성)</strong> / <strong>Claude Design = 마감(글자·배치)</strong>. 사람이 디자이너에게 일을 맡길 때랑 똑같은 구조입니다.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">3</span><h2>이미지 프롬프트 6요소</h2></div>
+<p>실습 A의 프롬프트 B가 왜 그렇게 생겼는지 뜯어봅시다. <strong>여섯 칸</strong>이 채워져 있었습니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>요소</strong></th><th><strong>질문</strong></th><th><strong>그린컵 예시</strong></th></tr></thead><tbody><tr><td>① <strong>주제 · 동작</strong></td><td>누가/무엇이 뭘 하나</td><td>흰 책상 위 민트색 텀블러 한 개, 옆에 화분과 노트</td></tr><tr><td>② <strong>구도 · 앵글</strong></td><td>어디서, 얼마나 가까이, 여백은</td><td>정면에서 살짝 위, 중앙 배치, 오른쪽 1/3 비움</td></tr><tr><td>③ <strong>스타일 · 매체</strong></td><td>사진인가 그림인가</td><td>플랫 벡터 일러스트 (또는 실사 제품 사진)</td></tr><tr><td>④ <strong>조명 · 색</strong></td><td>밝기·색감</td><td>아침 자연광, 민트·아이보리·연회색</td></tr><tr><td>⑤ <strong>분위기</strong></td><td>어떤 느낌</td><td>조용하고 단정한 일상, 광고 같지 않게</td></tr><tr><td>⑥ <strong>용도 · 비율 · 금지</strong></td><td>어디 쓰나, 비율, 넣지 말 것</td><td>16:9, 이미지 안 글자 금지</td></tr></tbody></table></div>
+<h3 class="sub-head">3-1. 빈칸은 AI가 '가장 흔한 것'으로 채운다</h3>
+<p>이게 6요소의 존재 이유입니다. ④를 안 쓰면 AI가 조명을 안 정하는 게 아니라, <strong>가장 흔한 조명</strong>으로 정합니다. 결과가 밋밋한 건 그래서입니다.</p>
+<h3 class="sub-head">3-2. ③ 스타일은 '단어 하나'가 제일 세다</h3>
+<p>같은 주제라도 스타일 단어 하나로 완전히 달라집니다: <code>실사 제품 사진</code> / <code>플랫 벡터 일러스트</code> / <code>수채화</code> / <code>연필 스케치</code> / <code>3D 렌더링</code> / <code>아이소메트릭</code>. 사내 문서엔 <strong>플랫 벡터</strong>나 <strong>실사 제품 사진</strong>이 무난합니다.</p>
+<h3 class="sub-head">3-3. ⑥ 비율은 먼저 정한다</h3>
+<p>나중에 자르면 구도가 망가집니다. 상세페이지 배너 <code>16:9</code>, 인스타 <code>1:1</code> 또는 <code>4:5</code>, 포스터 <code>3:4</code>, 스토리 <code>9:16</code>.</p>
+<h3 class="sub-head">3-4. 네거티브 프롬프트 — "이건 넣지 마"</h3>
+<p>자주 쓰는 목록입니다. 그대로 붙여 쓰세요.</p>
+<div class="prompt">넣지 말 것: 이미지 안의 글자·로고·워터마크, 손 클로즈업,
+과장된 스톡사진 표정, 특정 브랜드 상표, 실존 인물과 닮은 얼굴,
+프레임·테두리, 형광색</div>
+<h3 class="sub-head">3-5. 글자는 이미지 모델에게 시키지 마세요</h3>
+<p>오늘 가장 실용적인 한 줄입니다. 한글 제목을 이미지 안에 넣으라고 하면 십중팔구 깨집니다. 운 좋게 한 장 나와도 <strong>다섯 장을 같은 톤으로</strong> 뽑을 수 없습니다.</p>
+<div class="callout callout--practice"><div class="callout-label">✅ 정답은 분리입니다.</div><p>배경·사물·분위기는 이미지 AI, <strong>글자는 5절의 디자인 도구에서</strong> 얹습니다. 그래서 프롬프트마다 <em>"이미지 안에 글자를 넣지 말 것"</em> 이 들어갑니다.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">4</span><h2>오늘의 핵심 — Claude로 이미지 프롬프트 뽑기</h2></div>
+<p>6요소를 매번 손으로 채우는 것도 일입니다. 그런데 잘 보면 이건 <strong>그림 작업이 아니라 글쓰기 작업</strong>이죠. 글쓰기는 Claude가 잘합니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>단계</strong></th><th><strong>누가</strong></th><th><strong>무엇을</strong></th></tr></thead><tbody><tr><td>1. 기획</td><td><strong>Claude</strong></td><td>용도·톤을 듣고 컨셉 3안 제안</td></tr><tr><td>2. 프롬프트 작성</td><td><strong>Claude</strong></td><td>6요소를 채운 완성 프롬프트 + 영어 버전 + 네거티브</td></tr><tr><td>3. 생성</td><td>ChatGPT · Gemini 등</td><td>실제 이미지 뽑기 (4장씩)</td></tr><tr><td>4. 검수</td><td><strong>Claude</strong></td><td>나온 이미지를 붙여넣고 "지시와 뭐가 다른가"</td></tr><tr><td>5. 마감</td><td><strong>Claude Design</strong></td><td>글자·로고·레이아웃 얹어 결과물로</td></tr></tbody></table></div>
+<h3 class="sub-head">4-1. 복붙용 — 프롬프트 뽑아내는 마스터 지시문</h3>
+<p>Claude에 그대로 붙여넣고 <strong>대괄호만</strong> 바꾸세요.</p>
+<div class="prompt">너는 숙련된 아트 디렉터야. 나는 이미지 생성 AI에 넣을 프롬프트가 필요해.
+
+[용도] 그린컵 신제품 상세페이지 상단 배너
+[제품] 민트색 스테인리스 텀블러 (350ml, 친환경 컨셉)
+[보는 사람] 20~40대, 환경에 관심 있는 직장인
+[느낌] 조용하고 단정한 일상. 과장된 광고 느낌은 피하고 싶음
+[꼭 들어갈 것] 텀블러가 주인공, 자연광
+[피할 것] 손 클로즈업, 이미지 안 글자, 형광색, 특정 브랜드 로고
+[비율] 16:9, 오른쪽 1/3은 카피가 들어갈 여백
+
+다음을 해줘:
+1. 서로 확실히 다른 컨셉 3안을 한 줄씩 제안하고, 각각의 장단점을 알려줘.
+2. 내가 하나를 고르면, 그 컨셉으로 프롬프트를 완성해줘. 이때
+   주제·동작 / 구도·앵글 / 스타일·매체 / 조명·색 / 분위기 / 비율·금지사항
+   여섯 가지를 모두 채워서 한 문단으로 써줘.
+3. 같은 내용의 영어 버전도 함께 줘.
+4. 넣지 말아야 할 요소(네거티브 프롬프트)를 따로 정리해줘.</div>
+<div class="callout callout--tip"><div class="callout-label">💡 1번(컨셉 3안)을 건너뛰지 마세요.</div><p>바로 프롬프트를 달라고 하면 첫 번째로 떠오른 뻔한 안이 나옵니다. 세 개를 놓고 고르는 순간, 여러분이 <strong>디렉터</strong>가 됩니다.</p></div>
+<h3 class="sub-head">4-2. 영어 버전을 같이 받는 이유</h3>
+<p>대부분의 이미지 모델은 영어 학습량이 압도적으로 많아 <strong>영어 지시를 더 정확히 따릅니다.</strong> 프롬프트만 영어면 됩니다 — 여러분은 계속 한국어로 대화하세요. Claude가 단순 번역이 아니라 <strong>그쪽 업계 표현으로</strong> 옮겨줍니다.</p>
+<h3 class="sub-head">4-3. 결과가 아쉬울 때 — AI를 비평가로 쓰기</h3>
+<p>이게 의외로 안 알려진 기술입니다.</p>
+<div class="prompt">방금 나온 이미지를 첨부할게. 내 프롬프트와 다른 점을 짚어주고,
+프롬프트를 어떻게 고치면 좋을지 수정본으로 알려줘.
+한 번에 한 가지만 바꿔줘.</div>
+<p>Claude는 이미지를 <strong>볼 수 있습니다.</strong> 만들지는 못해도 보고 판단하는 건 합니다. "왜 이상한지 모르겠는데 이상한" 상태를 말로 풀어줍니다.</p>
+<h3 class="sub-head">4-4. 마음에 든 이미지가 있을 때 — 스타일 역추출</h3>
+<div class="prompt">이 이미지를 참고해서 비슷한 느낌을 내고 싶어.
+스타일·조명·구도·색감을 분석해서, 내 주제([주제])에 맞는 프롬프트로 정리해줘.
+그대로 베끼지는 말고 스타일 방향만.</div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 그대로 베끼라는 게 아닙니다.</div><p>남의 작품을 복제하는 게 아니라, <em>"내가 원하는 느낌"</em> 을 <strong>말로 옮기는 훈련</strong>입니다. 특정 작가 이름을 넣어 화풍을 흉내 내는 건 사내 공식물에서는 피하세요(7절).</p></div>
+<h3 class="sub-head">4-5. 여러 장이 필요할 때 — 톤 묶기</h3>
+<p>카드뉴스 5장이 제각각이면 아마추어처럼 보입니다. 한 번에 시키세요.</p>
+<div class="prompt">같은 스타일·조명·색감·구도 규칙을 유지하면서 주제만 바꾼 프롬프트 5개를 만들어줘.
+공통 규칙을 먼저 한 덩어리로 적고, 그 뒤에 장별 차이만 적는 형식으로.
+주제: 1) 제품 소개 2) 보온 성능 3) 세척 편의 4) 친환경 소재 5) 구매 안내</div>
+<div class="callout callout--tip"><div class="callout-label">💡 공통 규칙 + 장별 차이</div><p>형식이 핵심입니다. 이러면 5장의 톤이 묶이고, 나중에 6장째를 추가하기도 쉽습니다.</p></div>
+</section>
+
+<!-- ===== 실습 C · D ===== -->
+<section class="lesson-section">
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 C — Claude로 프롬프트 뽑기 (핵심) 🥇최소 코스</div>
+  <p>순서는 <b>① 마스터 지시문 붙여넣기</b> → <b>② 컨셉 3안 중 고르기</b> → <b>③ 완성 프롬프트 받기</b> → <b>④ 실습 B와 비교</b>.<br>Claude의 <b>새 대화</b>에서 시작합니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>마스터 지시문</b> <span class="meta">· 본문 4-1절 · 복붙용</span></li>
+      <li><b>실습 브리프</b> <span class="meta">· 이미지 프롬프트 키트 안 · 그린컵 배너 브리프</span></li>
+      <li><b>실습 B의 벤치마크 프롬프트</b> <span class="meta">· 워크시트에 적어둔 것</span></li>
+    </ul>
+  </div>
+</div>
+<ol><li>4-1절 마스터 지시문을 Claude에 붙여넣고 대괄호를 그린컵 배너 브리프로 채웁니다</li><li><strong>컨셉 3안</strong>을 받고 하나 고릅니다 — 왜 골랐는지 한 줄로 적어보세요</li><li>완성 프롬프트(한국어 + 영어 + 네거티브)를 받습니다</li></ol>
+<div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 내가 쓴 것보다 얼마나 구체적인가?</div><p>실습 B에서 직접 쓴 것과 비교해 보세요. <strong>얼마나 더 구체적인지</strong> 확인합니다.</p></div>
+
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 D — 생성 → 비평 → 재생성</div>
+  <p>순서는 <b>① 4장 생성</b> → <b>② Claude에 비평 받기</b> → <b>③ 한 가지씩 바꿔 재생성</b>.<br>비평은 실습 C와 <b>같은 대화</b>에서 이어갑니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>실습 C의 완성 프롬프트</b> <span class="meta">· 같은 대화에 있음</span></li>
+    </ul>
+  </div>
+</div>
+<ol><li>받은 프롬프트로 <strong>4장</strong> 생성</li><li>제일 나은 걸 Claude에 붙여넣고 4-3절 비평 지시문 실행</li><li>고친 프롬프트로 재생성 — <strong>한 번에 한 가지만</strong> 바꾸며 2~3회</li></ol>
+<div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 1차와 최종본은 무엇이 달라졌나?</div><p>1차와 최종본을 나란히 놓고 보세요. 이 차이가 오늘의 성과입니다.</p></div>
+</section>
+
+<!-- ===== 이론 5 ===== -->
+<section class="lesson-section"><div class="section-head"><span class="section-mark">5</span><h2>Claude Design — 글자·레이아웃은 여기서</h2></div>
+<h3 class="sub-head">5-1. 왜 필요한가</h3>
+<p>포스터·카드뉴스·배너는 결국 <strong>글자가 반</strong>입니다. 그런데 그 글자를 이미지 모델은 잘 못 씁니다(3-5절). 그래서 <strong>작업을 나눕니다.</strong></p>
+<div class="table-scroll"><table><thead><tr><th></th><th><strong>이미지 생성 AI</strong></th><th><strong>Claude Design</strong></th></tr></thead><tbody><tr><td>잘하는 것</td><td>배경·사물·인물·질감·분위기</td><td><strong>레이아웃 · 글자 · 표 · 아이콘</strong></td></tr><tr><td>한글</td><td>자주 깨진다</td><td><strong>정확히 들어간다</strong></td></tr><tr><td>수정</td><td>다시 뽑아야 한다</td><td><strong>그 부분만 고친다</strong></td></tr><tr><td>결과물</td><td>이미지 파일</td><td>포스터·슬라이드·한 장 보고서 (PDF·PPTX 등)</td></tr></tbody></table></div>
+<h3 class="sub-head">5-2. 뭐 하는 도구인가</h3>
+<p>2026년 4월 Anthropic Labs가 내놓은 <strong>디자인 캔버스</strong>입니다. 대화로 시안을 만들고, <strong>캔버스에서 직접 고치고</strong>, PDF·PPTX 등으로 내보냅니다. 유료 플랜(Pro 이상)에 포함되어 있습니다. (<a href="https://www.anthropic.com/news/claude-design-anthropic-labs" target="_blank" rel="noopener">공식 소개</a>)</p>
+<p>여전히 <strong>실험실(Labs) 성격</strong>의 도구라 화면과 기능이 바뀔 수 있습니다. 흐름만 익혀두면 됩니다.</p>
+<h3 class="sub-head">5-3. 쓰는 법 — 역시 한국어로</h3>
+<div class="prompt">그린컵 신제품 사내 공지 포스터를 A4 세로로 만들어줘.
+제목 "데일리 텀블러 출시", 부제 "9월 12일부터 사내 카페에서 만나보세요",
+문의 "마케팅팀 내선 1234".
+브랜드 톤: 다정한 존댓말, 과장 없이 담백하게. 민트·아이보리·연회색.
+상단 1/3은 제품 이미지 자리로 비워줘.</div>
+<p>시안이 나오면 <strong>말로 고칩니다.</strong></p>
+<ul><li><em>"제목을 더 크게, 부제는 한 줄로."</em></li><li><em>"민트를 좀 더 차분하게."</em></li><li><em>"문의는 오른쪽 아래로."</em></li></ul>
+<p>그다음 4절에서 뽑은 이미지를 상단에 배치하고, <strong>PDF로 내보내면 끝</strong>입니다.</p>
+<h3 class="sub-head">5-4. 오늘의 조합기술 — 3단계</h3>
+<div class="callout callout--summary"><p><span class="co-icon">①</span> <strong>Claude</strong>로 프롬프트 뽑기 → ② <strong>이미지 도구</strong>로 배경·제품컷 생성 → ③ <strong>Claude Design</strong>에서 글자 얹어 마감</p></div>
+<p>디자이너 없이도 <strong>부끄럽지 않은 한 장</strong>이 나옵니다. 그리고 이 셋 다 <strong>한국어로 말만</strong> 하면 됩니다.</p>
+</section>
+
+<!-- ===== 실습 E · F ===== -->
+<section class="lesson-section">
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 E — Claude Design으로 포스터 마감 (실무형, 핵심) 🥇최소 코스</div>
+  <p>순서는 <b>① A4 포스터 만들기</b> → <b>② 이미지 배치</b> → <b>③ 말로 2~3회 수정</b> → <b>④ PDF 내보내기</b>.<br>Claude Design의 <b>새 대화</b>에서 시작합니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>포스터 지시문</b> <span class="meta">· 본문 5-3절 · 복붙용</span></li>
+      <li><b>실습 D의 최종 이미지</b> <span class="meta">· 이미지 파일 · 1장</span></li>
+    </ul>
+  </div>
+</div>
+<ol><li>Claude Design에서 <strong>A4 세로 사내 공지 포스터</strong>를 만듭니다 (5-3절 지시문 사용)</li><li>실습 D의 이미지를 상단에 배치</li><li><em>"제목을 더 크게"</em>, <em>"민트를 차분하게"</em> 처럼 <strong>말로</strong> 2~3회 수정</li><li>PDF로 내보내기 → <strong>완성</strong></li></ol>
+
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 F — 카드뉴스 5장 세트 (톤 일관성)</div>
+  <p>순서는 <b>① 공통 규칙 + 장별 차이 프롬프트 받기</b> → <b>② 5장 생성해 나란히 보기</b> → <b>③ 안 묶인 장 고정하기</b>.<br>프롬프트는 실습 C와 <b>같은 대화</b>에서 이어갑니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>세트 지시문</b> <span class="meta">· 본문 4-5절 · 복붙용</span></li>
+    </ul>
+  </div>
+</div>
+<ol><li>4-5절 지시문으로 <strong>공통 규칙 + 장별 차이</strong> 프롬프트 5개를 받습니다</li><li>5장을 생성해 나란히 놓고 봅니다 — <strong>톤이 묶였나?</strong></li><li>안 묶였다면: <em>"1·3번이 다른 장들과 톤이 안 맞아. 공통 규칙을 더 강하게 고정해줘."</em></li></ol>
+<div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 5장의 톤이 하나로 묶였나?</div><p>시리즈물의 핵심은 <strong>공통 규칙을 먼저 고정하는 것</strong>입니다.</p></div>
+</section>
+
+<!-- ===== 이론 6 · 7 · 8 ===== -->
+<section class="lesson-section"><div class="section-head"><span class="section-mark">6</span><h2>한 번에 안 나온다 — 고쳐가는 루프</h2></div>
+<p>첫 장이 마음에 안 드는 건 <strong>정상</strong>입니다. 실력 차이는 여기서 갈립니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>습관</strong></th><th><strong>왜</strong></th></tr></thead><tbody><tr><td><strong>4장씩 뽑아 고른다</strong></td><td>한 장만 보고 판단하면 도구 탓을 하게 된다</td></tr><tr><td><strong>한 번에 하나만 바꾼다</strong></td><td>조명·구도·색을 동시에 바꾸면 뭐가 효과였는지 모른다</td></tr><tr><td><strong>결과를 Claude에 보여준다</strong></td><td>4-3절. "왜 이상한지"를 말로 풀어준다</td></tr><tr><td><strong>잘 된 프롬프트를 저장한다</strong></td><td>다음에 톤 맞출 때 재활용. 3차시의 Project에 모아두면 최고</td></tr><tr><td><strong>버전을 남긴다</strong></td><td><code>배너_v1_자연광</code>, <code>배너_v2_역광</code> 처럼. 나중에 되돌아갈 수 있게</td></tr></tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 잘 된 프롬프트는 <strong>자산</strong>입니다. 한 번 만든 "그린컵 제품컷 공통 규칙"은 다음 신제품에도, 내년에도 씁니다.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">7</span><h2>⚠️ 실무에서 사고 나는 지점</h2></div>
+<p>이미지는 <strong>밖으로 나가는 결과물</strong>이라 글보다 위험합니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>하지 말 것</strong></th><th><strong>왜</strong></th></tr></thead><tbody><tr><td><strong>실존 인물·유명인</strong>을 닮게 만들기</td><td>초상권·퍼블리시티권 문제</td></tr><tr><td><strong>브랜드 로고·캐릭터</strong> 넣기</td><td>상표권 문제. "○○ 스타일로"도 사내 공식물에선 피하는 게 안전</td></tr><tr><td><strong>사실처럼 보이는 가짜 사진</strong> 만들기</td><td>실제 사건·인물처럼 보이는 이미지는 그 자체로 위험</td></tr><tr><td><strong>생성 이미지를 검수 없이 발행</strong></td><td>손가락·눈·이빨·글자·제품 형태가 자주 어긋난다</td></tr><tr><td><strong>회사 규정 무시</strong></td><td>대외 발행물에 AI 이미지 사용 시 <strong>표기 의무</strong>가 있는 조직이 늘고 있다</td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 제품 이미지는 특히 조심하세요.</div><p>실제 제품과 다르게 생긴 이미지를 상세페이지에 쓰면 과장광고 문제로 번질 수 있습니다. 제품컷은 <strong>실제 사진을 찍고 AI로 배경·보정만</strong> 하는 쪽이 안전합니다(2-1절의 사진 편집형 도구).</p></div>
+<div class="callout callout--tip"><div class="callout-label">💡 AI가 만든 이미지에는 출처 표식(워터마크·메타데이터)이 들어가는 추세입니다.</div><p>지운다고 문제가 없어지는 게 아니라, <strong>애초에 문제 될 이미지를 안 만드는 것</strong>이 답입니다.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">8</span><h2>붙여넣기용 마스터 프롬프트 모음</h2></div>
+<div class="table-scroll"><table><thead><tr><th><strong>상황</strong></th><th><strong>지시문</strong></th></tr></thead><tbody><tr><td>프롬프트 뽑기</td><td>4-1절 마스터 지시문</td></tr><tr><td>결과 비평</td><td><em>"이 이미지가 내 프롬프트와 다른 점을 짚고, 한 번에 한 가지만 바꾼 수정본을 줘."</em></td></tr><tr><td>스타일 역추출</td><td><em>"이 이미지의 스타일·조명·구도·색감을 분석해서, [내 주제]에 맞는 프롬프트로 정리해줘."</em></td></tr><tr><td>세트로 뽑기</td><td><em>"공통 규칙을 먼저 적고, 장별 차이만 다르게 한 프롬프트 5개를 만들어줘."</em></td></tr><tr><td>벤치마크 만들기</td><td><em>"나는 [직무]야. 이미지 도구를 비교 평가할 고정 테스트 프롬프트 3개를 만들어줘. 하나는 한글 글자가 들어가게."</em></td></tr><tr><td>안전 점검</td><td><em>"이 이미지를 사내 공지에 써도 될지, 저작권·초상권·과장 표현 관점에서 점검해줘."</em></td></tr></tbody></table></div>
+</section>
+
+<!-- ===== 실습 G ===== -->
+<section class="lesson-section">
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 G — 🎓 도전 과제 (빨리 끝낸 사람용)</div>
+  <p>순서는 <b>① 다른 비율로 다시 만들기</b> → <b>② 카드뉴스 카피 쓰기</b> → <b>③ 실제 사진 배경 바꾸기</b>.<br>①②는 실습 C와 <b>같은 대화</b>에서 이어가고, ③은 사진 편집형 도구의 <b>새 대화</b>에서 시작합니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>실습 C의 배너 프롬프트</b> <span class="meta">· 같은 대화에 있음</span></li>
+      <li><b>브랜드 보이스</b> <span class="meta">· 2·3차시에서 만든 것 · Project에 있음</span></li>
+      <li><b>실제 제품 사진</b> <span class="meta">· 이미지 파일 · 1장</span></li>
+    </ul>
+  </div>
+</div>
+<ul><li>같은 배너를 <strong>인스타(1:1)·스토리(9:16)</strong> 비율로 다시 만들어 보세요. 구도가 어떻게 달라져야 하나요?</li><li>Claude에게 <em>"이 5장 카드뉴스에 들어갈 카피도 그린컵 톤으로 써줘"</em> — 2·3차시에서 만든 브랜드 보이스를 붙이면 <strong>글과 그림이 한 톤</strong>이 됩니다</li><li>실제 제품 사진 한 장을 두고 <em>"배경만 흰색으로 바꿔줘"</em> 를 사진 편집형 도구로 시도해 보세요 — 생성보다 <strong>편집</strong>이 실무에서 더 자주 필요합니다</li></ul>
+</section>
+
+<!-- ===== 이론 9 · 10 · 11 · 12 ===== -->
+<section class="lesson-section"><div class="section-head"><span class="section-mark">9</span><h2>안 될 때 — 트러블슈팅</h2></div>
+<div class="table-scroll"><table><thead><tr><th><strong>증상</strong></th><th><strong>원인</strong></th><th><strong>이렇게</strong></th></tr></thead><tbody><tr><td>한글이 깨져 나온다</td><td>이미지 모델의 고질적 약점</td><td>프롬프트에 <em>"글자 넣지 말 것"</em> → <strong>글자는 Claude Design에서</strong></td></tr><tr><td>매번 비슷한 그림만 나온다</td><td>6요소 중 ③⑤가 비어 있음</td><td>스타일 단어와 분위기를 <strong>구체적인 단어</strong>로 지정</td></tr><tr><td>여러 장의 톤이 제각각</td><td>장마다 따로 시켰음</td><td>4-5절 <strong>공통 규칙 + 장별 차이</strong> 형식으로 한 번에</td></tr><tr><td>비율이 안 맞아 잘린다</td><td>나중에 자름</td><td>⑥에서 <strong>비율을 먼저</strong> 지정하고 여백까지 지시</td></tr><tr><td>손·얼굴이 이상하다</td><td>모델의 약점 구간</td><td>손 클로즈업을 네거티브에 넣고, <strong>인물을 작게·뒤로</strong></td></tr><tr><td>지시한 개수와 다르다</td><td>개수 세기가 약함</td><td>요소를 줄이거나, <strong>개수를 문장 앞쪽</strong>에 배치</td></tr><tr><td>브랜드 색이 안 맞는다</td><td>색을 말로만 지정</td><td><em>"민트(#79C7B0 계열)"</em> 처럼 <strong>색상 코드</strong>를 함께, 최종 보정은 Claude Design에서</td></tr><tr><td>뭐가 문제인지 모르겠다</td><td>눈에는 보이는데 말이 안 나옴</td><td>4-3절 — <strong>Claude에 이미지를 보여주고</strong> 물어보기</td></tr></tbody></table></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">10</span><h2>자주 묻는 질문 (FAQ)</h2></div>
+<p><strong>Q. Claude는 왜 이미지를 못 만드나요? 못 하는 건가요, 안 하는 건가요?</strong> A. 안 하는 쪽에 가깝습니다. 사진 합성 대신 <strong>읽고·쓰고·판단하고·도구를 다루는 능력</strong>에 집중한 선택입니다. 그래서 오늘처럼 <strong>Claude에게 기획과 프롬프트와 검수를 맡기고, 생성만 다른 도구에 맡기는</strong> 조합이 실제로 잘 작동합니다.</p>
+<p><strong>Q. 이미지 도구를 유료로 결제해야 하나요?</strong> A. 오늘 실습은 쓰던 구독(ChatGPT 등) 안의 이미지 기능이면 충분합니다. <strong>먼저 1-4절의 벤치마크로 재보고</strong>, 내 업무에서 확실히 이득이 나올 때 결제하세요.</p>
+<p><strong>Q. AI가 만든 이미지, 저작권은 누구 것인가요?</strong> A. 나라와 서비스 약관마다 다르고 아직 정리되는 중입니다. 실무 기준은 두 가지만 지키면 대체로 안전합니다 — <strong>① 남의 것을 닮게 만들지 않기 ② 회사 규정과 서비스 약관 확인하기.</strong> 대외 발행물이면 법무·홍보팀에 한 번 물어보세요.</p>
+<p><strong>Q. 상세페이지 제품 사진을 AI로 만들어도 되나요?</strong> A. <strong>권하지 않습니다.</strong> 실제 제품과 다르면 과장광고 문제가 됩니다. 제품은 <strong>실제 사진을 찍고, AI로 배경·보정만</strong> 하세요. AI 생성은 배경·컨셉컷·일러스트 쪽이 안전합니다.</p>
+<p><strong>Q. 프롬프트를 영어로 쓰라니, 영어를 못하는데요.</strong> A. 여러분이 영어를 쓸 일은 없습니다. <strong>Claude가 만들어준 영어 문장을 복사해서 붙여넣기만</strong> 하면 됩니다. 대화는 계속 한국어로 하세요.</p>
+<p><strong>Q. 나온 이미지가 어디서 본 것 같아요.</strong> A. 그럴 수 있습니다. AI는 흔한 패턴으로 끌리니까요(1-3절). 스타일 단어를 바꾸고, 구도와 소품을 구체적으로 지정하세요. 그래도 걸리면 <strong>쓰지 마세요.</strong> 찜찜하면 안 쓰는 게 실무 원칙입니다.</p>
+<p><strong>Q. 매번 프롬프트를 새로 만들어야 하나요?</strong> A. 아니요. 잘 된 프롬프트를 <strong>3차시의 Project에 모아두세요.</strong> 다음부터는 <em>"저장된 그린컵 제품컷 규칙으로, 이번엔 보온병 버전"</em> 한 줄이면 됩니다.</p>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">11</span><h2>내 업무라면? — 이미지가 필요한 순간 찾기</h2></div>
+<p>이번 주에 <strong>글 말고 그림이 필요했던 순간</strong>을 떠올려 보세요.</p>
+<ul><li>발표 자료 표지·구분 슬라이드</li><li>사내 공지·행사 포스터</li><li>제품·서비스 소개 배너</li><li>SNS·블로그 썸네일</li><li>교육 자료의 설명 그림</li><li>제안서 표지</li></ul>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> Claude에게 물어보세요: <em>"나는 [직무]야. 내 업무에서 이미지가 필요한 순간을 찾아주고, 각각 AI로 만들기 적합한지 / 사람 디자이너가 필요한지 판단해줘."</em></p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">12</span><h2>직무별 '내 업무에 이렇게 붙인다'</h2></div>
+<div class="table-scroll"><table><thead><tr><th><strong>직무</strong></th><th><strong>이렇게</strong></th></tr></thead><tbody><tr><td><strong>마케팅</strong></td><td>캠페인 무드컷·SNS 카드뉴스 세트. <strong>공통 규칙 프롬프트</strong>를 캠페인 단위로 만들어 재사용</td></tr><tr><td><strong>영업</strong></td><td>제안서 표지·도식. 고객사 산업에 맞는 컨셉컷을 30분 만에</td></tr><tr><td><strong>기획·PM</strong></td><td>화면 흐름도·서비스 설명 그림. <strong>도형 중심은 Claude가 SVG로 직접</strong></td></tr><tr><td><strong>인사·총무</strong></td><td>사내 공지·행사 포스터·교육자료 표지. <strong>Claude Design만으로도</strong> 대부분 해결</td></tr><tr><td><strong>CS</strong></td><td>안내 이미지·FAQ 도식. 글로 설명하던 걸 그림 한 장으로</td></tr><tr><td><strong>재무·회계</strong></td><td>보고용 차트는 이미지 AI가 아니라 <strong>데이터로</strong>(7차시). 표지·구분 페이지만 이쪽</td></tr></tbody></table></div>
+</section>
+
+<!-- ===== 실습 H ===== -->
+<section class="lesson-section">
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 H — 3단계로 내 것으로 만들기</div>
+  <p>순서는 <b>① 이미지 1개 고르기</b> → <b>② 프롬프트 뽑아 4장 생성</b> → <b>③ Claude Design으로 PDF 마감</b>.<br>프롬프트는 Claude의 <b>새 대화</b>에서 시작합니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>이번 주에 필요한 이미지 1개</b> <span class="meta">· 11절에서 떠올린 것</span></li>
+      <li><b>마스터 지시문</b> <span class="meta">· 본문 4-1절 · 복붙용</span></li>
+    </ul>
+  </div>
+</div>
+<ol><li><strong>이번 주에 필요한 이미지 1개</strong>를 고른다</li><li>4-1절 마스터 지시문으로 프롬프트를 뽑아 <strong>4장</strong> 생성한다</li><li>Claude Design에서 글자를 얹어 <strong>PDF 한 장</strong>으로 마감한다</li></ol>
+</section>
+
+<!-- ===== 마무리 ===== -->
+<section class="lesson-section"><div class="section-head"><span class="section-mark">✅</span><h2>오늘 자가진단</h2></div>
+<div class="table-scroll"><table><thead><tr><th><strong>#</strong></th><th><strong>확인</strong></th><th><strong>못 하면</strong></th></tr></thead><tbody><tr><td>1</td><td>'펠리컨 자전거'가 무엇을 재는 시험인지 한 줄로 설명할 수 있다</td><td>1-1절</td></tr><tr><td>2</td><td>AI 이미지가 <strong>왜 흔한 쪽으로 미끄러지는지</strong> 안다</td><td>1-3절</td></tr><tr><td>3</td><td>내 업무용 <strong>벤치마크 3개</strong>를 적었고, 하나는 한글이 들어간다</td><td>1-4절·실습 B</td></tr><tr><td>4</td><td>프롬프트 <strong>6요소</strong>를 보지 않고 셋 이상 말할 수 있다</td><td>3절</td></tr><tr><td>5</td><td>비율을 <strong>먼저</strong> 정해야 하는 이유를 안다</td><td>3-3절</td></tr><tr><td>6</td><td><strong>글자를 이미지 모델에게 안 시키는</strong> 이유를 안다</td><td>3-5절</td></tr><tr><td>7</td><td>Claude에게 프롬프트를 뽑게 하는 지시문을 갖고 있다</td><td>4-1절</td></tr><tr><td>8</td><td><strong>컨셉 3안을 먼저 받는</strong> 이유를 안다</td><td>4-1절</td></tr><tr><td>9</td><td>결과 이미지를 <strong>Claude에 보여주고 비평받는</strong> 법을 안다</td><td>4-3절</td></tr><tr><td>10</td><td>여러 장의 톤을 묶는 <strong>공통 규칙 + 장별 차이</strong> 형식을 안다</td><td>4-5절</td></tr><tr><td>11</td><td>이미지 AI와 Claude Design의 <strong>역할 분담</strong>을 설명할 수 있다</td><td>5-1절</td></tr><tr><td>12</td><td>실무에서 <strong>하면 안 되는 것 3가지</strong>를 말할 수 있다</td><td>7절</td></tr><tr><td>13</td><td>제품 상세컷을 AI로 만들면 왜 위험한지 안다</td><td>7절·FAQ</td></tr><tr><td>14</td><td>내 업무 이미지 1개를 실제로 만들어 PDF로 마감했다</td><td>실습 E·H</td></tr></tbody></table></div>
+<div class="callout callout--tip"><div class="callout-label">💡 3·8·10·12번이 오늘의 진짜 성적표입니다.</div><p>예쁜 그림 한 장은 운으로도 나옵니다. 여러분이 챙길 건 <strong>재현 가능하게 만드는 것</strong>과 <strong>안 될 일을 안 하는 것</strong> — 그건 넘길 수 없어요.</p></div>
+<h3 class="sub-head">오늘의 결과물 체크리스트</h3>
+<div class="table-scroll"><table><thead><tr><th><strong>결과물</strong></th><th><strong>어느 실습에서</strong></th></tr></thead><tbody><tr><td>[ ] 나만의 벤치마크 3개 + 채점표</td><td>실습 B 🥇</td></tr><tr><td>[ ] Claude가 뽑은 완성 프롬프트 (한국어·영어·네거티브)</td><td>실습 C 🥇</td></tr><tr><td>[ ] 1차 이미지 vs 최종 이미지 비교</td><td>실습 D</td></tr><tr><td>[ ] 글자까지 얹은 포스터 PDF</td><td>실습 E 🥇</td></tr><tr><td>[ ] 톤이 묶인 카드뉴스 5장</td><td>실습 F</td></tr></tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 🥇 세 개만 있어도 오늘은 성공입니다.</p></div>
+</section>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">＊</span><h2>오늘 정리</h2></div>
+<h3 class="sub-head">🎯 세 개만 기억한다면</h3>
+<ol><li><strong>AI는 흔한 그림으로 끌려간다.</strong> 흔하지 않은 걸 원하면 <strong>6요소</strong>로 구체적으로 말하라</li><li><strong>Claude = 아트 디렉터.</strong> 프롬프트를 뽑게 하고, 결과를 보여주고 비평받아라</li><li><strong>글자는 이미지 모델에게 시키지 마라.</strong> 배경은 이미지 AI, 글자·레이아웃은 Claude Design</li></ol>
+<h3 class="sub-head">전체 정리</h3>
+<ul><li>벤치마크는 남의 순위가 아니라 <strong>내 시험문제</strong>. 고정 프롬프트 3개를 만들어 도구가 바뀔 때마다 재라</li><li>이미지 모델의 약점은 정해져 있다 — <strong>손 · 한글 글자 · 개수 · 흔치 않은 지시</strong>. 거기가 검수 지점이다</li><li>빈칸은 AI가 <strong>가장 흔한 것</strong>으로 채운다. 6요소를 다 채워라</li><li><strong>비율은 먼저</strong>, 여백까지 지시하라. 나중에 자르면 구도가 망가진다</li><li><strong>네거티브 프롬프트</strong>를 습관으로 — 글자·워터마크·손 클로즈업·실존 인물</li><li>Claude에게 <strong>컨셉 3안 → 완성 프롬프트 → 영어 버전 → 네거티브</strong> 순으로 시켜라</li><li>여러 장은 <strong>공통 규칙 + 장별 차이</strong>로. 톤 일관성이 아마추어와 프로를 가른다</li><li>결과가 아쉬우면 <strong>이미지를 Claude에 보여주고</strong> 물어라. 한 번에 하나만 바꿔라</li><li>잘 된 프롬프트는 <strong>자산</strong>이다. 3차시의 Project에 모아라</li><li>⚠️ 실존 인물·브랜드 로고·가짜 사진 금지. <strong>제품 상세컷은 실제 사진</strong>으로. 대외 발행물은 회사 규정 확인</li><li>마지막은 언제나 <strong>사람이 본다.</strong> 손가락·글자·제품 형태를 눈으로 확인하고 내보내라</li></ul>
+</section>
+
+<!-- ===== 추가 실습: Adobe ===== -->
+<section class="lesson-section"><div class="section-head"><span class="section-mark">＊</span><h2>추가 실습 — Adobe for Creativity 커넥터 (편집)</h2></div>
+<div class="callout callout--summary"><p><span class="co-icon"></span> 위에서 배운 Claude Design은 <strong>처음부터 새로</strong> 만드는 디자인/화면(생성)이고, 여기서 배우는 Adobe for Creativity 커넥터는 <strong>이미 있는 사진/영상 파일</strong>을 편집·보정하는 도구입니다. 둘의 목적이 다릅니다 — 맨 아래 비교표로 정리합니다.</p></div>
+<h3 class="sub-head">1. Claude에서는 사진을 보정하거나 생성할 수 없다</h3>
+<p>Claude 자체는 이미지를 "이해/분석"할 순 있지만, 리터칭이나 이미지 생성 엔진은 내장돼 있지 않아요. 그래서 Adobe for Creativity 커넥터를 설치/추가합니다.</p>
+
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 I — Adobe for Creativity 커넥터 설치</div>
+  <p>순서는 <b>① 새 대화 열기</b> → <b>② 커넥터 설치</b> → <b>③ 도구 권한 설정</b>.<br>Claude의 <b>새 대화</b>에서 시작합니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>Adobe for Creativity 커넥터</b> <span class="meta">· 커넥터 둘러보기에서 설치 · 무료 가능</span></li>
+    </ul>
+  </div>
+</div>
+<ol><li><strong>+ 새로 생성</strong>: 새로운 대화창</li><li>메시지 창에 <strong>+</strong> → <strong>커넥터</strong> → <strong>connector 추가</strong> → <strong>커넥터 둘러보기</strong> → <strong>adobe for creativity 설치</strong></li><li><strong>커넥터 관리</strong> → <strong>adobe for creativity</strong> → <strong>도구 권한</strong>
+<ul><li>대화형 도구: 항상 허용</li><li>읽기 전용 도구: 항상 허용</li><li>쓰기/삭제 도구: 확인 후 허용</li><li><code>image_fill_area</code> — 마스킹된 영역을 AI로 채우는</li><li><code>Apply generative expand</code> — 이미지 경계를 AI로 확장하는</li></ul></li></ol>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> Adobe 측에서 관리하는 한도가 존재해서 다 쓰면 거부당합니다. 정확히 하루/한 달에 몇 번까지인지는 공식 문서에도 명시되어 있지 않습니다.</p></div>
+
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 J — 포토샵 기능으로 보정·리사이즈·영상 편집</div>
+  <p>순서는 <b>① 사진 보정·색상 조정</b> → <b>② 크롭·스타일·배경</b> → <b>③ 문서·벡터·영상·오디오</b>.<br>실습 I와 <b>같은 대화</b>에서 이어갑니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>보정할 사진</b> <span class="meta">· 이미지 파일 · 1장 이상</span></li>
+      <li><b>편집할 영상</b> <span class="meta">· 영상 파일 · 선택</span></li>
+    </ul>
+  </div>
+</div>
+<h4 class="mini-head">사진 보정/색상 조정</h4>
+<p>기본적인 사진 품질 개선 작업들. 결과가 가장 안정적인 영역입니다.</p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> "이 사진 밝기랑 대비 좀 자연스럽게 올려줘"<br>"색온도를 좀 더 따뜻하게 바꿔줘"<br>"노출이 어두운 부분만 살짝 밝혀줘"<br>"채도를 전체적으로 살짝 낮춰서 톤 다운해줘"<br>"빨간색만 좀 더 선명하게 해줘" (단일 색상 채도 조정)</p></div>
+<h4 class="mini-head">크롭/구도 조정</h4>
+<div class="callout callout--summary"><p><span class="co-icon"></span> "이 사진 정사각형으로 잘라줘, 인물 얼굴 중심으로"<br>"사진이 살짝 기울어졌는데 수평 맞춰줘" (Auto straighten)<br>"이 사진 4:5 비율로 리사이즈해줘"</p></div>
+<h4 class="mini-head">스타일/효과 적용</h4>
+<p>사진에 특정 감성이나 분위기를 입힐 때.</p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> "이 사진에 필름 그레인 느낌의 노이즈 추가해줘"<br>"빈티지 하프톤 인쇄 느낌으로 바꿔줘"<br>"배경만 흐릿하게 렌즈 블러 효과 넣어줘 (아웃포커스)"<br>"흑백 사진에 세피아 톤 입혀줘" (모노크로매틱 틴트)<br>"라이트룸 프리셋 중에 '필름 룩' 있으면 적용해줘"</p></div>
+<h4 class="mini-head">배경 관련</h4>
+<div class="callout callout--summary"><p><span class="co-icon"></span> "이 제품 사진 배경색을 흰색에서 파스텔 민트로 바꿔줘"<br>"인물 배경 지우고 투명 배경으로 만들어줘"</p></div>
+<h4 class="mini-head">텍스트/문서 작업 (InDesign, PDF 관련)</h4>
+<p>문서/인쇄물 작업에 특화된 기능들. 학원 업무(공지문, 브로슈어 등)에 유용할 수 있는 영역.</p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> "이 PDF를 InDesign 파일로 변환해줘"<br>"이 텍스트 프레임에 원고 내용 자동으로 채워줘" (Fill Text)<br>"여러 명의 이름을 넣어서 각각 다른 증명서 파일로 만들어줘" (Data Merge — 예: 수료증 대량 생성)<br>"InDesign 문서를 HTML로 내보내서 Express에서 편집할 수 있게 해줘"</p></div>
+<h4 class="mini-head">벡터/그래픽 문서</h4>
+<div class="callout callout--summary"><p><span class="co-icon"></span> "이 로고 파일을 벡터로 렌더링해줘"<br>"여러 데이터를 합쳐서 벡터 그래픽으로 만들어줘" (예: 반복되는 배지/카드 디자인)</p></div>
+<h4 class="mini-head">영상 작업</h4>
+<div class="callout callout--summary"><p><span class="co-icon"></span> "이 영상에서 하이라이트만 뽑아서 30초짜리 요약본 만들어줘"<br>"이 영상 파일 정보(길이, 해상도) 좀 알려줘" (메타데이터)<br>"영상을 렌더링해서 mp4로 내보내줘"<br>"이 영상의 5초 지점 프레임을 이미지로 캡처해줘"</p></div>
+<h4 class="mini-head">음성/오디오</h4>
+<div class="callout callout--summary"><p><span class="co-icon"></span> "이 영상 속 목소리가 좀 작은데 또렷하게 보정해줘"</p></div>
+<h4 class="mini-head">콘텐츠 요약/검색</h4>
+<div class="callout callout--summary"><p><span class="co-icon"></span> "이 영상 내용 요약해서 텍스트로 정리해줘"<br>"내 Creative Cloud 라이브러리에서 '로고'라는 이름 들어간 파일 찾아줘"<br>"이 디자인이랑 비슷한 스타일의 다른 디자인 찾아줘" (Search Design)</p></div>
+<p>→ 다만 앞서 말씀드렸듯 Adobe Express 수준에서 작동하기 때문에 정밀한 생성 작업엔 한계가 있습니다.</p>
+<p><strong>추가: "40가지 기능" 관련</strong> → Adobe 계정 없이 게스트로 사용할 수 있는 것은 약 40개의 표준 도구이고, 전체는 50개 이상이며 로그인하면 더 많이 열립니다.</p>
+
+<h3 class="sub-head">2. Claude Design과의 차이점</h3>
+<p>이 둘은 <strong>목적 자체가 완전히 다릅니다.</strong></p>
+<div class="table-scroll"><table><thead><tr><th>구분</th><th>Adobe for Creativity 커넥터</th><th>Claude Design</th></tr></thead><tbody><tr><td><strong>입력 대상</strong></td><td><strong>기존에 있는 사진/영상 파일</strong>을 편집</td><td><strong>처음부터 새로</strong> 만드는 디자인/화면</td></tr><tr><td><strong>작업 성격</strong></td><td>사진 리터칭, 리사이즈, 영상 트리밍 등 <strong>편집·가공</strong></td><td>프레젠테이션, 프로토타입, 웹페이지, 랜딩페이지 등 <strong>처음부터 창작</strong></td></tr><tr><td><strong>결과물 형태</strong></td><td>이미지/영상 파일 (jpg, mp4 등)</td><td>HTML, React, SVG 등으로 이루어진 "살아있는(live)" 결과물 — 클릭 가능하고 테스트 가능한, 곧바로 배포 가능한 형태</td></tr><tr><td><strong>작동 방식</strong></td><td>Claude가 <strong>Adobe의 외부 엔진</strong>을 호출해서 처리</td><td><a href="http://Claude.ai" target="_blank" rel="noopener">Claude.ai</a>의 디자인 탭에서, 왼쪽 채팅에 설명하면 오른쪽 캔버스에 실제로 동작하는 디자인이 생성</td></tr><tr><td><strong>예시 사용처</strong></td><td>프로필 사진 보정, 인스타용 리사이즈, 제품 광고 이미지</td><td>웹사이트 목업, 앱 프로토타입, PPT 슬라이드, 원페이지 랜딩</td></tr><tr><td><strong>필요 조건</strong></td><td>Adobe 커넥터 설치 (무료 가능)</td><td>Pro, Max, Team, Enterprise 플랜에서만 제공</td></tr></tbody></table></div>
+<p><strong>한 문장으로 비유하면:</strong></p>
+<ul><li><strong>Adobe 커넥터</strong> = "이미 있는 사진/영상을 포토샵으로 다듬어주는 조수"</li><li><strong>Claude Design</strong> = "백지 상태에서 새로운 화면/디자인을 통째로 만들어주는 디자이너"</li></ul>
+<p>즉, 갖고 있는 사진을 예쁘게 다듬고 싶으면 → <strong>Adobe 커넥터</strong></p>
+<p>없던 걸 처음부터 만들고 싶으면(웹페이지, 슬라이드, 앱 화면 등) → <strong>Claude Design</strong></p>
+<div class="callout callout--summary"><p><span class="co-icon">🗣️</span> 다음 차시 예고: 10차시는 <strong>회의 업무</strong>입니다. 지금까지 배운 것(지시·Projects·문서·데이터·조사)을 <strong>모아서</strong>, 회의 준비부터 회의록·액션아이템까지 한 업무에 모두 적용합니다.</p></div>
+</section>
+<a class="next-lesson" href="lesson10.html"><div><span class="label">다음 차시</span><h3>회의: 워크플로우와 액션아이템</h3></div><span class="arrow">→</span></a>
+  </main>
+
+  <footer class="page-footer">
+    <p>그린컵 AI 에이전트 과정 · 9차시 이미지 만들기와 보정</p>
+  </footer>
+
+</div>
+</body>
+</html>
