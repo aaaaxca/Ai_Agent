@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>회의와 액션아이템</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --paper:#F5F7FB;
+    --surface:#FFFFFF;
+    --surface-2:#EEF1F9;
+    --ink:#1B2333;
+    --ink-soft:#525C72;
+    --border:#DCE1EE;
+    --accent:#2954D6;
+    --accent-ink:#FFFFFF;
+    --accent-tint:#E7ECFB;
+    --amber:#8A5A10;
+    --amber-tint:#FBF0DC;
+    --amber-line:#E9CE9C;
+    --red:#B23434;
+    --red-tint:#FCE9E9;
+    --red-line:#EFC2C2;
+    --green:#1F8A5F;
+    --green-tint:#E5F5EE;
+    --shadow:0 1px 2px rgba(27,35,51,.04), 0 8px 24px -12px rgba(27,35,51,.12);
+    --term-bg:#12151E;
+    --term-ink:#DDE3F0;
+    --term-accent:#7C9BFF;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#10131B;
+      --surface:#171B26;
+      --surface-2:#1C2130;
+      --ink:#E7EAF2;
+      --ink-soft:#A7AFC2;
+      --border:#2B3143;
+      --accent:#89A6FF;
+      --accent-ink:#0B1020;
+      --accent-tint:#1E2740;
+      --amber:#E8B75D;
+      --amber-tint:#2E2716;
+      --amber-line:#4A3B1E;
+      --red:#E58888;
+      --red-tint:#3A1E1E;
+      --red-line:#4E2A2A;
+      --green:#5FD1A0;
+      --green-tint:#123326;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#10131B;
+    --surface:#171B26;
+    --surface-2:#1C2130;
+    --ink:#E7EAF2;
+    --ink-soft:#A7AFC2;
+    --border:#2B3143;
+    --accent:#89A6FF;
+    --accent-ink:#0B1020;
+    --accent-tint:#1E2740;
+    --amber:#E8B75D;
+    --amber-tint:#2E2716;
+    --amber-line:#4A3B1E;
+    --red:#E58888;
+    --red-tint:#3A1E1E;
+    --red-line:#4E2A2A;
+    --green:#5FD1A0;
+    --green-tint:#123326;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Noto Sans KR","Pretendard",sans-serif;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+    word-break:keep-all;
+    overflow-wrap:break-word;
+  }
+  h1,h2,h3{
+    font-family:"Nanum Myeongjo",serif;
+    color:var(--ink);
+    text-wrap:balance;
+    margin:0;
+  }
+  a{color:var(--accent);}
+  strong{color:var(--ink); font-weight:700;}
+  em{font-style:italic;}
+  code{
+    font-family:"JetBrains Mono",monospace;
+    font-size:.9em;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:4px;
+    padding:.1em .4em;
+  }
+  p{margin:0 0 1em;}
+  ul,ol{margin:0 0 1em; padding-left:1.3em;}
+  li{margin-bottom:.45em;}
+  .page-shell{
+    max-width:860px;
+    margin:0 auto;
+    padding:0 20px 96px;
+  }
+
+  /* ---------- Masthead ---------- */
+  .masthead{
+    padding:56px 0 40px;
+    border-bottom:1px solid var(--border);
+    margin-bottom:40px;
+  }
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.78rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--accent);
+    background:var(--accent-tint);
+    border:1px solid var(--border);
+    padding:5px 12px;
+    border-radius:999px;
+    margin-bottom:20px;
+  }
+  .masthead h1{
+    font-size:clamp(2.1rem, 4.5vw, 3.1rem);
+    font-weight:800;
+    margin-bottom:10px;
+  }
+  .masthead .lede{
+    color:var(--ink-soft);
+    font-size:1.05rem;
+    max-width:60ch;
+    margin-bottom:0;
+  }
+  .masthead .meta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px 24px;
+    margin-top:24px;
+    font-size:.9rem;
+    color:var(--ink-soft);
+  }
+  .masthead .meta-row span{display:flex; align-items:center; gap:6px;}
+  .masthead .meta-row b{color:var(--ink); font-weight:700;}
+
+  main{min-width:0;}
+
+  /* ---------- Sections ---------- */
+  .lesson-section{
+    padding-bottom:44px;
+    margin-bottom:44px;
+    border-bottom:1px solid var(--border);
+    scroll-margin-top:20px;
+  }
+  .lesson-section:last-of-type{border-bottom:none;}
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    margin-bottom:20px;
+  }
+  .section-mark{
+    font-family:"JetBrains Mono",monospace;
+    font-weight:700;
+    font-size:1rem;
+    color:var(--accent-ink);
+    background:var(--accent);
+    border-radius:8px;
+    padding:3px 9px;
+    flex-shrink:0;
+  }
+  .section-head h2{
+    font-size:clamp(1.35rem,2.6vw,1.7rem);
+    font-weight:700;
+  }
+  .section-head h2 small{
+    display:block;
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:500;
+    font-size:.85rem;
+    color:var(--ink-soft);
+    margin-top:4px;
+  }
+  h3.sub-head{
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:700;
+    font-size:1.02rem;
+    color:var(--accent);
+    margin:28px 0 10px;
+  }
+  h3.sub-head.first{margin-top:0;}
+  h4.mini-head{
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:700;
+    font-size:.96rem;
+    color:var(--ink);
+    margin:20px 0 8px;
+  }
+
+  /* ---------- Callouts ---------- */
+  .callout{
+    border:1px solid var(--border);
+    border-left:4px solid var(--accent);
+    background:var(--surface);
+    border-radius:10px;
+    padding:16px 18px;
+    margin:20px 0;
+    box-shadow:var(--shadow);
+  }
+  .callout p:last-child{margin-bottom:0;}
+  .callout ul:last-child, .callout ol:last-child{margin-bottom:0;}
+  .callout-label{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-weight:700;
+    font-size:.92rem;
+    margin-bottom:8px;
+    color:var(--ink);
+  }
+  .callout--scenario{border-left-color:var(--accent); background:var(--accent-tint);}
+  .callout--tip{border-left-color:var(--amber); background:var(--amber-tint);}
+  .callout--tip .callout-label{color:var(--amber);}
+  .callout--warning{border-left-color:var(--red); background:var(--red-tint);}
+  .callout--warning .callout-label{color:var(--red);}
+  .callout--summary{border-left-color:var(--accent); background:var(--surface);}
+  .callout--summary .callout-label{color:var(--accent);}
+  .callout--question{border-left-color:var(--ink-soft); background:var(--surface-2);}
+  .callout--practice{border-left-color:var(--green); background:var(--green-tint);}
+  .callout--practice .callout-label{color:var(--green);}
+  .co-icon{font-size:1.02em; margin-right:2px;}
+  .co-icon:empty{display:none;}
+  .callout-label:empty{display:none;}
+  .callout hr{border:none; border-top:1px dashed var(--border); margin:12px 0;}
+
+  /* ---------- Prepare chip ---------- */
+  .prep{
+    font-size:.9rem;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-left:4px solid var(--ink-soft);
+    border-radius:8px;
+    padding:11px 14px;
+    margin:0 0 14px;
+  }
+  .prep b{color:var(--ink);}
+
+  /* ---------- Terminal / prompt ---------- */
+  .terminal{
+    background:var(--term-bg);
+    color:var(--term-ink);
+    border-radius:10px;
+    padding:16px 18px;
+    margin:14px 0;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.84rem;
+    line-height:1.8;
+    overflow-x:auto;
+    white-space:pre-wrap;
+  }
+  .prompt{
+    background:var(--term-bg);
+    color:var(--term-ink);
+    border-radius:8px;
+    padding:10px 14px;
+    margin:10px 0;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.82rem;
+    line-height:1.8;
+    white-space:pre-wrap;
+    overflow-x:auto;
+  }
+  .prompt .note{color:#8892AC; font-family:"Noto Sans KR",sans-serif;}
+  .terminal code, .prompt code{background:none; border:none; padding:0; color:inherit;}
+
+  /* ---------- Tables ---------- */
+  .table-scroll{overflow-x:auto; margin:18px 0; border:1px solid var(--border); border-radius:12px;}
+  table{border-collapse:collapse; width:100%; min-width:480px; font-size:.92rem;}
+  th,td{
+    text-align:left;
+    padding:11px 14px;
+    border-bottom:1px solid var(--border);
+    vertical-align:top;
+  }
+  th{
+    background:var(--surface-2);
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:700;
+    color:var(--ink);
+    white-space:nowrap;
+  }
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:nth-child(even){background:var(--surface);}
+  tbody tr:nth-child(odd){background:transparent;}
+  td strong{color:var(--accent);}
+  .tag-bad{color:var(--red); font-weight:700;}
+  .tag-good{color:var(--green); font-weight:700;}
+
+  /* ---------- Lists with markers ---------- */
+  .steps{padding-left:0; list-style:none; counter-reset:step;}
+  .steps li{counter-increment:step; position:relative; padding-left:36px; margin-bottom:14px;}
+  .steps li::before{
+    content:counter(step);
+    position:absolute; left:0; top:-1px;
+    width:24px; height:24px;
+    border-radius:50%;
+    background:var(--accent);
+    color:var(--accent-ink);
+    font-family:"JetBrains Mono",monospace;
+    font-size:.78rem;
+    font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  /* ---------- Checklist ---------- */
+  .checklist{list-style:none; padding-left:0;}
+  .checklist li{position:relative; padding-left:28px; margin-bottom:.5em;}
+  .checklist li::before{
+    content:"";
+    position:absolute; left:0; top:.5em;
+    width:15px; height:15px;
+    border:1.5px solid var(--border);
+    border-radius:4px;
+    background:var(--surface);
+  }
+
+  /* ---------- Figure ---------- */
+  figure.fig{margin:20px 0; text-align:center;}
+  figure.fig img{max-width:100%; height:auto; border:1px solid var(--border); border-radius:10px; background:var(--surface);}
+  figure.fig figcaption{font-size:.85rem; color:var(--ink-soft); margin-top:8px;}
+
+  /* ---------- Toggle ---------- */
+  details.toggle{
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:var(--surface);
+    padding:12px 16px;
+    margin:18px 0;
+  }
+  details.toggle > summary{
+    cursor:pointer;
+    font-weight:700;
+    color:var(--accent);
+    font-size:.95rem;
+    list-style:none;
+  }
+  details.toggle > summary::-webkit-details-marker{display:none;}
+  details.toggle > summary::before{content:"\25B8 "; font-family:"JetBrains Mono",monospace;}
+  details.toggle[open] > summary::before{content:"\25BE ";}
+  details.toggle[open] > summary{margin-bottom:10px; padding-bottom:8px; border-bottom:1px dashed var(--border);}
+  .toggle-body > :last-child{margin-bottom:0;}
+  .toggle-body .lesson-section{border-bottom:none; padding-bottom:0; margin-bottom:0;}
+
+  /* ---------- FAQ / quiz ---------- */
+  .quiz-item{
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:14px 16px;
+    margin-bottom:12px;
+    background:var(--surface);
+  }
+  .quiz-item .q{font-weight:700; margin-bottom:0;}
+  .quiz-item details{margin-top:8px;}
+  .quiz-item summary{cursor:pointer; color:var(--accent); font-weight:700; font-size:.86rem;}
+  .quiz-item .ans{margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); color:var(--ink-soft); font-size:.9rem;}
+  .quiz-item .ans p{margin-bottom:0;}
+
+  /* ---------- Next lesson ---------- */
+  .next-lesson{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:22px 26px;
+    margin-top:8px;
+    box-shadow:var(--shadow);
+    text-decoration:none;
+    color:inherit;
+  }
+  a.next-lesson:hover{border-color:var(--accent);}
+  a.next-lesson:hover .arrow{transform:translateX(4px);}
+  .next-lesson .label{
+    font-family:"JetBrains Mono",monospace;
+    font-size:.76rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+    display:block;
+  }
+  .next-lesson h3{font-size:1.2rem; font-weight:700; font-family:"Nanum Myeongjo",serif;}
+  .next-lesson .arrow{
+    font-family:"JetBrains Mono",monospace;
+    font-size:1.4rem;
+    color:var(--accent);
+    display:inline-block;
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .next-lesson .arrow{transition:transform .15s ease;}
+  }
+
+  .page-footer{
+    margin-top:60px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    color:var(--ink-soft);
+    font-size:.84rem;
+  }
+
+  @media (prefers-reduced-motion:no-preference){
+    a{transition:background-color .15s ease, color .15s ease;}
+  }
+
+  /* ---------- Practice card (claude/practice-card-template.md) ---------- */
+  .practice-title{display:flex;align-items:center;gap:8px;font-family:"Noto Sans KR",sans-serif;font-weight:700;font-size:1.05rem;color:var(--green);margin:0 0 10px;}
+  .practice-card{border:1px solid var(--border);border-left:4px solid var(--green);background:var(--green-tint);border-radius:12px;padding:18px 20px;margin:28px 0 18px;box-shadow:var(--shadow);}
+  .practice-card > p{margin:0 0 .4em;}
+  .practice-prep{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-top:14px;font-size:.92rem;}
+  .practice-prep .prep-label{font-weight:700;margin-bottom:6px;}
+  .practice-prep ul{list-style:none;padding-left:0;margin:0;}
+  .practice-prep li{margin-bottom:.3em;}
+  .practice-prep .meta{color:var(--ink-soft);}
+  .practice-block > .practice-card:first-child{margin-top:0;}
+  .practice-card .mini-head{margin:16px 0 8px;}
+  .practice-card .prompt{margin-bottom:0;}
+  .callout--question .table-scroll{background:var(--surface);}
+  .callout--question .checklist{margin-bottom:0;}
+  .term-note{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--ink-soft);border-radius:8px;padding:8px 14px;margin:8px 0 16px;font-size:.92rem;}
+  .practice-prep .desc{display:block;color:var(--ink-soft);font-size:.82rem;margin:2px 0 6px;}
+  .practice-card > .term-note{margin-top:12px;}
+  .practice-flow{margin-top:14px;background:var(--surface);border-radius:10px;}
+  .practice-flow table{font-size:.9rem;}
+</style>
+</head>
+<body>
+<div class="page-shell">
+
+  <header class="masthead">
+    <a class="eyebrow" href="index.html" style="text-decoration:none;">← 그린컵 AI 에이전트 과정 · 10차시</a>
+    <h1>회의와 액션아이템</h1>
+    <p class="lede">&ldquo;그래서 출시일 언제로 했죠?&rdquo; — 받아적기만 된 회의록에는 답이 없습니다. <strong>회의 전 준비부터 회의록·액션아이템·다음 회의로 잇기까지</strong> 한 세트로 만듭니다.</p>
+    <div class="meta-row">
+      <span>📍 <b>오늘 배우는 것</b> — 회의 업무의 세 구간(전·중·후), 녹음을 글자로 바꾸는 방법(Claude가 되는 경우와 안 되는 경우)과 상황별 추천, 회의록 3층 구조(결정·액션·보류), 회의록 검수 두 방향, 액션아이템 4요소, 지난 회의와 대조해 흐지부지 잡아내기, 흩어진 안건을 한 장의 회의 계획으로, 회의 유형별 주의점과 올리면 안 되는 회의</span>
+    </div>
+  </header>
+
+  <main>
+<div class="callout callout--scenario"><div class="callout-label">🎯 오늘의 가상 문제상황</div><p>지난주에 회의를 네 번 했습니다. 그런데 이번 주 월요일, 팀장이 묻습니다. <em>"그래서 출시일 언제로 했죠?"</em> 회의록을 뒤져봅니다. 있긴 한데 <strong>받아적기만</strong> 되어 있어요. 누가 무슨 말을 했는지는 적혀 있는데, <strong>뭐가 결정된 건지</strong>가 없습니다. 지난달에 "하자"고 했던 고객 설문은요? 아무도 안 했습니다. 회의에서 분명 얘기가 나왔는데 <strong>담당자를 안 정했거든요.</strong> 오늘은 회의 업무를 통째로 다룹니다. <strong>회의 전 준비 → 회의록 만들기 → 액션아이템 살리기 → 다음 회의로 잇기.</strong> 지금까지 배운 것(지시·맥락·문서·검증)을 한 업무에 전부 붓습니다.</p></div>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">＊</span><h2>오늘, 지금까지 배운 게 전부 쓰입니다</h2></div>
+<p>10차시는 <strong>1과정 전반부의 마무리</strong>이기도 합니다. 새로 배우는 기술은 거의 없어요 — 이미 가진 것을 <strong>한 업무에 다 붓는</strong> 차시입니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>배운 것</strong></th><th><strong>오늘 어디에</strong></th></tr></thead><tbody><tr><td><strong>2차시</strong> 지시 잘하기</td><td>회의록 프롬프트의 6줄 — 형식·제외·빈칸 처리를 다 지정합니다</td></tr><tr><td><strong>3차시</strong> 맥락 얹기</td><td>지난 회의록을 같이 올려야 "흐지부지"가 보입니다</td></tr><tr><td><strong>4·5차시</strong> 보고서·메일</td><td>초안 → 교정 → 톤 조절 3단계를 회의록·공유 메시지에 그대로 씁니다</td></tr><tr><td><strong>7차시</strong> 표 정리</td><td>액션 추적표의 표기 흔들림(완료/done/O)</td></tr><tr><td><strong>8차시</strong> 검증</td><td><strong>오늘의 핵심</strong> — 안 한 말이 결정으로 둔갑하는 것 막기</td></tr></tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 그래서 오늘 잘 안 되는 부분이 있다면, <strong>그 차시로 돌아가면</strong> 됩니다. 예를 들어 회의록이 뭉뚱그려 나온다면 2차시(지시)의 문제예요.</p></div>
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">1</span><h2>회의 업무는 하나가 아니다</h2></div>
+<p>"회의 업무"라고 하면 대개 <strong>회의록 쓰기</strong>만 떠올립니다. 그런데 실제로는 셋입니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>구간</strong></th><th><strong>하는 일</strong></th><th><strong>누가</strong></th></tr></thead><tbody><tr><td><strong>① 회의 전</strong></td><td>안건 모으기, 시간 배분, 사전 브리프, 예상 쟁점</td><td><strong>AI가 잘함</strong> ✅</td></tr><tr><td><strong>② 회의 중</strong></td><td>기록 남기기, 결정 못 박기, 담당·기한 정하기</td><td><strong>사람의 몫</strong> 🙋</td></tr><tr><td><strong>③ 회의 후</strong></td><td>회의록 만들기, 액션 정리, 지난 회의와 대조</td><td><strong>AI가 잘함</strong> ✅</td></tr></tbody></table></div>
+<div class="callout callout--tip"><div class="callout-label">💡 가운데가 사람의 몫인 게 핵심입니다.</div><p>②에서 안 정한 건 ③에서 만들어낼 수 없어요. AI가 아무리 좋아도 <strong>하지 않은 결정을 있게 할 수는 없습니다.</strong></p></div>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> 반대로, 많은 사람이 ①과 ③에 시간을 거의 안 씁니다. 회의는 열심히 하는데 <strong>앞뒤가 비어 있어서</strong> 매번 같은 얘기를 반복하죠. 오늘 AI로 메울 곳이 정확히 거깁니다.</p></div>
+<div class="callout callout--summary"><div class="callout-label">📌 1절 한 줄 요약</div><p>— 회의 업무는 전·중·후 셋. <strong>AI는 앞뒤를 맡고, 가운데는 사람이 지킨다.</strong></p></div>
+</section>
+
+<section class="lesson-section practice-block">
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 A — 전사본 한 토막 맛보기</div>
+  <p><b>새 대화</b>에서 시작합니다.</p>
+<h4 class="mini-head">① 자막 한 토막 붙여넣기</h4>
+<p>1절의 세 구간 중 <strong>회의 후</strong> — 회의가 끝난 기록에서 "뭐가 정해졌나"를 건지는 일을 5분만 먼저 해 봅니다. 맨 위 문제상황처럼 <em>"그래서 뭐로 정했죠?"</em>에 답하려면 바로 이 작업이 필요해요. 아래를 그대로 Claude에 붙여넣으시고 <strong>'결정된 것'만 뽑고</strong> 논의만 하고 안 정해진 건 <strong>'미결정'으로 빼기</strong></p>
+<div class="term-note">📖 <b>전사(轉寫)본</b> : 말한 것을 <strong>글자로 옮겨 적은 것.</strong> 회의 녹음을 텍스트로 바꾼 파일</div>
+<div class="prompt">김팀장: 그러면 초기 마케팅 예산을 2,400만원으로 잡았는데요
+이준호: 오프라인 매장 프로모션은 안 들어가 있어요
+김팀장: 오프라인도 해야 되지 않나 그거 넣으면 얼마나 되는데요
+이준호: 어 대략 400만원 정도 더 봐야 될 것 같은데요 그러면 2,800만원
+김팀장: 2,800이면 좀 많은데
+이준호: 작년은 2,650이었어요
+김팀장: 그럼 작년 수준으로 맞춥시다 2,650으로 하고 오프라인은 그 안에서 조정하는 걸로
+박서연: 어 그러면 온라인이 좀 줄어드는 건데 괜찮을까요
+김팀장: 일단 그렇게 가고 나중에 보죠</div>
+</div>
+<div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 숫자는 최종값, 미결정은 따로 빠졌나?</div><div class="table-scroll"><table><thead><tr><th><strong>확인</strong></th><th><strong>왜 중요한가</strong></th></tr></thead><tbody><tr><td>예산이 <strong>2,650만원</strong>으로 나왔나?</td><td>대화 중에 숫자가 <strong>2,400 → 2,800 → 2,650</strong> 으로 두 번 바뀝니다. 앞의 숫자를 집으면 틀립니다</td></tr><tr><td><em>"온라인이 줄어드는 건 괜찮은가"</em> 가 <strong>미결정</strong>으로 빠졌나?</td><td>질문이 나왔는데 <em>"나중에 보죠"</em> 로 끝났습니다. <strong>결정된 게 아닙니다</strong></td></tr></tbody></table></div><p style="margin-top:12px;">📖 <strong>미결정 = 보류.</strong> 여기서 뽑은 '미결정'이 3절에서 배울 <strong>'보류'</strong>입니다 — 결정을 미룬 것, 즉 <em>"안 정했다"</em>를 기록으로 남긴 상태예요. 회의가 끝난 뒤 만드는 <strong>회의록의 세 번째 층</strong>(결정 / 액션 / <strong>보류</strong>)으로 들어가고, 오늘 계속 나옵니다.</p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 방금 한 게 오늘의 핵심입니다. 회의 기록에서 값진 건 <strong>"누가 무슨 말을 했나"가 아니라 "뭐가 정해졌고 뭐가 안 정해졌나"</strong> 예요. 사람이 47분치를 읽으며 이걸 가려내려면 오래 걸리고, 놓칩니다.</p></div>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> 그리고 <strong>두 번째가 더 중요합니다.</strong> 안 정해진 걸 안 정해졌다고 남기는 것 — 이게 다음 회의를 짧게 만듭니다.</p></div>
+
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">2</span><h2>회의 중 — 기록을 어떻게 남기나</h2></div>
+<h3 class="sub-head">2-1. ⚠️ 먼저 알아야 할 사실: Claude는 소리를 직접 듣지 못합니다</h3>
+<p>여기서 많이 막힙니다. Claude는 녹음을 <strong>직접 듣지는 못합니다.</strong> 다만 <strong>코드 실행 기능이 켜진 유료 요금제</strong>에서는 녹음 파일을 올리면, Claude가 받아쓰기 프로그램(Whisper)을 스스로 내려받아 돌려서 <strong>글자로 바꾼 뒤</strong> 정리해 줍니다. 2025년 9월에 Claude가 자기 작업 공간에서 프로그램을 실행할 수 있게 되면서 생긴 활용법이에요.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>올리는 파일</strong></th><th><strong>Claude가 하는 일</strong></th></tr></thead><tbody><tr><td>PDF, DOCX, CSV, TXT, HTML, XLSX 등 <strong>문서</strong><br>JPEG, PNG, GIF, WebP 등 <strong>이미지</strong></td><td>바로 읽습니다</td></tr><tr><td><strong>음성 파일</strong> (mp3·m4a 등)</td><td><strong>코드 실행이 켜져 있으면</strong> 받아쓰기 프로그램을 돌려 글자로 바꾼 뒤 읽습니다.<br>무료 요금제이거나, 기능이 꺼져 있거나, 회사 관리자가 인터넷 접근을 막아두었으면 <strong>안 됩니다</strong></td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ Claude에게 받아쓰기를 맡기면 이런 게 따라옵니다.</div><ul><li><strong>느립니다</strong> — 프로그램을 내려받고 돌리는 시간이 걸립니다. 녹음이 길수록 더 오래 걸려요</li><li><strong>화자 구분이 없습니다</strong> — 누가 한 말인지 표시되지 않습니다</li><li><strong>안 들린 구간이 생깁니다</strong> — 결과에 <code>[불명확]</code>, <code>(?)</code> 표시가 섞여 나옵니다. <strong>숫자·이름은 반드시 원본으로 확인</strong>하세요</li></ul></div>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> 그래서 순서는 이렇습니다.<br><strong>녹음 → 전사본 만들기 (회의 도구 · 받아쓰기 앱 · 또는 Claude) → 그 전사본으로 회의록</strong><br>가운데 칸은 없어지지 않습니다. Claude가 대신 해 줘도 속에서는 글자부터 만듭니다. 그래서 <strong>글자로 바뀐 결과를 한 번 훑어보는 습관</strong>이 필요해요.</p></div>
+<p><strong>전사본 만드는 방법 — 내 상황에 맞는 걸 고르세요</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>내 상황</strong></th><th><strong>추천</strong></th><th><strong>이유 · 주의</strong></th></tr></thead><tbody><tr><td><strong>화상회의</strong><br>(Zoom·Teams·Meet)</td><td><strong>그 회의 도구의 기록·전사 기능</strong> ⭐<br>Zoom: 기록(Record) → 클라우드 기록<br>Teams: 기록 및 전사 시작<br>Meet: 기록 또는 자막 기록</td><td>따로 설치할 게 없고 <strong>화자 이름이 붙어서</strong> 나옵니다. 1순위예요</td></tr><tr><td><strong>회의실 대면 회의</strong></td><td><strong>클로바노트</strong> (휴대폰 앱으로 녹음)</td><td>한국어에 강하고 <strong>화자 구분</strong>이 됩니다. 무료로 월 300분(개인정보 활용 동의 시 600분)</td></tr><tr><td><strong>녹음 파일만 이미 있음</strong></td><td>클로바노트에 파일 올리기 → 안 되면 <strong>Claude</strong></td><td>Claude는 위 조건(코드 실행 · 유료)일 때만. 느리고 화자 구분이 없어서 <strong>보조 수단</strong>입니다</td></tr><tr><td><strong>녹음 자체를 못 하는 회의</strong></td><td><strong>휴대폰 키보드의 마이크 버튼</strong>(음성 입력) 또는 <strong>구글 문서 → 도구 → 음성 입력</strong><br>+ 2-2절 메모 틀</td><td>한국어가 잘 됩니다. 화자 구분은 안 되지만, 결정·숫자·할 일만 남기면 충분합니다.<br>윈도우 <code>Win</code>+<code>H</code>는 <strong>윈도우 버전·설정에 따라 한국어가 안 될 수 있습니다</strong></td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 회사 정책을 먼저 확인하세요.</div><p>회의 녹음·전사는 참석자 동의와 사내 규정이 걸립니다. 클로바노트 같은 <strong>외부 서비스에 회의 녹음을 올리는 건</strong> 특히요. 이건 기술 문제가 아니라 <strong>규정 문제</strong>입니다.</p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>ChatGPT에도 녹음 기능(Record)이 있습니다.</strong> 다만 <strong>Plus 이상 요금제 + 맥 데스크톱 앱</strong>에서만 되고, 윈도우·휴대폰에서는 안 됩니다. 맥과 ChatGPT 유료를 이미 쓰고 있다면 선택지가 하나 더 있는 셈이에요.</p></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 위 기능들은 요금제·조직 설정에 따라 잠겨 있을 수 있습니다.</div><p>회의 도구의 <strong>기록·전사 버튼</strong>, Claude의 <strong>코드 실행 기능</strong> 모두 그렇습니다. 특히 회사 계정은 관리자가 꺼두거나 인터넷 접근을 막아둔 경우가 많아요. 버튼이 안 보이거나 Claude가 녹음 파일을 처리하지 못하면 <strong>내 문제가 아니라 권한 문제</strong>입니다 — IT 담당자에게 물어보세요.</p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>회의 도구에서 버튼을 못 찾겠으면</strong>: Claude에게 <strong>사용법을 물어보세요.</strong> <em>"Zoom 회의에서 전사본을 받으려면 어디를 눌러야 해? 회의가 끝난 뒤에도 받을 수 있어?"</em> — Claude가 Zoom에 들어가는 게 아니라, 메뉴 위치를 <strong>설명해 주는</strong> 겁니다. 화면 구성은 업데이트마다 바뀌니 <strong>웹 검색을 켜고</strong> 물어보면 최신 화면 기준으로 답합니다.</p></div>
+<h3 class="sub-head">2-2. 전사가 없다면 — 메모라도 이렇게</h3>
+<p>녹음을 못 하는 회의도 많습니다. 그럴 땐 <strong>완벽한 받아적기를 포기하고 세 가지만</strong> 적으세요.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>적을 것</strong></th><th><strong>예</strong></th></tr></thead><tbody><tr><td><strong>결정된 순간</strong></td><td>"출시일 10월 5일로 확정 (14:32)"</td></tr><tr><td><strong>숫자가 바뀐 순간</strong></td><td>"예산 2,400 → 2,800 → 2,650"</td></tr><tr><td><strong>누가 뭘 하기로 했나</strong></td><td>"경쟁사 확인 — 준호"</td></tr></tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 이 셋만 있으면 AI가 회의록을 만들 수 있습니다. 반대로 <strong>줄글로 열심히 받아적은 메모</strong>는 오히려 정리가 어려워요 — 결정과 잡담이 같은 무게로 섞여 있으니까요.</p></div>
+<p><strong>그대로 복사해 쓰는 메모 틀</strong></p>
+<p>회의 시작할 때 메모장에 이걸 붙여놓고, 네 칸만 채우세요. 문장으로 안 써도 됩니다.</p>
+<div class="prompt">[회의명 / 날짜]
+참석:
+
+■ 결정된 것
+-
+
+■ 숫자·날짜가 바뀐 것
+-  (항목: 처음 → 바뀐 값 → 최종)
+
+■ 하기로 한 것
+-  (무엇 / 누가 / 언제까지)
+
+■ 답이 안 나온 것
+-  (질문은 나왔는데 결론이 없던 것)</div>
+<div class="callout callout--tip"><div class="callout-label">💡 네 번째 칸이 이 틀의 핵심입니다.</div><p>회의 중엔 "답이 안 나왔다"는 걸 적을 생각을 잘 안 해요. 그런데 그게 <strong>다음 회의 안건</strong>이 됩니다.</p></div>
+<div class="callout callout--summary"><p><span class="co-icon">📌</span> 이 메모를 그대로 10-2절 프롬프트에 넣으면 회의록이 나옵니다. <strong>전사본이 아니어도 됩니다.</strong></p></div>
+<h3 class="sub-head">2-3. 회의 중에 못 박아야 하는 한 가지</h3>
+<div class="callout callout--summary"><div class="callout-label"> "그럼 이건 누가, 언제까지 하나요?"</div></div>
+<p>이 한 문장을 회의 중에 물어보는 사람이 되세요. 오늘 실습 전사본을 보면, <em>"그거 준호님이 좀 알아봐 주세요" / "네"</em> 로 끝난 액션이 있습니다. <strong>기한이 없죠.</strong> 그리고 그런 건 대부분 안 됩니다.</p>
+<div class="callout callout--summary"><div class="callout-label">📌 2절 한 줄 요약</div><p>— AI가 다루는 건 결국 텍스트 — 녹음은 먼저 글자로 바뀐다. 그리고 <strong>회의 중에 안 정한 것은 나중에 만들어낼 수 없다.</strong></p></div>
+</section>
+
+<section class="lesson-section practice-block">
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 B — 47분 회의를 한 세트로</div>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>B: 회의 전사본</b>(<code>meeting_transcript_raw.docx</code>) <span class="meta">· Word · 47분 회의 1건</span><span class="desc">화상회의 자동 자막을 <strong>편집 없이 내려받은 것.</strong> 문장부호 없음, 화자 표기 제각각, 잡담 포함</span></li>
+      <li><b>F: 지난 회의록</b>(<code>previous_minutes.docx</code>) <span class="meta">· Word · 회의록 1건(액션아이템 5건)</span><span class="desc">일주일 전 회의록. 액션아이템 5건 중 <strong>2건이 미완료</strong></span></li>
+      <li><b>G: 안건 요청</b>(<code>agenda_inputs.docx</code>) <span class="meta">· Word · 요청 4건</span><span class="desc">메일·메신저로 들어온 안건 요청 4건. 형식이 전부 다름</span></li>
+      <li><b>H: 액션아이템 추적표</b>(<code>action_tracker.xlsx</code>) <span class="meta">· Excel · 표 1개</span><span class="desc">손으로 관리해온 추적표. <strong>상태 표기가 흔들림</strong> (완료/done/O/진행중)</span></li>
+    </ul>
+  </div>
+<div class="term-note">📖 <b>액션아이템</b> : 회의에서 <strong>"하기로 한 일".</strong> 담당자와 기한이 붙어야 진짜 액션아이템</div>
+<div class="table-scroll practice-flow"><table><thead><tr><th>실습</th><th>하는 일</th><th>대화</th></tr></thead><tbody><tr><td><b>B 전사본 진단</b></td><td>전사본이 어떤 상태인지 확인</td><td><b>새 대화</b> 시작</td></tr><tr><td><b>C 회의록 만들기</b></td><td>결정 / 액션 / 보류로 정리</td><td>이어서</td></tr><tr><td><b>D 회의록 검수</b></td><td>전사본과 맞는지 확인</td><td>이어서</td></tr><tr><td><b>E 4요소 점검</b></td><td>액션아이템 다듬기</td><td>이어서</td></tr><tr><td><b>F 흐지부지 탐지 ⭐</b></td><td>지난 회의록과 대조 + 공유 메시지</td><td>이어서</td></tr><tr><td><b>G 다음 회의 계획</b></td><td>다음 회의 안건 정리</td><td>이어서</td></tr><tr><td><b>H 추적표 정리</b></td><td>추적표 표기 통일</td><td><b>새 대화</b></td></tr></tbody></table></div>
+</div>
+<div class="callout callout--summary"><p><span class="co-icon">📌</span> 오늘 실습은 <strong>팀 내부 의사결정 회의</strong> 하나로 진행합니다. 여러분의 회의가 주간 공유나 고객 미팅이라면 챙길 게 조금 달라요 — <strong>13절</strong>에 유형별로 정리해 두었습니다. 실습을 먼저 하고, 13절에서 내 유형을 찾으면 됩니다.</p></div>
+<h3 class="sub-head">PART 1 — 회의록 만들기</h3>
+<div class="callout callout--scenario"><p><span class="co-icon">🎯</span> <strong>목표</strong>: 지저분한 전사본을 사람이 읽고 움직일 수 있는 문서로.</p></div>
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 B — 전사본 진단</div>
+  <p>순서는 <b>① 전사본 올리기</b> → <b>② 상태 진단</b> → <b>③ 정답과 맞춰 보기</b> — 회의록은 아직 만들지 않습니다.<br><b>새 대화</b>에서 시작합니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>회의 전사본</b>(<code>meeting_transcript_raw.docx</code>) <span class="meta">· Word · 47분 회의 1건</span></li>
+    </ul>
+  </div>
+</div>
+<div class="callout callout--tip"><div class="callout-label">💡 오늘 실습 파일은 회의 도구에서 내려받은 '자동 자막 원본' 그대로입니다.</div><p>깔끔하지 않아요 — 문장부호가 없고, 화자 이름이 왔다갔다 하고, 잡담이 섞여 있습니다. <strong>실제로 손에 들어오는 게 딱 이 상태입니다.</strong></p></div>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 회의 전사본의 상태를 진단해줘.</em> <em>① 참석자가 몇 명이고, 같은 사람이 여러 이름으로 적힌 경우가 있는지</em> <em>② 회의 중에 숫자나 날짜가 바뀐 항목이 있는지, 어떻게 바뀌었는지</em> <em>③ 결정된 것처럼 보이지만 사실 확정이 아닌 대목이 있는지</em> <em>아직 회의록으로 정리하진 마."</em></p></div>
+<div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 네 가지가 진단에 나왔나?</div><ul class="checklist"><li><strong>김민수(팀장)</strong> 가 <code>김팀장 / 김 팀장 / 화자2</code>(일부) 로 흩어져 있음</li><li><strong>예산: 2,400 → 2,800 → 2,650</strong> (최종 2,650만원)</li><li><strong>출시일</strong>: 9/15 → "10월 초" → <strong>10월 5일 확정</strong></li><li>경쟁사 출시 시점은 이준호가 <em>"확실한 건 아니고요"</em> 라고 말함 — <strong>확정 아님</strong></li></ul></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 마지막 항목이 8차시에서 배운 <strong>단서 유지</strong>입니다. <em>"경쟁사 10월 둘째 주"</em> 만 옮겨 적으면 확인 안 된 정보가 사실이 됩니다.</p></div>
+
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">3</span><h2>회의 후 — 회의록의 3층 구조</h2></div>
+<h3 class="sub-head">3-1. 왜 대부분의 회의록이 쓸모없나</h3>
+<p>받아적기만 되어 있어서입니다. 발언 순서대로 적혀 있으면, 읽는 사람이 <strong>결정과 잡담을 스스로 가려내야</strong> 합니다. 아무도 안 합니다.</p>
+<p>좋은 회의록은 <strong>세 층으로 나뉘어</strong> 있습니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>층</strong></th><th><strong>무엇</strong></th><th><strong>읽는 사람이 하는 일</strong></th></tr></thead><tbody><tr><td><strong>① 결정된 것</strong></td><td>확정. 더 논의 안 함</td><td>그대로 따른다</td></tr><tr><td><strong>② 해야 할 것 (액션)</strong></td><td>누가·언제까지</td><td>내 것을 찾아 한다</td></tr><tr><td><strong>③ 아직 안 정한 것 (보류)</strong></td><td>다음에 다시 볼 것</td><td>다음 회의 안건이 된다</td></tr></tbody></table></div>
+<div class="callout callout--tip"><div class="callout-label">💡 ③이 있어야 회의가 짧아집니다.</div><p>보류를 안 적으면 다음 회의에서 <em>"그거 어떻게 하기로 했죠?"</em> 부터 다시 시작해요. 보류 목록이 그대로 다음 안건이 되면, 회의가 이어집니다.</p></div>
+<h3 class="sub-head">실제로 이렇게 생겼습니다</h3>
+<p>말로만 하면 감이 안 오죠. 오늘 실습 전사본을 정리하면 <strong>이런 모양</strong>이 나옵니다. 실습 C의 목표 지점이에요.</p>
+<div class="callout callout--summary"><div class="callout-label"> 2026-08-24 하반기 신제품 킥오프</div><p>참석: 김민수(팀장), 박서연, 이준호, 최유진 / 불참: 정하늘<br><strong>① 결정된 것</strong></p><ul><li>출시일 <strong>10월 5일(월)</strong> — 부자재 2주 지연으로 9/15에서 변경</li><li>초기 마케팅 예산 <strong>2,650만원</strong> (2,400 → 2,800 → <strong>2,650</strong>, 작년 수준으로 맞춤)</li><li>오프라인 프로모션은 위 예산 <strong>안에서</strong> 조정</li></ul><p><strong>② 해야 할 것</strong></p></div>
+<div class="table-scroll"><table><thead><tr><th><strong>무엇을</strong></th><th><strong>누가</strong></th><th><strong>언제까지</strong></th><th><strong>끝난 기준</strong></th></tr></thead><tbody><tr><td>경쟁사 하반기 출시 시점 확인</td><td>이준호</td><td><strong>미정</strong></td><td><strong>미정</strong></td></tr><tr><td>패키지 시안 3종 검토</td><td>박서연</td><td>이번 주 (<strong>날짜 미정</strong>)</td><td><strong>미정</strong></td></tr><tr><td>쿠팡 수수료·예상 물량 정리</td><td>최유진</td><td>다음 주 회의 전</td><td>회의에서 공유</td></tr></tbody></table></div>
+<div class="callout callout--summary"><div class="callout-label"> ③ 아직 안 정한 것 (보류)</div><ul><li><strong>쿠팡 입점 여부</strong> — 수수료와 물량 정보가 부족해 다음 주 재논의</li><li><strong>온라인 예산 축소 영향</strong> — 박서연이 우려를 제기했으나 답이 나오지 않음</li><li><strong>고객 설문</strong> — 지난 회의 액션인데 진행되지 않음. 담당·기한 재확인 필요</li></ul></div>
+<p><strong>여기서 볼 것 셋:</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>지점</strong></th><th><strong>왜 이렇게 썼나</strong></th></tr></thead><tbody><tr><td>예산에 <strong>바뀐 과정</strong>이 남아 있다</td><td>나중에 <em>"왜 2,650이죠?"</em> 에 바로 답할 수 있습니다</td></tr><tr><td>액션 표에 <strong>"미정"이 그대로</strong> 있다</td><td>채우면 거짓이 됩니다. 비어 있는 게 <strong>물어볼 목록</strong>입니다</td></tr><tr><td>보류에 <strong>"답이 나오지 않음"</strong> 이 적혀 있다</td><td>질문이 있었다는 사실 자체가 기록입니다</td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ "미정"이 세 칸이나 보이는 게 정상입니다.</div><p>회의록이 지저분해 보인다고요? 아니에요 — <strong>회의가 그렇게 끝난 것</strong>이고, 회의록은 그걸 정직하게 비춘 겁니다. 예쁘게 채운 회의록이 오히려 위험합니다.</p></div>
+<h3 class="sub-head">3-2. 그대로 쓰는 변환 프롬프트</h3>
+<div class="prompt">첨부한 회의 전사본을 회의록으로 정리해줘.
+
+1) 먼저 참석자를 정리해줘. 자동 자막이라 같은 사람이 여러 이름으로
+   적혀 있을 수 있어. 같은 사람으로 보이는 표기는 묶고, 확신이 없으면
+   "확인 필요"로 표시해.
+2) 본문을 세 덩어리로 나눠줘.
+   - 결정된 것 (확정, 더 논의하지 않음)
+   - 해야 할 것 (액션아이템)
+   - 아직 안 정한 것 (보류 · 다음 회의 안건 후보)
+3) 회의 중에 숫자나 날짜가 바뀐 항목이 있으면, 바뀐 과정을 남기고
+   최종값을 굵게 표시해줘.
+4) 액션아이템은 표로 만들어줘.
+   무엇을 | 누가 | 언제까지 | 무엇을 보면 끝났다고 할지
+   기록에 없는 칸은 지어내지 말고 "미정"이라고 적어줘.
+5) 잡담·인사·자리 비움은 빼줘.</div>
+<p>각 줄이 왜 있는지:</p>
+<div class="table-scroll"><table><thead><tr><th><strong>줄</strong></th><th><strong>막으려는 사고</strong></th></tr></thead><tbody><tr><td>1) 화자 묶기</td><td>자동 자막은 같은 사람을 "김팀장 / 김 팀장 / 화자2 / A"로 적습니다</td></tr><tr><td>3) 바뀐 값 추적</td><td><strong>앞의 숫자를 집는 실수.</strong> 회의 중 값은 자주 바뀝니다</td></tr><tr><td>4) "미정"이라 적기</td><td>담당자·기한을 <strong>AI가 그럴듯하게 채우는 것</strong>을 막습니다 (8차시의 그 문제)</td></tr><tr><td>5) 잡담 제거</td><td>안 하면 회의록에 점심 메뉴가 들어갑니다</td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 4번 줄이 오늘 가장 중요한 한 줄입니다.</div><p>담당자가 안 정해진 액션을 AI가 <em>"담당: 이준호"</em> 라고 채워버리면, 그건 <strong>회의에서 나온 적 없는 사실</strong>입니다. 그리고 아무도 안 지킵니다. 8차시에서 배운 <strong>"빈칸을 그럴듯하게 채우는"</strong> 환각이 회의록에서 나타나는 모습이에요.</p></div>
+<div class="callout callout--summary"><div class="callout-label">📌 3절 한 줄 요약</div><p>— 회의록은 <strong>결정 / 액션 / 보류</strong> 세 층. 빈칸은 채우지 말고 <strong>"미정"</strong> 으로 남긴다.</p></div>
+</section>
+
+<section class="lesson-section practice-block">
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 C — 회의록 만들기</div>
+  <p>순서는 <b>① 변환 프롬프트 붙여넣기</b> → <b>② 결과 확인표로 점검</b>.<br>실습 B와 <b>같은 대화</b>에서 이어갑니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>실습 B의 전사본</b> <span class="meta">· 같은 대화에 있음</span></li>
+    </ul>
+  </div>
+</div>
+<p>아래를 그대로 붙여넣으세요. (10-2절과 같은 것입니다 — 여기 다시 둡니다)</p>
+<div class="prompt">첨부한 회의 전사본을 회의록으로 정리해줘.
+
+1) 참석자 정리 — 같은 사람이 여러 표기로 나오면 묶고,
+   확신이 없으면 "확인 필요"로 표시
+2) 본문을 세 덩어리로 — 결정된 것 / 해야 할 것 / 아직 안 정한 것
+3) 회의 중 숫자·날짜가 바뀐 항목은 바뀐 과정을 남기고 최종값을 굵게
+4) 액션아이템 표: 무엇을 | 누가 | 언제까지 | 무엇을 보면 끝났다고 할지
+   기록에 없는 칸은 지어내지 말고 "미정"
+5) 잡담·인사·자리 비움은 제외
+6) 제안·의견과 확정된 결정을 구분. 확정 근거가 약하면 "논의됨"으로 표시</div>
+<div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 세 덩어리·최종값·"미정"이 맞게 나왔나?</div><div class="table-scroll"><table><thead><tr><th><strong>확인</strong></th><th><strong>기준</strong></th></tr></thead><tbody><tr><td>세 덩어리로 나뉘었나</td><td>결정 / 액션 / 보류</td></tr><tr><td><strong>보류</strong>에 쿠팡 입점이 들어갔나</td><td><em>"다음 주에 다시 보죠"</em> — 결정 아님</td></tr><tr><td><strong>보류</strong>에 온라인 예산 축소 우려가 들어갔나</td><td><em>"일단 그렇게 가고 나중에 보죠"</em></td></tr><tr><td>예산이 <strong>2,650만원</strong>인가</td><td>앞 숫자를 집으면 오답</td></tr><tr><td>담당자 없는 액션이 <strong>"미정"</strong> 인가</td><td>지어냈으면 실패</td></tr><tr><td>점심 메뉴 얘기가 빠졌나</td><td>마지막 대목의 잡담</td></tr></tbody></table></div></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ "미정"이 하나도 없다면 의심하세요.</div><p>전사본에는 담당자나 기한이 안 정해진 액션이 분명히 있습니다. 전부 채워져 나왔다면 AI가 지어낸 겁니다.</p></div>
+
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">4</span><h2>회의록 검수 — 두 방향으로</h2></div>
+<h3 class="sub-head">무엇을 보나</h3>
+<p>8차시에서 배운 검증이 여기서도 그대로 쓰입니다. 방향이 둘이에요.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>방향</strong></th><th><strong>무엇을 보나</strong></th><th><strong>시킬 말</strong></th></tr></thead><tbody><tr><td><strong>① 들어간 게 맞나</strong></td><td>회의록의 문장이 <strong>실제로 나온 말인가</strong></td><td><em>"회의록의 각 항목이 전사본 어디에 근거하는지 표시해줘. 근거를 못 찾는 항목은 따로 빼줘"</em></td></tr><tr><td><strong>② 빠진 게 없나</strong></td><td>중요한 내용이 <strong>조용히 사라지지 않았나</strong></td><td><em>"전사본에는 있는데 회의록에 안 들어간 내용 중, 나중에 문제가 될 만한 걸 알려줘"</em></td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 회의록에서 특히 위험한 건 ①입니다.</div><p><em>"~하기로 했다"</em> 라고 적힌 문장이 사실은 <strong>누군가 지나가듯 제안만 한 것</strong>일 때가 있어요. 회의록에 올라가는 순간 그건 <strong>결정이 되어버립니다.</strong> 아무도 동의한 적 없는데요.</p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 8차시의 <strong>"단서를 떼는 환각"</strong> 과 정확히 같은 구조입니다. 원문에서 <em>"~하는 게 어떨까요"</em> 였던 게 회의록에서 <em>"~하기로 함"</em> 이 되죠. 그래서 이 한 줄을 붙입니다:<br><em>"제안·의견과 확정된 결정을 구분해줘. 확정으로 볼 근거가 약하면 '논의됨'으로 표시해."</em></p></div>
+<div class="callout callout--summary"><div class="callout-label">📌 4절 한 줄 요약</div><p>— 회의록 검수는 <strong>없는 결정이 생겼나 / 있는 내용이 사라졌나</strong> 두 방향.</p></div>
+</section>
+
+<section class="lesson-section practice-block">
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 D — 회의록 검수</div>
+  <p>순서는 <b>① 없는 결정이 생겼나</b> → <b>② 있는 내용이 사라졌나</b>.<br>실습 C와 <b>같은 대화</b>에서 이어갑니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>실습 C의 회의록</b> <span class="meta">· 같은 대화에 있음</span></li>
+      <li><b>실습 B의 전사본</b> <span class="meta">· 같은 대화에 있음</span></li>
+    </ul>
+  </div>
+</div>
+<p>4절의 두 방향을 순서대로.</p>
+<p><strong>① 없는 결정이 생겼나</strong></p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"회의록의 '결정된 것' 항목 각각이 전사본 어느 대목에 근거하는지 표시해줘. 근거가 약하거나 제안 수준인 항목은 따로 빼줘."</em></p></div>
+<p><strong>② 있는 내용이 사라졌나</strong></p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"전사본에는 있는데 회의록에 안 들어간 내용 중, 나중에 문제가 될 만한 걸 알려줘."</em></p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> ②에서 <strong>"온라인 예산이 줄어드는 것에 대한 우려"</strong> 가 나오면 잘 된 겁니다. 회의록에서 빠지기 딱 좋은 대목이거든요 — 아무도 답을 안 했으니까요.</p></div>
+
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">5</span><h2>액션아이템이 죽는 이유</h2></div>
+<p>회의에서 "하자"고 한 일의 상당수가 안 됩니다. 이유는 대체로 넷 중 하나예요.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>빠진 것</strong></th><th><strong>증상</strong></th><th><strong>고치는 법</strong></th></tr></thead><tbody><tr><td><strong>무엇을</strong> 이 흐릿함</td><td>"고객 설문 좀 봅시다"</td><td>산출물을 적는다 — "설문 문항 초안 1장"</td></tr><tr><td><strong>누가</strong> 가 없음</td><td>"그거 확인해봐야겠네요"</td><td>이름을 적는다. 팀 이름은 담당자가 아니다</td></tr><tr><td><strong>언제까지</strong> 가 없음</td><td>"빠른 시일 내에"</td><td>날짜를 적는다. "이번 주"도 날짜가 아니다</td></tr><tr><td><strong>끝난 기준</strong>이 없음</td><td>"검토하기"</td><td>무엇을 보면 끝인지 — "슬랙에 결과 공유"</td></tr></tbody></table></div>
+<div class="callout callout--tip"><div class="callout-label">💡 네 번째가 잘 안 챙겨집니다.</div><p>"검토하기"는 영원히 끝나지 않아요. <strong>"세 시안 중 하나를 골라 팀 채널에 공유"</strong> 는 끝납니다.</p></div>
+<p><strong>AI에게 점검시키기</strong></p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 액션아이템 목록에서 무엇을·누가·언제까지·끝난 기준 중 빠진 게 있는 항목을 찾아 표로 알려줘. 그리고 각 항목에 대해 무엇을 물어봐야 채울 수 있는지 질문 형태로 제안해줘."</em></p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 마지막 문장이 실전용입니다. <em>"최유진님, 설문 설계는 언제까지 가능하실까요?"</em> 같은 <strong>보낼 수 있는 질문 목록</strong>이 나옵니다.</p></div>
+<div class="callout callout--summary"><div class="callout-label">📌 5절 한 줄 요약</div><p>— 액션아이템 4요소: <strong>무엇을 · 누가 · 언제까지 · 무엇을 보면 끝인지.</strong> 마지막이 제일 자주 빠진다.</p></div>
+</section>
+
+<section class="lesson-section practice-block">
+<h3 class="sub-head">PART 2 — 액션아이템 살리기</h3>
+<div class="callout callout--scenario"><p><span class="co-icon">🎯</span> <strong>목표</strong>: "하자"로 끝난 말을 <strong>실제로 되는 일</strong>로 바꾸기.</p></div>
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 E — 4요소 점검</div>
+  <p>순서는 <b>① 4요소로 점검</b> → <b>② 물어볼 질문 만들기</b> → <b>③ 끝난 기준이 분명한 문장으로 고쳐 쓰기</b>.<br>실습 D와 <b>같은 대화</b>에서 이어갑니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>실습 C의 액션아이템 표</b> <span class="meta">· 같은 대화에 있음</span></li>
+    </ul>
+  </div>
+</div>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 액션아이템들을 무엇을 · 누가 · 언제까지 · 무엇을 보면 끝났다고 할지 네 가지 기준으로 점검해줘. 빠진 칸이 있는 항목을 표로 정리하고, 각 항목마다 누구에게 무엇을 물어봐야 채울 수 있는지 질문 문장으로 제안해줘."</em></p></div>
+<div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 빠진 칸이 있는 액션 셋이 걸렸나?</div><div class="table-scroll"><table><thead><tr><th><strong>액션</strong></th><th><strong>뭐가 빠졌나</strong></th></tr></thead><tbody><tr><td>경쟁사 출시일 확인 (이준호)</td><td><strong>기한 없음</strong> — <em>"좀 알아봐 주세요" / "네"</em> 로 끝남</td></tr><tr><td>패키지 시안 검토 (박서연)</td><td><strong>기한이 "이번 주"</strong> — 날짜가 아님. 끝난 기준도 없음</td></tr><tr><td>고객 설문 설계</td><td>회의 중 <strong>담당자 재확인 안 됨</strong></td></tr></tbody></table></div></div>
+<p>이어서 고쳐 쓰기:</p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"위 액션아이템들을 끝난 기준이 분명한 문장으로 다시 써줘. 예를 들어 '검토하기'가 아니라 '세 시안 중 하나를 골라 팀 채널에 공유'처럼."</em></p></div>
+
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">6</span><h2>검수가 끝났으면 — 공유하고 남기기</h2></div>
+<p>회의록은 <strong>만드는 게 절반, 닿게 하는 게 절반</strong>입니다. 잘 만들어놓고 내 폴더에만 있으면 아무 일도 안 일어나요.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>항목</strong></th><th><strong>이렇게</strong></th></tr></thead><tbody><tr><td><strong>언제</strong></td><td><strong>회의 당일.</strong> 하루 지나면 참석자 기억이 흐려져 이의 제기가 안 됩니다</td></tr><tr><td><strong>어디에</strong></td><td><strong>팀이 이미 보는 곳</strong> (팀 채널·공용 문서함). 새 위키를 만들면 아무도 안 봅니다</td></tr><tr><td><strong>어떻게</strong></td><td>첨부파일보다 <strong>본문에 붙여넣기.</strong> 첨부는 잘 안 엽니다</td></tr><tr><td><strong>누구에게</strong></td><td>참석자 + <strong>불참자.</strong> 불참자에게 안 가면 다음 회의에서 같은 얘기를 또 합니다</td></tr><tr><td><strong>액션은</strong></td><td>담당자 <strong>이름을 멘션.</strong> 표 안에만 있으면 자기 것인 줄 모릅니다</td></tr></tbody></table></div>
+<p><strong>이의 제기 창구를 열어두세요</strong></p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 회의록에서 사실과 다른 부분이 있으면 내일 오전까지 알려주세요. 이후에는 이 내용으로 진행합니다."</em></p></div>
+<p>이 한 줄이 나중의 <em>"저는 그런 말 한 적 없는데요"</em> 를 막습니다. 그리고 기한을 주는 게 핵심이에요 — 안 주면 영원히 확정이 안 됩니다.</p>
+<p><strong>한 곳에 쌓아야 다음 대조가 됩니다</strong></p>
+<p>7절에서 지난 회의록과 대조할 텐데, 그러려면 <strong>회의록이 한 곳에 같은 이름 규칙으로</strong> 쌓여 있어야 합니다.</p>
+<div class="prompt">회의록_2026-08-24_신제품킥오프.md
+회의록_2026-08-31_주간.md</div>
+<div class="callout callout--tip"><div class="callout-label">💡 날짜를 앞에 두는 게 핵심입니다.</div><p>이름순으로 정렬하면 시간순이 되거든요. 3·4차시에서 배운 '자산으로 남기기'가 회의에 적용된 모습이에요.</p></div>
+<p><strong>공유 메시지도 시키면 됩니다</strong></p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 회의록을 팀 채널에 올릴 메시지로 만들어줘. 맨 위에 결정된 것 3줄, 그다음 각자 할 일을 이름과 함께, 마지막에 이의 제기 안내 한 줄. 전체 10줄 안쪽으로."</em></p></div>
+<div class="callout callout--tip"><div class="callout-label">💡 결정 3줄을 맨 위에</div><p>두는 게 요령입니다. 채널에서 사람들이 읽는 건 대개 첫 세 줄이에요.<br>🔌 <strong>5차시에서 캘린더 커넥터를 붙여두었다면</strong> — 여기서 한 번 더 나갈 수 있습니다: <em>"이 회의록의 '할 일' 표에서 내 담당 항목만 골라 마감일에 구글 캘린더 일정을 만들어줘. 담당자가 '미정'인 건 만들지 마. 만들기 전에 목록으로 먼저 보여줘."</em> — 회의 후 30분이 여기서 사라집니다. <strong>'미정'은 만들지 말라</strong>는 조건이 핵심이에요 — 담당이 없는 일정을 내 캘린더에 넣으면 그게 암묵적으로 내 일이 됩니다.</p></div>
+<div class="callout callout--summary"><div class="callout-label">📌 6절 한 줄 요약</div><p>— <strong>당일에, 팀이 보는 곳에, 이의 기한과 함께</strong> 공유한다.</p></div>
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">7</span><h2>지난 회의와 잇기 — 흐지부지 탐지</h2></div>
+<p>여기가 회의 업무에서 AI가 가장 크게 이기는 지점입니다. 사람은 지난 회의록을 <strong>다시 안 읽거든요.</strong></p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"지난 회의록의 액션아이템과 이번 회의 전사본을 대조해줘.</em> <em>① 이번 회의에서 완료가 확인된 것</em> <em>② 이번 회의에서 언급은 됐지만 진척이 없는 것</em> <em>③ 이번 회의에서 아예 언급조차 안 된 것</em> <em>③번을 제일 위에 놓아줘."</em></p></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ ③번이 오늘 실습의 하이라이트입니다.</div><p>지난 회의에서 "하자"고 한 것 중 <strong>아무도 다시 꺼내지 않은 항목</strong>이 있습니다. 언급이 없으니 아무도 문제라고 느끼지 못해요. 그리고 두 달 뒤에 <em>"그거 왜 안 됐죠?"</em> 가 됩니다.</p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 이걸 매 회의마다 돌리면 <strong>회의가 이어지기 시작합니다.</strong> 지난 회의의 미완료가 이번 회의 안건 맨 앞에 오니까요.</p></div>
+<div class="callout callout--summary"><div class="callout-label">📌 7절 한 줄 요약</div><p>— 지난 회의록과 대조해 <strong>언급조차 안 된 것</strong>을 찾아라. 그게 진짜 새는 곳이다.</p></div>
+</section>
+
+<section class="lesson-section practice-block">
+<h3 class="sub-head">PART 3 — 회의를 잇기 (오늘의 하이라이트)</h3>
+<div class="callout callout--scenario"><p><span class="co-icon">🎯</span> <strong>목표</strong>: 지난 회의와 이어 붙여, 새는 곳을 찾기.</p></div>
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 F — 흐지부지 탐지 ⭐</div>
+  <p>순서는 <b>① 지난 회의록과 대조</b> → <b>② 대조 결과 공유 메시지</b> → <b>③ 회의록 공유 메시지</b>.<br>실습 E와 <b>같은 대화</b>에서 이어갑니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>지난 회의록</b>(<code>previous_minutes.docx</code>) <span class="meta">· Word · 회의록 1건(액션아이템 5건)</span></li>
+      <li><b>실습 C의 회의록</b> <span class="meta">· 같은 대화에 있음</span></li>
+    </ul>
+  </div>
+</div>
+<p>아래를 그대로 붙여넣으세요. (10-3절과 같은 것입니다 — 여기 다시 둡니다)</p>
+<div class="prompt">지난 회의록의 액션아이템과 이번 회의 기록을 대조해줘.
+① 완료가 확인된 것
+② 언급은 됐지만 진척이 없는 것
+③ 아예 언급조차 안 된 것   ← 이걸 제일 위에
+각 항목에 대해, 다음 회의에서 물어봐야 할 질문을 한 줄씩 제안해줘.</div>
+<div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 지난 액션 다섯 건이 이렇게 갈렸나?</div><div class="table-scroll"><table><thead><tr><th><strong>지난 액션</strong></th><th><strong>이번 회의에서</strong></th></tr></thead><tbody><tr><td>부자재 일정 확인 (박서연)</td><td>✅ 완료 — 회의에서 결과 보고됨</td></tr><tr><td>예산안 초안 (이준호)</td><td>✅ 완료 — 2,400만원 안 나옴</td></tr><tr><td>패키지 시안 요청 (박서연)</td><td>✅ 완료 — 시안 3개 도착</td></tr><tr><td><strong>고객 설문 설계 (최유진)</strong></td><td>⚠️ 언급됨 — <em>"제가 다른 게 밀려서"</em>. <strong>재약속 없이 넘어감</strong></td></tr><tr><td><strong>경쟁사 출시 일정 조사 (담당 미정)</strong></td><td>🔴 <strong>담당자가 없어서 아무도 안 함.</strong> 이번 회의에서 겨우 준호에게 배정됐지만 <strong>기한은 여전히 없음</strong></td></tr></tbody></table></div></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 마지막 줄을 보세요.</div><p>지난 회의에서 "담당 미정"으로 남긴 항목이 <strong>일주일 동안 아무 일도 일어나지 않았습니다.</strong> 그리고 이번 회의에서도 기한 없이 넘어갔죠. 이런 항목은 <strong>다음 주에도 똑같습니다.</strong></p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 이게 오늘 배운 것 전체가 한 점으로 모이는 대목입니다 — <strong>담당자와 기한이 없는 액션은 존재하지 않는 것과 같다.</strong></p></div>
+<p>이어서:</p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"위 대조 결과를 팀에 공유할 짧은 메시지로 만들어줘. 비난하는 톤 말고, 각자 확인할 것을 명확히 하는 톤으로."</em></p></div>
+<p><strong>그리고 회의록 공유 메시지까지</strong> (6절):</p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"실습 C에서 만든 회의록을 팀 채널에 올릴 메시지로 만들어줘. 맨 위에 결정된 것 3줄, 그다음 각자 할 일을 이름과 함께, 마지막에 이의 제기 안내 한 줄. 전체 10줄 안쪽."</em></p></div>
+
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">8</span><h2>회의 전 — 흩어진 요청을 한 장으로</h2></div>
+<h3 class="sub-head">8-1. 실제로 벌어지는 일</h3>
+<p>안건이 <strong>한 곳에 모이지 않습니다.</strong> 메일로 오고, 메신저로 오고, 지나가며 말로 옵니다. 형식도 길이도 제각각이죠. 그래서 회의 시작 5분 전에 급하게 정리하거나, 아예 안 하고 들어갑니다.</p>
+<h3 class="sub-head">8-2. 시켜야 할 것 — 모으기가 아니라 '고르기'</h3>
+<p>그냥 <em>"안건 정리해줘"</em> 하면 <strong>받은 걸 그대로 나열</strong>합니다. 그건 이미 있는 거예요. 필요한 건 <strong>판단이 붙은 정리</strong>입니다.</p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"아래 안건 요청들을 회의 계획으로 정리해줘. 회의는 60분이야.</em> <em>① 각 안건에 필요한 시간을 요청자가 적은 대로 표시하고, 합계가 60분을 넘으면 알려줘</em> <em>② 결정이 필요한 안건과 공유만 하면 되는 안건을 나눠줘</em> <em>③ 이미 지난 회의에서 결정된 안건이 섞여 있으면 중복이라고 표시해줘</em> <em>④ 안건 순서를 제안해줘. 왜 그 순서인지도 한 줄로."</em></p></div>
+<div class="table-scroll"><table><thead><tr><th><strong>시킨 것</strong></th><th><strong>왜</strong></th></tr></thead><tbody><tr><td><strong>시간 합계 확인</strong></td><td>60분에 80분치를 넣는 게 회의가 늘어지는 1번 원인</td></tr><tr><td><strong>결정 / 공유 구분</strong></td><td>공유만 할 건 회의 때 말고 문서로 보내면 됩니다</td></tr><tr><td><strong>중복 표시</strong></td><td>이미 정한 걸 또 논의하는 회의가 정말 많습니다</td></tr><tr><td><strong>순서와 이유</strong></td><td>결정 안건을 앞에 두는 게 보통 맞습니다. 뒤로 가면 시간이 없어 대충 정해져요</td></tr></tbody></table></div>
+<div class="callout callout--tip"><div class="callout-label">💡 ③번이 오늘 실습의 함정 중 하나입니다.</div><p>안건 요청 4건 중 하나는 <strong>이미 지난 회의에서 정해진 사안</strong>이에요. 사람이 보면 잘 안 걸립니다 — 요청한 사람은 그 회의에 없었거나 잊었을 뿐이니까요.</p></div>
+<h3 class="sub-head">8-3. 사전 브리프 — 참석자에게 미리 보낼 것</h3>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"위 회의 계획을 참석자에게 미리 보낼 브리프로 만들어줘. 각 안건마다 '이 안건에서 우리가 결정해야 할 것' 을 한 문장으로 쓰고, 참석자가 미리 준비해와야 할 것이 있으면 표시해줘."</em></p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> <em>"미리 준비해와야 할 것"</em> 이 브리프의 값어치 전부입니다. 이게 있으면 <em>"아 그건 확인해봐야 하는데요"</em> 로 날아가는 시간이 줄어요.</p></div>
+<div class="callout callout--summary"><div class="callout-label">📌 8절 한 줄 요약</div><p>— 회의 전 AI의 일은 <strong>모으기가 아니라 거르기.</strong> 시간 초과·중복 안건·결정 여부를 미리 가른다.</p></div>
+</section>
+
+<section class="lesson-section practice-block">
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 G — 다음 회의 계획</div>
+  <p>순서는 <b>① 안건 요청 올리기</b> → <b>② 회의 계획으로 정리</b> → <b>③ 정답과 맞춰 보기</b>.<br>실습 F와 <b>같은 대화</b>에서 이어갑니다. (이번 회의 결정을 알아야 중복 안건이 보입니다)</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>안건 요청</b>(<code>agenda_inputs.docx</code>) <span class="meta">· Word · 요청 4건</span></li>
+    </ul>
+  </div>
+</div>
+<p>아래를 그대로 붙여넣으세요. (10-1절과 같은 것입니다 — 여기 다시 둡니다)</p>
+<div class="prompt">아래 안건 요청들을 [60]분 회의 계획으로 정리해줘.
+1) 각 안건의 요청 시간을 표시하고, 합계가 회의 시간을 넘으면 알려줘
+2) '결정이 필요한 안건'과 '공유만 하면 되는 안건'을 나눠줘
+3) 지난 회의에서 이미 결정된 사안이 섞여 있으면 '중복'으로 표시해줘
+4) 안건 순서를 제안하고 이유를 한 줄씩
+5) 시간이 모자라면 어느 안건을 다음으로 미룰지 제안해줘</div>
+<div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 시간 합계·중복 안건·결정/공유 구분이 맞나?</div><div class="table-scroll"><table><thead><tr><th><strong>확인</strong></th><th><strong>정답</strong></th></tr></thead><tbody><tr><td>요청 시간 합계</td><td><strong>20 + 10 + 15 = 45분</strong>, 그리고 ③번은 <strong>시간을 안 적었음.</strong> 60분에 빠듯합니다 — 안건 하나가 길어지면 바로 넘칩니다</td></tr><tr><td><strong>중복 안건</strong>을 찾았나</td><td>③ 정하늘의 <em>"출시일이 언제로 정해졌는지"</em> — <strong>이미 10/5로 확정됨.</strong> 회의 안건이 아니라 <strong>회의록 공유</strong>로 해결할 일</td></tr><tr><td>결정 / 공유 구분</td><td>①쿠팡 = 결정 · ②경쟁사 = 공유 · ④시안 = 결정</td></tr><tr><td>보류 항목이 안건에 들어갔나</td><td>쿠팡 입점 — 지난 회의 보류가 이번 안건으로</td></tr></tbody></table></div></div>
+<div class="callout callout--tip"><div class="callout-label">💡 중복 안건이 오늘의 마지막 함정입니다.</div><p>정하늘님은 휴가 중이어서 몰랐을 뿐이에요. 이걸 회의에서 다시 논의하면 15분이 날아갑니다. <strong>답은 "회의록을 보내드리세요"</strong> 입니다.</p></div>
+
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">9</span><h2>초보가 흔히 하는 실수 5가지</h2></div>
+<div class="table-scroll"><table><thead><tr><th><strong>#</strong></th><th><strong>실수</strong></th><th><strong>대신</strong></th></tr></thead><tbody><tr><td>1</td><td><strong>회의 도구 전사본이 있는데 녹음 파일부터 Claude에 올림</strong></td><td>전사본이 있으면 그걸 먼저 — 더 빠르고 화자 이름이 붙는다 (2-1절)</td></tr><tr><td>2</td><td><strong>"회의록 만들어줘" 한 줄로 시킴</strong></td><td>3층 구조를 지정한다 — 결정/액션/보류</td></tr><tr><td>3</td><td><strong>빈 담당자·기한을 AI가 채우게 둠</strong></td><td><em>"기록에 없으면 '미정'이라 적어"</em></td></tr><tr><td>4</td><td><strong>회의 중 바뀐 숫자의 앞값을 씀</strong></td><td><em>"바뀐 과정을 남기고 최종값을 굵게"</em></td></tr><tr><td>5</td><td><strong>회의록을 만들고 끝냄</strong></td><td>지난 회의록과 <strong>대조</strong>까지 해야 값이 난다 (7절)</td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 3번이 가장 조용한 사고입니다.</div><p>회의록이 그럴듯하게 완성돼 보여서 아무도 의심하지 않아요. 그런데 그 담당자는 자기가 담당인 줄 모릅니다.</p></div>
+</section>
+
+<section class="lesson-section practice-block">
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 H — 추적표 정리</div>
+  <p>순서는 <b>① 추적표 문제 찾기</b> → <b>② 표기 통일한 표 다시 만들기</b>.<br><b>새 대화</b>에서 시작합니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>액션아이템 추적표</b>(<code>action_tracker.xlsx</code>) <span class="meta">· Excel · 표 1개</span></li>
+    </ul>
+  </div>
+</div>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 추적표의 문제를 찾아줘. 특히 상태 표기가 통일되어 있는지, 기한이 날짜가 아닌 행이 있는지, 담당자나 기한이 빈 행이 있는지."</em></p></div>
+<p>이어서:</p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"상태 표기를 '완료 / 진행중 / 미착수' 세 가지로 통일하고, 기한이 날짜가 아닌 행은 '기한 확인 필요'로 표시한 표를 다시 만들어줘."</em></p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 7차시(데이터 정리)에서 배운 <strong>표기 흔들림</strong>이 회의 업무에서 나타난 모습입니다. <code>완료 / done / O</code> 가 전부 같은 뜻인데, 이대로면 "완료 몇 건인가"를 셀 수 없어요.</p></div>
+
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">＊</span><h2>도전 과제</h2></div>
+<h3 class="sub-head first">🎓 도전 과제</h3>
+<ul><li><strong>회의 없애기</strong>: <em>"이 회의의 안건 중, 회의 없이 문서나 메시지로 처리할 수 있었던 것을 골라줘. 이유와 함께."</em> → 회의 시간을 줄이는 가장 확실한 방법</li><li><strong>회의록 두 버전</strong>: 같은 전사본으로 <em>"참석자용"</em> 과 <em>"불참자용(정하늘)"</em> 두 버전을 만들어보기. 불참자용은 <strong>배경 설명이 더 필요</strong>합니다</li><li><strong>결정 이력 추적</strong>: <em>"출시일이 이 회의들에서 어떻게 바뀌어 왔는지 시간순으로 정리하고, 각 변경의 이유를 붙여줘."</em> → 나중에 <em>"왜 10월로 밀렸죠?"</em> 에 바로 답할 수 있습니다</li><li><strong>회의 없이 결정하기</strong>: 보류된 쿠팡 건에 대해 <em>"회의 대신 비동기로 결정하려면 어떤 정보를 누구에게 받아야 하는지 정리해줘"</em></li><li><strong>내 회의로</strong>: 이번 주 내 회의 하나의 기록(메모라도)으로 10-2절 프롬프트를 돌려보기</li></ul>
+<div class="callout callout--tip"><div class="callout-label">💡 첫 번째 도전 과제가 가장 값집니다.</div><p>오늘 배운 걸 다 해도, <strong>안 해도 될 회의를 안 하는 것</strong>보다 시간을 아껴주진 않습니다.</p></div>
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">10</span><h2>붙여넣기용 프롬프트 3종</h2></div>
+<div class="callout callout--summary"><div class="callout-label">📌 대괄호 <strong>**<code>[ ]</code></strong></div><p>표시는 바꿔 넣으라는 자리입니다.** <code>[60]분</code> 이면 대괄호까지 지우고 <code>45분</code> 처럼 내 숫자를 씁니다. 그대로 두면 AI가 헷갈립니다.</p></div>
+<h3 class="sub-head">10-1. 회의 전 — 안건 정리</h3>
+<div class="prompt">아래 안건 요청들을 [60]분 회의 계획으로 정리해줘.
+1) 각 안건의 요청 시간을 표시하고, 합계가 회의 시간을 넘으면 알려줘
+2) '결정이 필요한 안건'과 '공유만 하면 되는 안건'을 나눠줘
+3) 지난 회의에서 이미 결정된 사안이 섞여 있으면 '중복'으로 표시해줘
+4) 안건 순서를 제안하고 이유를 한 줄씩
+5) 시간이 모자라면 어느 안건을 다음으로 미룰지 제안해줘</div>
+<h3 class="sub-head">10-2. 회의 후 — 전사본 → 회의록</h3>
+<div class="prompt">첨부한 회의 전사본을 회의록으로 정리해줘.
+
+1) 참석자 정리 — 같은 사람이 여러 표기로 나오면 묶고,
+   확신이 없으면 "확인 필요"로 표시
+2) 본문을 세 덩어리로 — 결정된 것 / 해야 할 것 / 아직 안 정한 것
+3) 회의 중 숫자·날짜가 바뀐 항목은 바뀐 과정을 남기고 최종값을 굵게
+4) 액션아이템 표: 무엇을 | 누가 | 언제까지 | 무엇을 보면 끝났다고 할지
+   기록에 없는 칸은 지어내지 말고 "미정"
+5) 잡담·인사·자리 비움은 제외
+6) 제안·의견과 확정된 결정을 구분. 확정 근거가 약하면 "논의됨"으로 표시</div>
+<h3 class="sub-head">10-3. 회의 잇기 — 지난 회의와 대조</h3>
+<div class="prompt">지난 회의록의 액션아이템과 이번 회의 기록을 대조해줘.
+① 완료가 확인된 것
+② 언급은 됐지만 진척이 없는 것
+③ 아예 언급조차 안 된 것   ← 이걸 제일 위에
+각 항목에 대해, 다음 회의에서 물어봐야 할 질문을 한 줄씩 제안해줘.</div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 셋을 <strong>메모장에 저장</strong>해두세요. 회의는 매주 오고, 이 셋은 매번 그대로 씁니다. (3·4차시에서 배운 '고정하기')</p></div>
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">11</span><h2>안 될 때 — 트러블슈팅</h2></div>
+<div class="table-scroll"><table><thead><tr><th><strong>증상</strong></th><th><strong>원인</strong></th><th><strong>대응</strong></th></tr></thead><tbody><tr><td><strong>녹음 파일을 올렸는데 처리가 안 됨</strong></td><td>코드 실행이 꺼져 있거나, 무료 요금제이거나, 회사가 인터넷 접근을 막음</td><td>설정에서 코드 실행 기능을 켜거나, 회의 도구 자동 자막·받아쓰기로 <strong>텍스트 먼저</strong> (2-1절)</td></tr><tr><td><strong>받아쓴 결과에 [불명확]이 많음</strong></td><td>녹음 품질(회의실 울림·작은 목소리)</td><td>숫자·이름은 원본 확인. 화상회의라면 <strong>회의 도구 전사본</strong>을 우선 (2-1절)</td></tr><tr><td><strong>회의 도구에 기록 버튼이 없음</strong></td><td>요금제·조직 정책으로 잠김</td><td>내 문제가 아님. IT 담당자에게 문의하거나 <strong>클로바노트·휴대폰 음성 입력</strong>으로 우회 (회사 정책 확인 먼저)</td></tr><tr><td><strong><code>Win</code>+<code>H</code>에서 "현재 언어로는 받아쓰기를 사용할 수 없습니다: 한국어"</strong></td><td>윈도우 버전·설정에 따라 한국어 음성 입력이 지원되지 않음</td><td>휴대폰 키보드 음성 입력, 구글 문서 음성 입력, 클로바노트로 대신 (2-1절)</td></tr><tr><td><strong>회의록이 그냥 요약임</strong></td><td>3층 구조를 안 지정함</td><td><em>"결정 / 액션 / 보류로 나눠줘"</em> 명시</td></tr><tr><td><strong>담당자가 다 채워져 있음</strong></td><td>빈칸 처리를 안 시킴</td><td><em>"기록에 없으면 '미정'이라 적어"</em></td></tr><tr><td><strong>바뀌기 전 숫자가 들어감</strong></td><td>최종값 지정을 안 함</td><td><em>"바뀐 과정을 남기고 최종값을 굵게"</em></td></tr><tr><td><strong>제안이 결정으로 적힘</strong></td><td>확정 여부 구분을 안 시킴</td><td><em>"제안·의견과 확정을 구분. 근거 약하면 '논의됨'"</em></td></tr><tr><td><strong>같은 사람이 여러 명으로 나옴</strong></td><td>자동 자막의 화자 인식 한계</td><td><em>"같은 사람으로 보이는 표기는 묶고, 확신 없으면 '확인 필요'"</em></td></tr><tr><td><strong>회의록이 너무 길다</strong></td><td>잡담 제거를 안 시킴</td><td><em>"잡담·인사·자리 비움은 제외"</em>  • 분량 지정</td></tr><tr><td><strong>지난 회의 대조가 부실함</strong></td><td>지난 회의록을 같이 안 올림</td><td>두 파일을 <strong>함께</strong> 올리고 파일명을 지정해 지시</td></tr><tr><td><strong>액션이 매번 안 지켜짐</strong></td><td>끝난 기준이 없음</td><td>4요소 중 <strong>"무엇을 보면 끝인지"</strong> 를 반드시 (5절)</td></tr><tr><td><strong>전사본이 너무 길어 잘림</strong></td><td>한 번에 다 넣음</td><td>시간 구간별로 나눠 정리 후 합치기</td></tr></tbody></table></div>
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">12</span><h2>자주 묻는 질문 (FAQ)</h2></div>
+<p><strong>Q. 회의 녹음을 해도 되나요?</strong> A. <strong>회사 규정과 참석자 동의가 먼저</strong>입니다. 기술 문제가 아니라 규정 문제예요. 대부분의 회사가 화상회의 도구의 기록 기능은 허용하되 <strong>참석자에게 고지</strong>하도록 하고 있습니다. 외부 전사 서비스에 올리는 건 별도 확인이 필요합니다.</p>
+<p><strong>Q. 자동 자막이 너무 엉망인데 쓸 수 있나요?</strong> A. 생각보다 잘 됩니다. 오늘 실습 파일이 일부러 엉망으로 만든 것인데도 회의록이 나오죠. <strong>완벽한 전사가 필요한 게 아니라, 결정과 액션을 건질 수만 있으면</strong> 됩니다. 다만 사람 이름·숫자는 틀리기 쉬우니 <strong>그 둘만 확인</strong>하세요.</p>
+<p><strong>Q. 회의록을 어디까지 자세히 써야 하나요?</strong> A. 판단 기준 하나 — <strong>"불참자가 이것만 읽고 따라올 수 있나."</strong> 그 이상은 대개 낭비입니다. 발언 전체가 필요한 회의(인사·징계·계약 협상)는 예외지만, 그런 회의는 애초에 AI에 올리면 안 되는 회의이기도 합니다.</p>
+<p><strong>Q. 민감한 회의 내용을 AI에 올려도 되나요?</strong> A. 인사 평가, 징계, 연봉, 계약 협상, 개인정보가 나온 회의는 <strong>올리지 마세요.</strong> 회사 보안 정책 확인이 먼저입니다. 굳이 정리해야 한다면 <strong>이름을 A·B·C로 바꾸고 숫자를 지운 뒤</strong> 구조만 정리하는 정도로 쓰세요.</p>
+<p><strong>Q. 회의록을 만들었는데 참석자가 "그런 말 한 적 없다"고 합니다.</strong> A. 그래서 4절의 검수가 있습니다. <strong>결정 항목마다 전사본 근거를 붙여두면</strong> 이 논쟁이 사라져요. 그리고 회의록은 <strong>공유 후 하루 안에 이의 제기</strong>를 받는 걸 규칙으로 두면 좋습니다.</p>
+<p><strong>Q. 제가 회의록 담당이 아닌데요?</strong> A. 그래도 <strong>나를 위해</strong> 만드세요. 공식 회의록과 별개로, 내 액션과 내가 궁금한 보류 항목만 정리한 <strong>개인 메모</strong>를 남기는 겁니다. 2-2절의 네 칸 틀이면 5분이에요. 그리고 이게 쌓이면 <em>"그때 뭐라고 했죠?"</em> 에 가장 먼저 답할 수 있는 사람이 됩니다 — 회의록 담당보다 빠르게요.</p>
+<p><strong>Q. 회의록을 공유했더니 아무도 안 읽습니다.</strong> A. 세 가지를 확인하세요. ① <strong>첨부파일로 보냈나</strong> (본문에 붙여넣으세요) ② <strong>결정이 맨 위에 있나</strong> (사람들은 첫 세 줄만 읽습니다) ③ <strong>각자 이름이 멘션됐나</strong> (표 안에만 있으면 자기 것인 줄 모릅니다). 6절이 이 셋을 다룹니다.</p>
+<p><strong>Q. 매번 이렇게 하기엔 시간이 없어요.</strong> A. 세 개만 하세요 — <strong>10-2절 프롬프트 붙여넣기 → 액션 표 확인 → 지난 회의 대조.</strong> 익숙해지면 10분입니다. 그리고 이 셋 중 <strong>지난 회의 대조</strong>가 가장 값이 큽니다.</p>
+<p><strong>Q. 회의 중에 실시간으로 정리시킬 수 있나요?</strong> A. 됩니다 — 받아쓰기를 켜두고 중간중간 붙여넣으면요. 다만 <strong>회의에 집중이 안 됩니다.</strong> 회의 중엔 2-2절의 세 가지(결정된 순간·바뀐 숫자·누가 뭘)만 적고, 정리는 끝나고 하는 편이 낫습니다.</p>
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">13</span><h2>회의 유형마다 챙길 게 다릅니다</h2></div>
+<p>오늘 실습한 건 <strong>팀 내부 의사결정 회의</strong> 하나입니다. 그런데 실무 회의는 성격이 갈리고, <strong>회의록에서 챙길 것도 달라집니다.</strong></p>
+<div class="table-scroll"><table><thead><tr><th><strong>유형</strong></th><th><strong>예</strong></th><th><strong>회의록의 핵심</strong></th><th><strong>특히 조심할 것</strong></th></tr></thead><tbody><tr><td><strong>① 의사결정</strong></td><td>오늘 실습, 킥오프, 예산 회의</td><td><strong>결정과 보류의 구분</strong></td><td>제안이 결정으로 둔갑 (4절)</td></tr><tr><td><strong>② 정보 공유</strong></td><td>주간 회의, 전사 공유</td><td>액션이 거의 없음 — <strong>바뀐 것만</strong> 적는다</td><td>전부 받아적으면 <strong>아무도 안 읽습니다</strong></td></tr><tr><td><strong>③ 고객·외부 미팅</strong></td><td>영업, 협력사 협의</td><td><strong>우리가 약속한 것</strong> — 납기·가격·조건</td><td>회의록이 아니라 <strong>근거 문서</strong>가 됩니다 ⚠️</td></tr><tr><td><strong>④ 1:1·면담</strong></td><td>평가, 고충 상담</td><td>—</td><td><strong>대개 AI에 올리면 안 됩니다</strong> ⚠️</td></tr></tbody></table></div>
+<h3 class="sub-head">②번 — 공유 회의는 '바뀐 것만'</h3>
+<p>주간 회의록을 발언 순서대로 다 적으면 A4 세 장이 나오고, 아무도 안 읽습니다. 이렇게 시키세요.</p>
+<div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 주간 회의 기록에서 지난주와 달라진 것만 뽑아줘. 예정대로 진행 중인 항목은 '이상 없음' 한 줄로 묶고, 일정이 밀렸거나 새로 생긴 이슈만 자세히 적어줘."</em></p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 공유 회의록의 값어치는 분량이 아니라 <strong>'뭐가 달라졌나'</strong> 입니다. 8차시에서 배운 요약 4종 중 <strong>추출</strong>이에요 — 압축이 아니라.</p></div>
+<h3 class="sub-head">③번 — 고객 미팅은 회의록이 아니라 근거 문서</h3>
+<p>여기가 성격이 완전히 다릅니다. 내부 회의록은 틀려도 다음 회의에서 고치면 되지만, <strong>고객에게 보낸 회의록은 그 자체가 약속</strong>이 됩니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>내부 회의록</strong></th><th><strong>고객 미팅 기록</strong></th></tr></thead><tbody><tr><td>틀리면 다음에 고침</td><td><strong>틀리면 분쟁 소지</strong></td></tr><tr><td>"미정"으로 남겨도 됨</td><td>미정인 걸 <strong>미정이라고 명시</strong>해야 함</td></tr><tr><td>내가 확인하고 공유</td><td><strong>반드시 사람이 한 줄씩 검수 후</strong> 발송</td></tr></tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ AI가 만든 고객 회의록을 읽어보지 않고 보내지 마세요.</div><p>특히 숫자(단가·납기·수량)와 조건문("~하면 가능")은 <strong>원문 대조가 필수</strong>입니다. 8차시의 <em>"되돌리기 어려운 결정은 1차자료까지"</em> 가 여기 그대로 적용됩니다.</p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 시킬 때 한 줄 추가: <em>"우리가 약속한 것과 상대가 약속한 것을 나눠서 표로 만들고, 확정되지 않은 항목은 '협의 중'이라고 명시해줘."</em></p></div>
+<h3 class="sub-head">④번 — 올리면 안 되는 회의</h3>
+<p><strong>인사 평가, 징계, 연봉 협의, 고충 상담, 개인 신상이 오간 면담.</strong> 이런 회의는 정리가 편해도 AI에 올리지 않는 게 맞습니다.</p>
+<p>굳이 정리가 필요하다면:</p>
+<ul><li>이름을 <strong>A·B·C로 바꾸고</strong></li><li>금액·날짜 등 <strong>식별 가능한 숫자를 지우고</strong></li><li><strong>구조만</strong> 정리시키기 (예: "면담에서 나온 요청사항 유형 분류")</li></ul>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> 그리고 <strong>회사 정책이 먼저</strong>입니다. "지워서 올리면 되겠지"는 개인 판단이고, 사내 규정은 그것과 별개예요.</p></div>
+<div class="callout callout--summary"><div class="callout-label">📌 13절 한 줄 요약</div><p>— 유형에 따라 챙길 게 다르다. <strong>공유 회의는 바뀐 것만, 고객 미팅은 사람이 검수, 인사 면담은 올리지 않는다.</strong></p></div>
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">14</span><h2>내 업무라면? — 직무별 대입</h2></div>
+<div class="table-scroll"><table><thead><tr><th><strong>직무</strong></th><th><strong>이런 회의</strong></th><th><strong>특히 챙길 것</strong></th></tr></thead><tbody><tr><td><strong>기획·PM</strong></td><td>킥오프·주간 진행</td><td><strong>보류 항목</strong> — 다음 회의 안건이 됨</td></tr><tr><td><strong>영업</strong></td><td>고객 미팅</td><td><strong>약속한 것</strong> — 납기·가격·조건은 액션이 아니라 <strong>계약 사항</strong></td></tr><tr><td><strong>개발</strong></td><td>스프린트 회의</td><td><strong>결정의 이유</strong> — 나중에 "왜 이렇게 했지"가 반드시 나옴</td></tr><tr><td><strong>인사</strong></td><td>채용 면접 정리</td><td>⚠️ 민감정보. <strong>이름·개인정보 제거 후</strong>에만</td></tr><tr><td><strong>CS·운영</strong></td><td>이슈 대응 회의</td><td><strong>누가 언제까지</strong> — 장애 대응은 기한이 생명</td></tr><tr><td><strong>재무</strong></td><td>예산 회의</td><td><strong>바뀐 숫자 추적</strong> — 오늘 실습의 2,400→2,800→2,650 그대로</td></tr></tbody></table></div>
+<h3 class="sub-head">3단계로 내 것으로 만들기</h3>
+<ol><li><strong>모으기</strong> — 이번 주 회의 하나의 기록(자동 자막이든 메모든)을 확보</li><li><strong>돌리기</strong> — 10-2절 프롬프트를 그대로 붙여넣기</li><li><strong>잇기</strong> — 다음 회의 전에 10-3절로 지난 회의와 대조</li></ol>
+<div class="callout callout--tip"><div class="callout-label">💡 3번까지 가야 효과가 납니다.</div><p>1·2번만 하면 "회의록이 예뻐졌다"로 끝나요. 3번이 <strong>일이 실제로 굴러가게</strong> 만듭니다.</p></div>
+<h3 class="sub-head">🎯 오늘의 숙제 (한 개만)</h3>
+<p>이번 주 회의 하나를 골라, <strong>10-2절 프롬프트로 회의록을 만들고 액션아이템 4요소를 채워보세요.</strong> 빈칸이 있으면 그게 곧 <strong>물어볼 질문 목록</strong>입니다.</p>
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">✅</span><h2>오늘 자가진단</h2></div>
+<div class="table-scroll"><table><thead><tr><th><strong>#</strong></th><th><strong>확인</strong></th><th><strong>못 하면</strong></th></tr></thead><tbody><tr><td>1</td><td>회의 업무를 <strong>전·중·후 세 구간</strong>으로 나눠 설명할 수 있다</td><td>1절</td></tr><tr><td>2</td><td>셋 중 <strong>사람이 지켜야 하는 구간</strong>이 어디인지 안다</td><td>1절</td></tr><tr><td>3</td><td><strong>녹음을 글자로 바꾸는 방법</strong>을 알고, 내 상황에 맞는 걸 고를 수 있다</td><td>2-1절</td></tr><tr><td>4</td><td>회의록의 <strong>3층 구조</strong>를 말할 수 있다</td><td>3-1절</td></tr><tr><td>5</td><td><strong>보류 항목</strong>을 남기는 게 왜 중요한지 안다</td><td>3-1절</td></tr><tr><td>6</td><td>회의록 검수의 <strong>두 방향</strong>을 안다</td><td>4절</td></tr><tr><td>7</td><td><strong>제안이 결정으로 둔갑하는 것</strong>을 어떻게 막는지 안다</td><td>4절</td></tr><tr><td>8</td><td>액션아이템 <strong>4요소</strong>를 말할 수 있다</td><td>5절</td></tr><tr><td>9</td><td>넷 중 <strong>가장 자주 빠지는 것</strong>이 뭔지 안다</td><td>5절</td></tr><tr><td>10</td><td>지난 회의 대조에서 <strong>③번(언급조차 안 됨)</strong> 이 왜 제일 위인지 안다</td><td>7절</td></tr><tr><td>11</td><td>담당자·기한 빈칸을 AI가 채우면 왜 위험한지 설명할 수 있다</td><td>3-2절·실습 C</td></tr><tr><td>12</td><td><strong>공유 회의록</strong>에서 뭘 뽑아야 하는지 안다</td><td>13절</td></tr><tr><td>13</td><td><strong>AI에 올리면 안 되는 회의</strong>를 구분할 수 있다</td><td>13절</td></tr><tr><td>14</td><td>회의록을 <strong>언제·어디에·누구에게</strong> 공유해야 하는지 안다</td><td>6절</td></tr><tr><td>15</td><td>내 회의의 <strong>전사본을 어디서 받는지</strong> 안다</td><td>2-1절</td></tr><tr><td>16</td><td>내 실제 회의 하나로 돌려봤다</td><td>14절 숙제</td></tr></tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>3·9·10번이 오늘의 진짜 성적표</strong>입니다. 회의록을 예쁘게 만드는 건 프롬프트 한 줄이면 됩니다. 챙길 건 <strong>녹음을 글자로 바꾸는 현실</strong>, <strong>끝난 기준</strong>, 그리고 <strong>아무도 안 꺼낸 항목</strong>이에요.</p></div>
+<h3 class="sub-head">오늘의 결과물 체크리스트</h3>
+<div class="table-scroll"><table><thead><tr><th><strong>결과물</strong></th><th><strong>어느 실습</strong></th></tr></thead><tbody><tr><td>[ ] 전사본 진단표 (화자·바뀐 숫자·미확정)</td><td>B</td></tr><tr><td>[ ] 3층 회의록 (결정/액션/보류)</td><td>C ⭐</td></tr><tr><td>[ ] 회의록 근거 대조표</td><td>D</td></tr><tr><td>[ ] 액션아이템 4요소 점검표 + 물어볼 질문 목록</td><td>E</td></tr><tr><td>[ ] 지난 회의 대조표 (①②③)</td><td>F ⭐</td></tr><tr><td>[ ] 다음 회의 계획 (중복 안건 표시 포함)</td><td>G</td></tr><tr><td>[ ] 정리된 액션 추적표</td><td>H</td></tr><tr><td>[ ] 팀 채널 공유 메시지 (결정 3줄 + 각자 할 일 + 이의 기한)</td><td>F</td></tr></tbody></table></div>
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">＊</span><h2>오늘 정리</h2></div>
+<h3 class="sub-head">🎯 세 개만 기억한다면</h3>
+<ol><li><strong>AI가 다루는 건 결국 텍스트</strong> — 녹음은 글자로 바뀐 결과부터 확인</li><li><strong>회의록은 결정 / 액션 / 보류 세 층</strong> — 빈칸은 지어내지 말고 "미정"</li><li><strong>지난 회의와 대조하라</strong> — 아무도 안 꺼낸 항목이 진짜 새는 곳</li></ol>
+<h3 class="sub-head">전체 정리</h3>
+<ul><li>회의 업무는 <strong>전·중·후 셋.</strong> AI는 앞뒤를 맡고, <strong>가운데(결정 못 박기)는 사람이</strong> 지킨다</li><li><strong>Claude는 소리를 직접 듣지 못한다.</strong> 녹음은 회의 도구 전사본이 1순위, Claude 받아쓰기는 코드 실행이 켜졌을 때의 보조 수단</li><li>전사가 없으면 셋만 적어라 — <strong>결정된 순간 · 바뀐 숫자 · 누가 뭘 하기로 했나</strong></li><li>좋은 회의록은 <strong>결정 / 액션 / 보류</strong> 세 층. 특히 <strong>보류가 있어야 다음 회의가 짧아진다</strong></li><li>회의 중 <strong>숫자는 자주 바뀐다.</strong> 바뀐 과정을 남기고 최종값을 표시하게 시켜라</li><li>담당자·기한 빈칸을 AI가 채우면 <strong>회의에서 나온 적 없는 사실</strong>이 생긴다. "미정"으로 남겨라</li><li>회의록 검수는 두 방향 — <strong>없는 결정이 생겼나 / 있는 내용이 사라졌나</strong></li><li><strong>제안이 결정으로 둔갑하는 것</strong>이 회의록의 대표 사고. 8차시의 '단서 떼기'와 같은 구조다</li><li>액션아이템 4요소 — <strong>무엇을 · 누가 · 언제까지 · 무엇을 보면 끝인지.</strong> 마지막이 제일 자주 빠진다</li><li>회의록은 <strong>만드는 게 절반, 닿게 하는 게 절반.</strong> 당일에, 팀이 이미 보는 곳에, <strong>이의 제기 기한과 함께</strong></li><li>회의록은 <strong>날짜를 앞에 둔 같은 이름 규칙</strong>으로 한 곳에 쌓아라. 그래야 다음 대조가 된다</li><li>지난 회의와 대조해 <strong>언급조차 안 된 항목</strong>을 찾아라. 담당자 없는 액션은 <strong>일주일 뒤에도 그대로</strong>다</li><li>회의 전 AI의 일은 모으기가 아니라 <strong>거르기</strong> — 시간 초과·중복 안건·결정 여부</li><li><strong>회의 유형마다 챙길 게 다르다</strong> — 공유 회의는 <em>바뀐 것만</em>, 고객 미팅은 <em>사람이 한 줄씩 검수</em>, 인사 면담은 <em>올리지 않는다</em></li><li>고객에게 보낸 회의록은 <strong>그 자체가 약속</strong>이 된다. 숫자와 조건문은 반드시 원문 대조</li><li>가장 크게 시간을 아끼는 건 회의록이 아니라 — <strong>안 해도 될 회의를 안 하는 것</strong></li></ul>
+</section>
+<a class="next-lesson" href="lesson11.html"><div><span class="label">다음 차시</span><h3><strong>11차시 — 아티팩트.</strong></h3></div><span class="arrow">→</span></a>
+  </main>
+
+  <footer class="page-footer">
+    <p>그린컵 AI 에이전트 과정 · 10차시 회의와 액션아이템</p>
+  </footer>
+
+</div>
+</body>
+</html>
