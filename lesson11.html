@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>아티팩트 — 내 도구 만들기</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --paper:#F5F7FB;
+    --surface:#FFFFFF;
+    --surface-2:#EEF1F9;
+    --ink:#1B2333;
+    --ink-soft:#525C72;
+    --border:#DCE1EE;
+    --accent:#2954D6;
+    --accent-ink:#FFFFFF;
+    --accent-tint:#E7ECFB;
+    --amber:#8A5A10;
+    --amber-tint:#FBF0DC;
+    --amber-line:#E9CE9C;
+    --red:#B23434;
+    --red-tint:#FCE9E9;
+    --red-line:#EFC2C2;
+    --green:#1F8A5F;
+    --green-tint:#E5F5EE;
+    --shadow:0 1px 2px rgba(27,35,51,.04), 0 8px 24px -12px rgba(27,35,51,.12);
+    --term-bg:#12151E;
+    --term-ink:#DDE3F0;
+    --term-accent:#7C9BFF;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#10131B;
+      --surface:#171B26;
+      --surface-2:#1C2130;
+      --ink:#E7EAF2;
+      --ink-soft:#A7AFC2;
+      --border:#2B3143;
+      --accent:#89A6FF;
+      --accent-ink:#0B1020;
+      --accent-tint:#1E2740;
+      --amber:#E8B75D;
+      --amber-tint:#2E2716;
+      --amber-line:#4A3B1E;
+      --red:#E58888;
+      --red-tint:#3A1E1E;
+      --red-line:#4E2A2A;
+      --green:#5FD1A0;
+      --green-tint:#123326;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#10131B;
+    --surface:#171B26;
+    --surface-2:#1C2130;
+    --ink:#E7EAF2;
+    --ink-soft:#A7AFC2;
+    --border:#2B3143;
+    --accent:#89A6FF;
+    --accent-ink:#0B1020;
+    --accent-tint:#1E2740;
+    --amber:#E8B75D;
+    --amber-tint:#2E2716;
+    --amber-line:#4A3B1E;
+    --red:#E58888;
+    --red-tint:#3A1E1E;
+    --red-line:#4E2A2A;
+    --green:#5FD1A0;
+    --green-tint:#123326;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Noto Sans KR","Pretendard",sans-serif;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+    word-break:keep-all;
+    overflow-wrap:break-word;
+  }
+  h1,h2,h3{
+    font-family:"Nanum Myeongjo",serif;
+    color:var(--ink);
+    text-wrap:balance;
+    margin:0;
+  }
+  a{color:var(--accent);}
+  strong{color:var(--ink); font-weight:700;}
+  em{font-style:italic;}
+  code{
+    font-family:"JetBrains Mono",monospace;
+    font-size:.9em;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:4px;
+    padding:.1em .4em;
+  }
+  p{margin:0 0 1em;}
+  ul,ol{margin:0 0 1em; padding-left:1.3em;}
+  li{margin-bottom:.45em;}
+  .page-shell{
+    max-width:860px;
+    margin:0 auto;
+    padding:0 20px 96px;
+  }
+
+  /* ---------- Masthead ---------- */
+  .masthead{
+    padding:56px 0 40px;
+    border-bottom:1px solid var(--border);
+    margin-bottom:40px;
+  }
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.78rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--accent);
+    background:var(--accent-tint);
+    border:1px solid var(--border);
+    padding:5px 12px;
+    border-radius:999px;
+    margin-bottom:20px;
+  }
+  .masthead h1{
+    font-size:clamp(2.1rem, 4.5vw, 3.1rem);
+    font-weight:800;
+    margin-bottom:10px;
+  }
+  .masthead .lede{
+    color:var(--ink-soft);
+    font-size:1.05rem;
+    max-width:60ch;
+    margin-bottom:0;
+  }
+  .masthead .meta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px 24px;
+    margin-top:24px;
+    font-size:.9rem;
+    color:var(--ink-soft);
+  }
+  .masthead .meta-row span{display:flex; align-items:center; gap:6px;}
+  .masthead .meta-row b{color:var(--ink); font-weight:700;}
+
+  main{min-width:0;}
+
+  /* ---------- Sections ---------- */
+  .lesson-section{
+    padding-bottom:44px;
+    margin-bottom:44px;
+    border-bottom:1px solid var(--border);
+    scroll-margin-top:20px;
+  }
+  .lesson-section:last-of-type{border-bottom:none;}
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    margin-bottom:20px;
+  }
+  .section-mark{
+    font-family:"JetBrains Mono",monospace;
+    font-weight:700;
+    font-size:1rem;
+    color:var(--accent-ink);
+    background:var(--accent);
+    border-radius:8px;
+    padding:3px 9px;
+    flex-shrink:0;
+  }
+  .section-head h2{
+    font-size:clamp(1.35rem,2.6vw,1.7rem);
+    font-weight:700;
+  }
+  .section-head h2 small{
+    display:block;
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:500;
+    font-size:.85rem;
+    color:var(--ink-soft);
+    margin-top:4px;
+  }
+  h3.sub-head{
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:700;
+    font-size:1.02rem;
+    color:var(--accent);
+    margin:28px 0 10px;
+  }
+  h3.sub-head.first{margin-top:0;}
+  h4.mini-head{
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:700;
+    font-size:.96rem;
+    color:var(--ink);
+    margin:20px 0 8px;
+  }
+
+  /* ---------- Callouts ---------- */
+  .callout{
+    border:1px solid var(--border);
+    border-left:4px solid var(--accent);
+    background:var(--surface);
+    border-radius:10px;
+    padding:16px 18px;
+    margin:20px 0;
+    box-shadow:var(--shadow);
+  }
+  .callout p:last-child{margin-bottom:0;}
+  .callout ul:last-child, .callout ol:last-child{margin-bottom:0;}
+  .callout-label{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-weight:700;
+    font-size:.92rem;
+    margin-bottom:8px;
+    color:var(--ink);
+  }
+  .callout--scenario{border-left-color:var(--accent); background:var(--accent-tint);}
+  .callout--tip{border-left-color:var(--amber); background:var(--amber-tint);}
+  .callout--tip .callout-label{color:var(--amber);}
+  .callout--warning{border-left-color:var(--red); background:var(--red-tint);}
+  .callout--warning .callout-label{color:var(--red);}
+  .callout--summary{border-left-color:var(--accent); background:var(--surface);}
+  .callout--summary .callout-label{color:var(--accent);}
+  .callout--question{border-left-color:var(--ink-soft); background:var(--surface-2);}
+  .callout--practice{border-left-color:var(--green); background:var(--green-tint);}
+  .callout--practice .callout-label{color:var(--green);}
+  .co-icon{font-size:1.02em; margin-right:2px;}
+  .co-icon:empty{display:none;}
+  .callout-label:empty{display:none;}
+  .callout hr{border:none; border-top:1px dashed var(--border); margin:12px 0;}
+
+  /* ---------- Prepare chip ---------- */
+  .prep{
+    font-size:.9rem;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-left:4px solid var(--ink-soft);
+    border-radius:8px;
+    padding:11px 14px;
+    margin:0 0 14px;
+  }
+  .prep b{color:var(--ink);}
+
+  /* ---------- Terminal / prompt ---------- */
+  .terminal{
+    background:var(--term-bg);
+    color:var(--term-ink);
+    border-radius:10px;
+    padding:16px 18px;
+    margin:14px 0;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.84rem;
+    line-height:1.8;
+    overflow-x:auto;
+    white-space:pre-wrap;
+  }
+  .prompt{
+    background:var(--term-bg);
+    color:var(--term-ink);
+    border-radius:8px;
+    padding:10px 14px;
+    margin:10px 0;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.82rem;
+    line-height:1.8;
+    white-space:pre-wrap;
+    overflow-x:auto;
+  }
+  .prompt .note{color:#8892AC; font-family:"Noto Sans KR",sans-serif;}
+  .terminal code, .prompt code{background:none; border:none; padding:0; color:inherit;}
+
+  /* ---------- Tables ---------- */
+  .table-scroll{overflow-x:auto; margin:18px 0; border:1px solid var(--border); border-radius:12px;}
+  table{border-collapse:collapse; width:100%; min-width:480px; font-size:.92rem;}
+  th,td{
+    text-align:left;
+    padding:11px 14px;
+    border-bottom:1px solid var(--border);
+    vertical-align:top;
+  }
+  th{
+    background:var(--surface-2);
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:700;
+    color:var(--ink);
+    white-space:nowrap;
+  }
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:nth-child(even){background:var(--surface);}
+  tbody tr:nth-child(odd){background:transparent;}
+  td strong{color:var(--accent);}
+  .tag-bad{color:var(--red); font-weight:700;}
+  .tag-good{color:var(--green); font-weight:700;}
+
+  /* ---------- Lists with markers ---------- */
+  .steps{padding-left:0; list-style:none; counter-reset:step;}
+  .steps li{counter-increment:step; position:relative; padding-left:36px; margin-bottom:14px;}
+  .steps li::before{
+    content:counter(step);
+    position:absolute; left:0; top:-1px;
+    width:24px; height:24px;
+    border-radius:50%;
+    background:var(--accent);
+    color:var(--accent-ink);
+    font-family:"JetBrains Mono",monospace;
+    font-size:.78rem;
+    font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  /* ---------- Checklist ---------- */
+  .checklist{list-style:none; padding-left:0;}
+  .checklist li{position:relative; padding-left:28px; margin-bottom:.5em;}
+  .checklist li::before{
+    content:"";
+    position:absolute; left:0; top:.5em;
+    width:15px; height:15px;
+    border:1.5px solid var(--border);
+    border-radius:4px;
+    background:var(--surface);
+  }
+
+  /* ---------- Figure ---------- */
+  figure.fig{margin:20px 0; text-align:center;}
+  figure.fig img{max-width:100%; height:auto; border:1px solid var(--border); border-radius:10px; background:var(--surface);}
+  figure.fig figcaption{font-size:.85rem; color:var(--ink-soft); margin-top:8px;}
+
+  /* ---------- Toggle ---------- */
+  details.toggle{
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:var(--surface);
+    padding:12px 16px;
+    margin:18px 0;
+  }
+  details.toggle > summary{
+    cursor:pointer;
+    font-weight:700;
+    color:var(--accent);
+    font-size:.95rem;
+    list-style:none;
+  }
+  details.toggle > summary::-webkit-details-marker{display:none;}
+  details.toggle > summary::before{content:"\25B8 "; font-family:"JetBrains Mono",monospace;}
+  details.toggle[open] > summary::before{content:"\25BE ";}
+  details.toggle[open] > summary{margin-bottom:10px; padding-bottom:8px; border-bottom:1px dashed var(--border);}
+  .toggle-body > :last-child{margin-bottom:0;}
+  .toggle-body .lesson-section{border-bottom:none; padding-bottom:0; margin-bottom:0;}
+
+  /* ---------- FAQ / quiz ---------- */
+  .quiz-item{
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:14px 16px;
+    margin-bottom:12px;
+    background:var(--surface);
+  }
+  .quiz-item .q{font-weight:700; margin-bottom:0;}
+  .quiz-item details{margin-top:8px;}
+  .quiz-item summary{cursor:pointer; color:var(--accent); font-weight:700; font-size:.86rem;}
+  .quiz-item .ans{margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); color:var(--ink-soft); font-size:.9rem;}
+  .quiz-item .ans p{margin-bottom:0;}
+
+  /* ---------- Next lesson ---------- */
+  .next-lesson{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:22px 26px;
+    margin-top:8px;
+    box-shadow:var(--shadow);
+    text-decoration:none;
+    color:inherit;
+  }
+  a.next-lesson:hover{border-color:var(--accent);}
+  a.next-lesson:hover .arrow{transform:translateX(4px);}
+  .next-lesson .label{
+    font-family:"JetBrains Mono",monospace;
+    font-size:.76rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+    display:block;
+  }
+  .next-lesson h3{font-size:1.2rem; font-weight:700; font-family:"Nanum Myeongjo",serif;}
+  .next-lesson .arrow{
+    font-family:"JetBrains Mono",monospace;
+    font-size:1.4rem;
+    color:var(--accent);
+    display:inline-block;
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .next-lesson .arrow{transition:transform .15s ease;}
+  }
+
+  .page-footer{
+    margin-top:60px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    color:var(--ink-soft);
+    font-size:.84rem;
+  }
+
+  @media (prefers-reduced-motion:no-preference){
+    a{transition:background-color .15s ease, color .15s ease;}
+  }
+
+  /* ---------- Practice card (claude/practice-card-template.md) ---------- */
+  .practice-title{display:flex;align-items:center;gap:8px;font-family:"Noto Sans KR",sans-serif;font-weight:700;font-size:1.05rem;color:var(--green);margin:0 0 10px;}
+  .practice-card{border:1px solid var(--border);border-left:4px solid var(--green);background:var(--green-tint);border-radius:12px;padding:18px 20px;margin:28px 0 18px;box-shadow:var(--shadow);}
+  .practice-card > p{margin:0 0 .4em;}
+  .practice-prep{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-top:14px;font-size:.92rem;}
+  .practice-prep .prep-label{font-weight:700;margin-bottom:6px;}
+  .practice-prep ul{list-style:none;padding-left:0;margin:0;}
+  .practice-prep li{margin-bottom:.3em;}
+  .practice-prep .meta{color:var(--ink-soft);}
+  .practice-block > .practice-card:first-child{margin-top:0;}
+  .practice-card .mini-head{margin:16px 0 8px;}
+  .practice-card .prompt{margin-bottom:0;}
+  .callout--question .table-scroll{background:var(--surface);}
+  .callout--question .checklist{margin-bottom:0;}
+  .term-note{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--ink-soft);border-radius:8px;padding:8px 14px;margin:8px 0 16px;font-size:.92rem;}
+  .practice-prep .desc{display:block;color:var(--ink-soft);font-size:.82rem;margin:2px 0 6px;}
+  .practice-card > .term-note{margin-top:12px;}
+  .practice-flow{margin-top:14px;background:var(--surface);border-radius:10px;}
+  .practice-flow table{font-size:.9rem;}
+  .callout .table-scroll{background:var(--surface);margin:8px 0 12px;}
+  .practice-card .callout{margin:10px 0;}
+  .practice-card .prep{margin:10px 0;}
+  .practice-step{margin:20px 0 6px;font-weight:700;font-size:1rem;color:var(--ink);}
+  .practice-step:first-of-type{margin-top:18px;}
+  .practice-card .table-scroll{background:var(--surface);}
+  .practice-card .steps{margin-bottom:.6em;}
+</style>
+</head>
+<body>
+<div class="page-shell">
+
+  <header class="masthead">
+    <a class="eyebrow" href="index.html" style="text-decoration:none;">← 그린컵 AI 에이전트 과정 · 11차시</a>
+    <h1>아티팩트 — 말로 내 도구 만들기</h1>
+    <p class="lede">&ldquo;텀블러 120개에 로고 넣으면 얼마예요?&rdquo; — 하루 다섯 번 오는 같은 계산을, 오늘은 <strong>말로 도구를 만들어</strong> 끝냅니다. 그리고 그 도구를 <strong>내 주소가 붙은 웹페이지로 배포</strong>하는 데까지 갑니다.</p>
+    <div class="meta-row">
+      <span>📍 <b>오늘 배우는 것</b> — 아티팩트가 뭔지(답이 아니라 물건), 기능 켜기, 만드는 4단계(규칙 붙이기·뼈대·하나씩·검산), 부분 수정과 되돌리기, 공유하면 누가 열 수 있는지와 사용량, 아티팩트가 못 하는 것과 판단표, HTML 파일로 내려받아 GitHub Pages로 배포하기</span>
+    </div>
+  </header>
+
+  <main>
+<div class="callout callout--scenario"><div class="callout-label">🎯 오늘의 가상 문제상황</div><p>그린컵 영업팀에 단체주문 문의가 옵니다. <em>"텀블러 120개에 로고 넣으면 얼마예요?"</em> 견적 규칙 문서를 열고, 엑셀을 켜고, 기본가 × 수량 하고, 옵션 더하고, 수량 할인 8% 빼고, 재구매 고객이니 3% 더 빼고, 배송비 보고, 부가세 붙이고… <strong>10분.</strong> 문제는 이게 <strong>하루에 다섯 번</strong> 온다는 겁니다. 그리고 신입이 계산하면 <strong>자꾸 틀립니다</strong> — 할인을 두 개 겹쳐 적용하거든요. <em>"이거 계산기로 만들면 되잖아"</em> 라고 생각은 하는데, 개발자에게 부탁할 일은 아니고요. <strong>오늘 그걸 직접 만듭니다.</strong> 코드 한 줄 안 쓰고, 팀원에게 링크로 넘길 수 있는 상태로.</p></div>
+<div class="term-note">📖 <b>아티팩트(Artifact)</b> : 영어로 <strong>"만들어진 물건, 산출물".</strong> 대화 중에 오간 말이 아니라, <strong>따로 만들어져 남는 결과물</strong>을 가리킵니다</div>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">＊</span><h2>오늘 전체 수업 흐름</h2></div>
+<p>10차시까지는 <strong>AI에게 일을 시켰습니다.</strong> 오늘은 <strong>AI에게 도구를 만들게 합니다.</strong> 이 차이가 오늘 전부예요. 그리고 마지막에는 그 도구를 Claude 밖으로 꺼내 <strong>누구나 여는 웹페이지</strong>로 올립니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>순서</strong></th><th><strong>배우는 것</strong></th><th><strong>실습</strong></th></tr></thead><tbody>
+<tr><td><strong>1절</strong></td><td>아티팩트가 뭔가 · 기능 켜기</td><td>A 5분 맛보기</td></tr>
+<tr><td><strong>2절</strong></td><td>만드는 순서 4단계 · 부분 수정 · 되돌리기</td><td>B 뼈대 → C 하나씩 → D 검산 ⭐</td></tr>
+<tr><td><strong>3절</strong></td><td>조건이 갈리는 도구 · 데이터 도구</td><td>E 체크리스트 · F 대시보드</td></tr>
+<tr><td><strong>4절</strong></td><td>공유 — 누가 열 수 있고, 사용량은 누가 내나</td><td>G 공유 전 점검</td></tr>
+<tr><td><strong>5절</strong></td><td>아티팩트가 못 하는 것 · 언제 쓰나</td><td>—</td></tr>
+<tr><td><strong>6절</strong></td><td>초보가 흔히 하는 실수</td><td>—</td></tr>
+<tr><td><strong>7절</strong></td><td>HTML로 꺼내서 배포하기</td><td>H 회의록 리포트 → I GitHub Pages 배포 ⭐</td></tr>
+<tr><td><strong>정리</strong></td><td>마스터 프롬프트 · 안 될 때 · FAQ · 내 업무라면 · 자가진단</td><td></td></tr>
+</tbody></table></div>
+<h3 class="sub-head">⏱️ 시간 배분</h3>
+<div class="table-scroll"><table><thead><tr><th><strong>실습</strong></th><th><strong>시간</strong></th><th><strong>필수?</strong></th></tr></thead><tbody>
+<tr><td>A. 5분 맛보기</td><td>5분</td><td><strong>필수</strong></td></tr>
+<tr><td>B. 견적 계산기 뼈대</td><td>15분</td><td><strong>필수</strong></td></tr>
+<tr><td>C. 규칙 하나씩 붙이기</td><td>25분</td><td><strong>필수</strong> ⭐</td></tr>
+<tr><td>D. 검산</td><td>15분</td><td><strong>필수</strong> ⭐</td></tr>
+<tr><td>E. 온보딩 체크리스트</td><td>15분</td><td>권장</td></tr>
+<tr><td>F. 설문 대시보드</td><td>15분</td><td>권장</td></tr>
+<tr><td>G. 공유 전 점검</td><td>10분</td><td><strong>필수</strong></td></tr>
+<tr><td>H. 회의록 → 클릭형 리포트</td><td>15분</td><td>권장</td></tr>
+<tr><td>I. 사이트로 묶어 배포</td><td>30분</td><td><strong>필수</strong> ⭐</td></tr>
+<tr><td><strong>합계</strong></td><td><strong>약 145분</strong></td><td></td></tr>
+</tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 시간이 모자라면 <strong>B·C·D → G → I</strong> 만. 도구 하나를 <strong>만들고 → 검산하고 → 배포</strong>까지 끝까지 도는 게, 다섯 개를 대충 만드는 것보다 낫습니다. 실습 I에서 묶을 결과물이 모자라면 견적 계산기 하나만 올려도 됩니다.</p></div>
+<h3 class="sub-head">📁 오늘 준비물 — 자료 드라이브에서 내려받기</h3>
+<p><a href="https://naver.me/xllcXgmH" target="_blank" rel="noopener">📁 자료 드라이브 바로가기</a></p>
+<div class="table-scroll"><table><thead><tr><th><strong>파일</strong></th><th><strong>만들 것</strong></th><th><strong>실습</strong></th></tr></thead><tbody>
+<tr><td><code>quote_rules.docx</code></td><td><strong>견적 계산기</strong> — 숫자가 맞아야 함</td><td>B·C·D·G</td></tr>
+<tr><td><code>onboarding_rules.docx</code></td><td><strong>체크리스트 생성기</strong> — 조건에 따라 항목이 갈림</td><td>E</td></tr>
+<tr><td><code>team_pulse.xlsx</code></td><td><strong>설문 대시보드</strong> — 필터가 있어야 읽힘</td><td>F</td></tr>
+<tr><td><code>meeting_minutes_source.docx</code></td><td><strong>클릭형 회의록 리포트</strong></td><td>H</td></tr>
+<tr><td><strong>GitHub 계정</strong></td><td>배포용 (무료) — github.com 에서 가입</td><td>I</td></tr>
+</tbody></table></div>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>GitHub 계정은 수업 전에 만들어 오세요.</strong> 가입할 때 이메일 인증이 필요해서, 수업 중에 만들면 실습 I에서 10분 이상 밀립니다.</p></div>
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">1</span><h2>아티팩트가 뭔가</h2></div>
+<h3 class="sub-head first">1-1. 대화로 받는 것과 뭐가 다른가</h3>
+<p>같은 질문인데 <strong>결과의 형태</strong>가 다릅니다.</p>
+<div class="table-scroll"><table><thead><tr><th></th><th><strong>대화로 받으면</strong></th><th><strong>아티팩트로 받으면</strong></th></tr></thead><tbody>
+<tr><td>받는 것</td><td>계산된 <strong>답 하나</strong></td><td><strong>계산기 자체</strong></td></tr>
+<tr><td>다음에 또 필요하면</td><td>다시 물어본다</td><td><strong>그냥 쓴다</strong></td></tr>
+<tr><td>팀원이 쓰려면</td><td>나를 거쳐야 함</td><td><strong>링크를 준다</strong> (조건은 4절)</td></tr>
+<tr><td>대화를 닫으면</td><td>대화 속에 묻힌다</td><td><strong>사이드바 '아티팩트'에 따로 모인다</strong></td></tr>
+<tr><td>고치려면</td><td>처음부터 다시</td><td><strong>"여기만 바꿔줘"</strong></td></tr>
+</tbody></table></div>
+<div class="callout callout--tip"><div class="callout-label">💡 한 줄로 — 아티팩트는 답이 아니라 물건입니다.</div><p>남고, 넘길 수 있고, 고쳐 쓸 수 있어요.</p></div>
+<h3 class="sub-head">1-2. 무엇을 만들 수 있나</h3>
+<div class="table-scroll"><table><thead><tr><th><strong>종류</strong></th><th><strong>예</strong></th></tr></thead><tbody>
+<tr><td><strong>인터랙티브 도구</strong></td><td>계산기, 입력 양식, 체크리스트, 대시보드 ← <strong>오늘의 주인공</strong></td></tr>
+<tr><td>문서</td><td>보고서, 매뉴얼, 제안서</td></tr>
+<tr><td>다이어그램·차트</td><td>순서도, 조직도, 그래프</td></tr>
+<tr><td>이미지(SVG)</td><td>도식, 아이콘, 간단한 일러스트</td></tr>
+<tr><td>웹페이지</td><td>안내 페이지, 한 장짜리 홈페이지</td></tr>
+</tbody></table></div>
+<div class="term-note">📖 <b>인터랙티브</b> : 쓰는 사람이 <strong>값을 넣거나 누르면 반응하는 것.</strong> 문서는 읽기만 하지만, 도구는 반응합니다. 그래서 남에게 넘길 수 있어요</div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 유료 플랜에는 <strong>문서·슬라이드·디자인 템플릿</strong>도 있어서 화면에서 바로 고칠 수 있습니다. 오늘은 그중 <strong>계산기·체크리스트 같은 도구</strong>에 집중합니다.</p></div>
+<p><strong>만든 걸 다시 여는 곳</strong> — 만든 것은 모두 왼쪽 <strong>사이드바의 '아티팩트'(Artifacts) 탭</strong>에 모입니다. 오늘 도구를 여러 개 만들 텐데, 중간에 길을 잃으면 <strong>사이드바에서 찾으세요.</strong></p>
+<h3 class="sub-head">1-3. 실습 전 준비 — 기능 켜기 (1분)</h3>
+<p>아티팩트는 <strong>Free · Pro · Max · Team · Enterprise 모든 플랜</strong>에서 만들 수 있습니다. 다만 설정 하나가 켜져 있어야 해요.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>플랜</strong></th><th><strong>어디서</strong></th></tr></thead><tbody>
+<tr><td>Free · Pro · Max</td><td><strong>설정 → 기능(Capabilities)</strong> 에서 <strong>"코드 실행 및 파일 생성"</strong>(Cloud code execution and file creation) 켜기</td></tr>
+<tr><td>Team · Enterprise</td><td><strong>조직 설정 → 기능</strong> 에서 관리자가 켜야 합니다</td></tr>
+</tbody></table></div>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>회사 계정인데 안 켜진다면</strong> 관리자 권한이 필요합니다. 오늘은 개인 계정으로 실습하고, 회사 도입은 따로 요청하세요.</p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 메뉴 이름은 업데이트마다 조금씩 바뀝니다. 못 찾겠으면 Claude에게 물어보세요 — <em>"아티팩트를 만들려면 설정 어디를 켜야 해?"</em></p></div>
+<div class="callout callout--summary"><div class="callout-label">📌 1절 한 줄 요약</div><p>— 아티팩트는 <strong>답이 아니라 물건.</strong> 남고, 넘길 수 있고, 고쳐 쓸 수 있다.</p></div>
+</section>
+
+<section class="lesson-section practice-block">
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 A — 5분 맛보기: 회의 비용 계산기</div>
+  <p>순서는 <b>① 붙여넣기</b> → <b>② 숫자 바꿔 보기</b>.<br><b>새 대화</b>에서 시작합니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>없음</b> <span class="meta">· 1-3절 설정만 켜져 있으면 됩니다</span></li>
+    </ul>
+  </div>
+  <p class="practice-step">① 아래를 그대로 붙여넣기</p>
+  <p>설명 전에 하나 만들어 봅니다. 파일은 필요 없어요.</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"회의 시간 비용 계산기를 만들어줘.<br>- 참석자 수, 회의 시간(분), 평균 시급을 입력하면 이 회의에 든 인건비가 나오게<br>- 숫자를 바꾸면 결과가 바로 바뀌게<br>- 결과 밑에 '이 회의를 30분 줄이면 얼마가 절약되는지'도 같이 보여줘"</em></p></div>
+  <p class="practice-step">② 숫자 바꿔 보기</p>
+  <p>대화 옆에 <strong>창이 하나 열리고</strong>, 그 안에 실제로 동작하는 계산기가 있습니다. 참석자 수를 바꿔 보세요.</p>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 숫자를 바꾸면 결과가 바로 바뀌나?</div><p>참석자 8명 · 60분 · 시급 30,000원이면 <strong>240,000원</strong>, 30분 줄이면 <strong>120,000원 절약</strong>이 나와야 합니다. 직접 곱해서 맞는지 보세요 — 오늘 내내 할 <strong>검산</strong>의 첫 연습입니다.</p></div>
+</div>
+<div class="callout callout--tip"><div class="callout-label">💡 방금 만든 게 아티팩트입니다.</div><p>대화 속 텍스트가 아니라, <strong>따로 열린 창에 담긴 결과물</strong>이에요. 사이드바 '아티팩트' 탭에 가 보면 방금 만든 계산기가 들어 있습니다.</p></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 창이 안 열리고 글로만 나왔다면 — 순서대로 해보세요.</div><ol><li><em>"이걸 아티팩트로 만들어줘"</em> 라고 한 번 더 말하기</li><li>그래도 안 되면 <strong>설정에서 기능이 꺼진 것</strong>입니다 → 1-3절</li></ol></div>
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">2</span><h2>만드는 순서 — 한 번에 완성하려 하지 마세요</h2></div>
+<p>초보가 가장 많이 하는 실수가 <strong>규칙을 통째로 붙이고 "다 만들어줘"</strong> 입니다. 뭔가 나오긴 하는데, <strong>어디가 틀렸는지 알 수 없습니다.</strong></p>
+<h3 class="sub-head">2-1. 네 단계로</h3>
+<div class="table-scroll"><table><thead><tr><th><strong>단계</strong></th><th><strong>무엇</strong></th><th><strong>왜</strong></th></tr></thead><tbody>
+<tr><td><strong>① 규칙을 붙인다</strong></td><td>계산 규칙 문서를 그대로 첨부</td><td>말로 옮기면 반드시 빠뜨립니다</td></tr>
+<tr><td><strong>② 뼈대만 만든다</strong></td><td>기본가 × 수량만 되는 계산기</td><td>여기가 맞아야 나머지가 의미 있음</td></tr>
+<tr><td><strong>③ 하나씩 붙인다</strong></td><td>옵션 → 수량 할인 → 추가 할인 → 배송 → 부가세</td><td><strong>한 번에 하나씩.</strong> 틀리면 방금 붙인 게 범인</td></tr>
+<tr><td><strong>④ 숫자로 검산한다</strong></td><td>손으로 낸 견적과 대조</td><td>화면이 예쁘다고 맞는 게 아님</td></tr>
+</tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>③의 "한 번에 하나씩"이 핵심입니다.</strong> 다섯 개를 한꺼번에 붙이고 결과가 틀리면 다섯 개를 다 뒤져야 해요. 하나씩 붙이면 <strong>범인은 항상 방금 그것</strong>입니다.</p></div>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>④를 건너뛰지 마세요.</strong> 아티팩트는 결과가 <strong>너무 그럴듯하게</strong> 나옵니다. 화면이 깔끔하고 숫자가 딱 떨어지니 맞는 것 같죠. 8차시에서 배운 그 문제 — <strong>그럴듯함이 정확함은 아닙니다.</strong></p></div>
+<h3 class="sub-head">2-2. 고칠 때는 부분만</h3>
+<p>전체를 다시 만들게 하지 마세요. <strong>어디를 어떻게</strong> 바꿀지 짚어 줍니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>나쁜 요청</strong></th><th><strong>좋은 요청</strong></th></tr></thead><tbody>
+<tr><td><em>"좀 이상한데 다시 만들어줘"</em></td><td><em>"수량 할인이 옵션 금액을 빼고 계산되고 있어. 옵션 포함 소계에 적용되게 고쳐줘"</em></td></tr>
+<tr><td><em>"더 예쁘게"</em></td><td><em>"입력칸을 왼쪽, 결과를 오른쪽에 두고, 최종 금액만 크게 보여줘"</em></td></tr>
+<tr><td><em>"기능 더 넣어줘"</em></td><td><em>"제주·도서산간 체크박스를 추가하고, 체크하면 배송비에 25,000원을 더해줘"</em></td></tr>
+</tbody></table></div>
+<div class="callout callout--summary"><div class="callout-label">📌 어디에 입력하나요?</div><p>아티팩트를 만든 <strong>그 대화에 이어서</strong> 말하면 됩니다. 새 대화를 열면 Claude가 그 도구를 모릅니다. 옆 창은 그대로 두고 <strong>대화창에</strong> 입력하세요.</p></div>
+<h3 class="sub-head">2-3. 망가졌을 때 — 되돌리는 두 가지 방법</h3>
+<div class="table-scroll"><table><thead><tr><th><strong>방법</strong></th><th><strong>이렇게</strong></th></tr></thead><tbody>
+<tr><td><strong>① 말로 되돌리기</strong></td><td><em>"방금 바꾼 것 취소하고, 그 전 상태로 돌려줘"</em></td></tr>
+<tr><td><strong>② 갈래 만들기</strong></td><td>고치기 <strong>전에 보냈던 내 메시지를 편집</strong>해서 다시 보내면, 대화가 그 시점에서 갈라져 새로 만들어집니다</td></tr>
+</tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>그래서 과감하게 고쳐도 됩니다.</strong> 초보는 "건드렸다가 망가질까 봐" 못 고치는 경우가 많은데, 그럴 필요 없어요. 다만 <strong>잘 되는 상태일 때 검산 결과를 메모해 두면</strong>, 고친 뒤에 같은 숫자가 나오는지 바로 확인할 수 있습니다.</p></div>
+<div class="callout callout--summary"><div class="callout-label">📌 2절 한 줄 요약</div><p>— <strong>뼈대 → 하나씩 → 검산.</strong> 고칠 땐 전체가 아니라 <strong>부분을 짚어서.</strong></p></div>
+</section>
+
+<section class="lesson-section practice-block">
+<h3 class="sub-head first">PART 1 — 견적 계산기 (오늘의 본편)</h3>
+<div class="callout callout--scenario"><p><span class="co-icon">🎯</span> <strong>목표</strong>: 규칙 문서 하나를 <strong>팀원이 쓸 수 있는 도구</strong>로. 그리고 <strong>숫자가 맞는지 확인</strong>까지.</p></div>
+
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 B — 견적 계산기 뼈대</div>
+  <p>순서는 <b>① 규칙 문서 붙이기</b> → <b>② 뼈대만 만들기</b> → <b>③ 경계값 확인</b>.<br><b>새 대화</b>에서 시작합니다. (C·D·G까지 이 대화에서 이어갑니다)</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>견적 계산 규칙</b>(<code>quote_rules.docx</code>) <span class="meta">· Word · 규칙 7개 항목</span></li>
+    </ul>
+  </div>
+  <p class="practice-step">① 규칙 문서 붙이고 뼈대만 시키기</p>
+  <p>파일을 첨부하고 아래를 입력합니다. <strong>1번과 3번만</strong> 시키는 게 포인트예요.</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 견적 규칙 문서를 읽고, 단체주문 견적 계산기를 만들려고 해. 지금은 1번(기본 단가)과 3번(수량 할인)만 반영해줘. 나머지는 나중에 붙일 거야. 제품을 고르고 수량을 넣으면 소계와 할인이 적용된 금액이 나오게. 숫자를 바꾸면 바로 반영되게."</em></p></div>
+  <p class="practice-step">② 경계값 넣어 보기</p>
+  <p>수량칸에 <strong>20, 99, 100</strong>을 차례로 넣어 봅니다.</p>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 제품 4종, 할인 4단계, 100개에서 8%?</div><ul class="checklist"><li>제품 4종이 다 들어갔나 (350ml · 500ml · 보온병 500 · 750)</li><li>수량 할인 구간이 <strong>4단계</strong>인가 (50 · 100 · 300 · 500)</li><li>20개일 때 할인 <strong>0%</strong>, 100개일 때 <strong>8%</strong>인가 (5%가 아니라)</li></ul></div>
+</div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 마지막 항목이 함정입니다. 규칙은 <em>"100개 이상 8%"</em> 인데, 구간을 '초과'로 잡으면 100개에서 5%가 나옵니다. 8차시에서 배운 <strong>경계값 검증</strong>이 여기서 또 나와요.</p></div>
+<div class="term-note">📖 <b>경계값</b> : 구간이 바뀌는 <strong>바로 그 숫자</strong>(100개, 100만원). '이상'인지 '초과'인지에 따라 결과가 갈려서 가장 자주 틀립니다</div>
+
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 C — 규칙 하나씩 붙이기 ⭐</div>
+  <p>순서는 <b>① 옵션</b> → <b>② 할인 기준 확인</b> → <b>③ 추가 할인</b> → <b>④ 배송비</b> → <b>⑤ 마무리 규칙</b>.<br>실습 B와 <b>같은 대화</b>에서 이어갑니다. <strong>하나 보내고 → 숫자 확인하고 → 다음 것.</strong></p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>실습 B의 계산기 뼈대</b> <span class="meta">· 같은 대화에 있음</span></li>
+    </ul>
+  </div>
+  <p class="practice-step">① 옵션</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"2번 옵션을 추가해줘. 로고 인쇄(단색/풀컬러), 개인 각인, 선물 포장을 체크박스로. 옵션은 개당 금액이야."</em></p></div>
+  <p class="practice-step">② 수량 할인의 기준 확인 ← 여기가 핵심</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"수량 할인이 옵션 금액을 포함한 소계에 적용되고 있는지 확인해줘. 규칙 문서 3번 아래 주석을 봐."</em></p></div>
+  <p class="practice-step">③ 추가 할인</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"4번 추가 할인을 넣어줘. 재구매·공공기관·신규 거래처 세 가지인데, 중복 적용이 안 돼. 둘 이상 해당하면 고객에게 유리한 쪽 하나만 적용되게 해줘. 어느 게 적용됐는지도 화면에 보여줘."</em></p></div>
+  <p class="practice-step">④ 배송비</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"5번 배송비를 넣어줘. 100만원 기준으로 갈리고, 제주·도서산간은 체크박스로 25,000원 추가야."</em></p></div>
+  <p class="practice-step">⑤ 마무리 규칙</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"6번 규칙을 넣어줘. 최소 주문 20개 미만이면 견적이 안 나오고 안내 문구가 뜨게. 부가세 10%는 별도로 더하고, 배송비에도 부가세가 붙어. 최종 금액은 10원 단위 버림."</em></p></div>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 붙일 때마다 이것만 보세요</div><div class="table-scroll"><table><thead><tr><th><strong>붙인 것</strong></th><th><strong>확인</strong></th></tr></thead><tbody>
+  <tr><td>① 옵션</td><td>옵션을 켜면 금액이 <strong>수량만큼</strong> 늘어나나</td></tr>
+  <tr><td>② 기준</td><td>옵션을 켜면 <strong>할인액도</strong> 같이 커지나 (소계 기준이니까)</td></tr>
+  <tr><td>③ 추가 할인</td><td>셋 다 체크하면 <strong>하나만</strong> 적용되나</td></tr>
+  <tr><td>④ 배송비</td><td>100만원 <strong>정확히</strong>에서 무료인가</td></tr>
+  <tr><td>⑤ 부가세</td><td>배송비에도 붙나 · 19개에서 견적이 막히나</td></tr>
+  </tbody></table></div></div>
+</div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ ②번이 오늘 가장 자주 틀리는 곳입니다.</div><p>규칙 문서 7번 '자주 나오는 실수'에 <em>"수량 할인을 옵션 금액을 빼고 계산하는 실수"</em> 가 적혀 있어요. <strong>사람도 틀리는 걸 AI도 틀립니다.</strong> 그래서 따로 확인시키는 겁니다.</p></div>
+
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 D — 검산 ⭐</div>
+  <p>순서는 <b>① 기본 케이스</b> → <b>② 함정 케이스</b> → <b>③ 경계 케이스</b> → <b>④ 틀린 곳 짚어 고치기</b>.<br>실습 C와 <b>같은 대화</b>에서 이어갑니다. 계산기에 값을 넣고, 아래 정답표와 <strong>숫자를 대조</strong>합니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>실습 C의 견적 계산기</b> <span class="meta">· 같은 대화에 있음</span></li>
+    </ul>
+  </div>
+  <p class="practice-step">① 검산 케이스 1 — 기본</p>
+  <p>베이직 350ml · <strong>120개</strong> · 로고 단색 · 재구매 고객 · 서울</p>
+  <div class="table-scroll"><table><thead><tr><th><strong>단계</strong></th><th><strong>계산</strong></th><th><strong>값</strong></th></tr></thead><tbody>
+  <tr><td>기본</td><td>15,000 × 120</td><td>1,800,000</td></tr>
+  <tr><td>옵션</td><td>1,200 × 120</td><td>144,000</td></tr>
+  <tr><td>소계</td><td></td><td><strong>1,944,000</strong></td></tr>
+  <tr><td>수량 할인 (100개 이상 8%)</td><td>1,944,000 × 0.08</td><td>−155,520</td></tr>
+  <tr><td>추가 할인 (재구매 3%)</td><td>1,944,000 × 0.03</td><td>−58,320</td></tr>
+  <tr><td>할인 후</td><td></td><td><strong>1,730,160</strong></td></tr>
+  <tr><td>배송비 (100만원 이상)</td><td></td><td>0</td></tr>
+  <tr><td>부가세 10%</td><td></td><td>+173,016</td></tr>
+  <tr><td>합계</td><td>1,903,176 → 10원 단위 버림</td><td><strong>1,903,170원</strong></td></tr>
+  </tbody></table></div>
+  <p class="practice-step">② 검산 케이스 2 — 함정</p>
+  <p>써모 보온병 500ml · <strong>50개</strong> · 각인 + 선물포장 · <strong>공공기관이면서 신규 거래처</strong> · 제주</p>
+  <div class="table-scroll"><table><thead><tr><th><strong>단계</strong></th><th><strong>계산</strong></th><th><strong>값</strong></th></tr></thead><tbody>
+  <tr><td>기본</td><td>26,000 × 50</td><td>1,300,000</td></tr>
+  <tr><td>옵션</td><td>(3,000 + 1,800) × 50</td><td>240,000</td></tr>
+  <tr><td>소계</td><td></td><td><strong>1,540,000</strong></td></tr>
+  <tr><td>수량 할인 (50개 이상 5%)</td><td>1,540,000 × 0.05</td><td>−77,000</td></tr>
+  <tr><td>추가 할인 (<strong>공공기관 5%</strong>만)</td><td>1,540,000 × 0.05</td><td>−77,000</td></tr>
+  <tr><td>할인 후</td><td></td><td><strong>1,386,000</strong></td></tr>
+  <tr><td>배송비 (100만원 이상 무료 + <strong>제주 25,000</strong>)</td><td></td><td>+25,000</td></tr>
+  <tr><td>부가세 10% (<strong>배송비 포함</strong> 1,411,000 기준)</td><td></td><td>+141,100</td></tr>
+  <tr><td>합계</td><td></td><td><strong>1,552,100원</strong></td></tr>
+  </tbody></table></div>
+  <p>이 케이스는 함정 셋을 잡아냅니다. 내 계산기 숫자가 아래 중 하나라면 그 함정에 걸린 거예요.</p>
+  <div class="table-scroll"><table><thead><tr><th><strong>함정</strong></th><th><strong>틀리면 이렇게 나온다</strong></th></tr></thead><tbody>
+  <tr><td>추가 할인을 <strong>둘 다</strong> 적용 (공공 5% + 신규 4%)</td><td>1,484,340원 — <strong>67,760원 적게</strong> 청구</td></tr>
+  <tr><td>제주 배송비를 <strong>빼먹음</strong></td><td>1,524,600원</td></tr>
+  <tr><td>배송비에 <strong>부가세를 안 붙임</strong></td><td>1,549,600원</td></tr>
+  </tbody></table></div>
+  <p class="practice-step">③ 검산 케이스 3 — 경계</p>
+  <p>베이직 500ml · <strong>19개</strong> → 정답: <strong>견적이 안 나와야</strong> 합니다 (최소 주문 20개 미만).</p>
+  <p class="practice-step">④ 틀린 곳이 있으면 — 숫자로 짚어 고치기</p>
+  <p>"이상해요"가 아니라, <strong>어느 칸이 얼마여야 하는데 얼마가 나왔는지</strong>를 말합니다. 예를 들어 케이스 1에서 수량 할인이 144,000원으로 나왔다면:</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"120개 케이스에서 수량 할인이 155,520원이어야 하는데 144,000원이 나와. 옵션 금액을 빼고 계산한 것 같아. 옵션 포함 소계 기준으로 고쳐줘."</em></p></div>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 세 케이스가 모두 맞나?</div><p><strong>1,903,170원 · 1,552,100원 · 견적 안 나옴</strong> — 셋 다 맞으면 이 도구는 쓸 수 있습니다. 하나라도 다르면 위 함정표에서 어느 단계가 갈라졌는지 찾아 ④처럼 고치세요.</p></div>
+</div>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>"대충 맞는 것 같다"로 넘어가지 마세요.</strong> 이 도구는 <strong>고객에게 나갈 금액</strong>을 계산합니다. 8차시의 판단 기준 그대로 — <strong>되돌리기 어려운 결정</strong>이면 검산까지 합니다.</p></div>
+<div class="callout callout--summary"><div class="callout-label">📌 PART 1 정리</div><p>— 규칙 파일을 붙이고, 뼈대부터, 하나씩, 그리고 <strong>손 계산과 숫자로 대조.</strong> 셋 다 맞을 때까지가 '완성'입니다.</p></div>
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">3</span><h2>계산 말고도 — 조건 도구 · 데이터 도구</h2></div>
+<p>견적 계산기는 <strong>숫자</strong>를 다뤘습니다. 업무 도구는 크게 세 종류예요.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>도구 종류</strong></th><th><strong>하는 일</strong></th><th><strong>제일 중요한 확인</strong></th><th><strong>실습</strong></th></tr></thead><tbody>
+<tr><td><strong>계산기</strong></td><td>규칙대로 숫자를 낸다</td><td>손 계산과 <strong>숫자가 같나</strong></td><td>B·C·D</td></tr>
+<tr><td><strong>체크리스트 생성기</strong></td><td>조건을 고르면 <strong>필요한 항목만</strong> 보여준다</td><td><strong>나오면 안 되는 항목</strong>이 빠졌나</td><td>E</td></tr>
+<tr><td><strong>대시보드</strong></td><td>데이터를 <strong>필터로 걸러</strong> 보여준다</td><td><strong>비교 대상</strong>(전체 평균)이 같이 보이나</td><td>F</td></tr>
+</tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 만드는 순서(규칙 붙이기 → 뼈대 → 하나씩 → 검산)는 셋 다 같습니다. <strong>검산하는 방법만 다를 뿐</strong>이에요.</p></div>
+<div class="callout callout--summary"><div class="callout-label">📌 3절 한 줄 요약</div><p>— 계산기는 <strong>숫자</strong>, 체크리스트는 <strong>빠진 것</strong>, 대시보드는 <strong>비교</strong>를 확인한다.</p></div>
+</section>
+
+<section class="lesson-section practice-block">
+<h3 class="sub-head first">PART 2 — 조건이 갈리는 도구 · 데이터 도구</h3>
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 E — 온보딩 체크리스트 생성기</div>
+  <p>순서는 <b>① 체크리스트 도구 만들기</b> → <b>② 조건별로 확인</b> → <b>③ 복사 버튼 붙이기</b>.<br><b>새 대화</b>에서 시작합니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>신규 입사자 준비 규칙</b>(<code>onboarding_rules.docx</code>) <span class="meta">· Word · 고용형태·직군·근무지별 규칙</span></li>
+    </ul>
+  </div>
+  <p class="practice-step">① 체크리스트 도구 만들기</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 규칙으로 신규 입사자 준비 체크리스트를 만들어주는 도구를 만들어줘. 고용형태 · 직군 · 근무지를 고르면, 그 사람에게 필요한 항목만 체크리스트로 나오게. 각 항목에 언제까지 해야 하는지도 같이 보여줘. 리드타임이 긴 항목(노트북 5일, 법인카드 2주)은 눈에 띄게 표시해줘."</em></p></div>
+  <p class="practice-step">② 조건을 바꿔 가며 확인</p>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 조건마다 나와야 할 것</div><div class="table-scroll"><table><thead><tr><th><strong>조건</strong></th><th><strong>나와야 할 것</strong></th></tr></thead><tbody>
+  <tr><td><strong>프리랜서</strong> 선택</td><td>사원증·복지포인트가 <strong>안 나와야</strong> 함</td></tr>
+  <tr><td><strong>영업 직군</strong> 선택</td><td>법인카드가 <strong>눈에 띄게</strong> (2주 소요)</td></tr>
+  <tr><td><strong>재택 병행</strong> 선택</td><td>VPN · 서약서 · 모니터 대여</td></tr>
+  <tr><td><strong>인턴 + 개발 + 본사</strong></td><td>공통 5 + 인턴 2 + 개발 3 + 본사 2 = <strong>12개</strong></td></tr>
+  </tbody></table></div></div>
+  <p class="practice-step">③ 메신저로 옮길 수 있게</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"체크리스트를 복사해서 메신저에 붙여넣을 수 있는 형태로 내보내는 버튼을 추가해줘."</em></p></div>
+</div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>프리랜서 케이스가 함정입니다.</strong> 규칙 문서에 <em>"프리랜서는 사원증·복지포인트 대상이 아닙니다"</em> 가 <strong>본문이 아니라 '주의' 항목에</strong> 적혀 있어요. 문서를 끝까지 안 읽으면 놓칩니다 — <strong>AI도 그렇습니다.</strong> 프리랜서에게 사원증이 나오면 <em>"규칙 문서 맨 아래 주의사항을 반영해줘"</em> 라고 짚어 주세요.</p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> ③의 한 줄이 도구를 실무로 밀어 넣습니다. 아무리 좋은 도구도 <strong>결과를 옮길 수 없으면 안 씁니다.</strong></p></div>
+
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 F — 설문 대시보드</div>
+  <p>순서는 <b>① 대시보드 만들기</b> → <b>② 필터 걸어 확인</b>.<br><b>새 대화</b>에서 시작합니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>팀 설문 응답</b>(<code>team_pulse.xlsx</code>) <span class="meta">· Excel · 응답 96건</span></li>
+    </ul>
+  </div>
+  <p class="practice-step">① 대시보드 만들기</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 설문 데이터로 대시보드를 만들어줘.<br>① 전체 평균을 항목별로 보여주고<br>② 부서 · 연차 · 고용형태로 필터를 걸 수 있게<br>③ 필터를 걸면 전체 평균과 얼마나 차이 나는지 같이 보여줘<br>④ 한줄의견은 필터에 맞는 것만 목록으로."</em></p></div>
+  <p class="practice-step">② 필터를 걸어 확인</p>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 필터에 따라 점수가 갈리나?</div><ul class="checklist"><li>부서를 <strong>영업</strong>으로 걸면 전체보다 <strong>낮게</strong> 나오나</li><li>부서를 <strong>인사</strong>로 걸면 <strong>높게</strong> 나오나</li><li>비어 있는 한줄의견이 목록에서 어떻게 처리됐나 (빈 줄이 그대로 찍히면 고쳐 달라고 하기)</li></ul></div>
+</div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>③이 대시보드의 값어치입니다.</strong> 숫자만 보여주면 "3.2점이 좋은 건가?"를 알 수 없어요. <strong>비교 대상이 있어야</strong> 읽힙니다.</p></div>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> 8차시의 <strong>자료 사각지대</strong>를 떠올리세요. 이 설문에는 <strong>이미 퇴사한 사람의 응답이 없습니다.</strong> 대시보드가 예뻐도 그 한계는 그대로예요. 도구는 데이터의 한계를 고쳐 주지 않습니다.</p></div>
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">4</span><h2>공유 — 누가 열 수 있고, 사용량은 누가 내나</h2></div>
+<p>만든 도구를 팀원에게 넘기려면 공유해야 합니다. 그런데 <strong>2026년 9월 16일 아티팩트가 새로 바뀌면서</strong> 공유 방식도 달라졌어요. 예전 자료에서 본 내용과 다를 수 있으니 이 절을 기준으로 하세요.</p>
+<h3 class="sub-head">4-1. 기본은 '나만 보기'</h3>
+<p>새로 만든 아티팩트는 <strong>처음엔 나만 볼 수 있습니다.</strong> 공유하기 전까지는 아무에게도 안 보여요. 아티팩트를 열고 <strong>'공유'(Share)</strong> 버튼 → <strong>'접근 권한'(Who has access)</strong>에서 고릅니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>플랜</strong></th><th><strong>고를 수 있는 공유 범위</strong></th></tr></thead><tbody>
+<tr><td><strong>Free</strong></td><td>새 아티팩트는 <strong>링크 공유가 안 됩니다</strong> → 7절의 <strong>HTML 배포</strong>가 대안입니다</td></tr>
+<tr><td><strong>Pro · Max</strong></td><td>나만 / 이메일로 특정인 초대(베타) / <strong>링크가 있는 모든 사람</strong></td></tr>
+<tr><td><strong>Team · Enterprise</strong></td><td>특정인 / 조직 전체. <strong>조직 밖 공유는 관리자가 허용해야</strong> 됩니다</td></tr>
+</tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 링크를 받은 사람도 Claude에 로그인해야 열립니다.</div><p>'링크가 있는 모든 사람'은 <strong>Claude 계정으로 로그인한 사람 중</strong> 링크를 가진 누구나라는 뜻이에요. 계정이 없는 고객이나 거래처에게 링크만 주면 못 엽니다. 그럴 때가 바로 <strong>7절(배포)</strong>이 필요한 순간입니다.</p></div>
+<p><strong>권한은 세 단계</strong>로 줄 수 있습니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>권한</strong></th><th><strong>할 수 있는 것</strong></th></tr></thead><tbody>
+<tr><td><strong>보기</strong></td><td>열어서 쓰기, 댓글 읽기</td></tr>
+<tr><td><strong>댓글</strong></td><td>보기 + 댓글 달기 + 도구가 주는 파일 내려받기</td></tr>
+<tr><td><strong>편집</strong></td><td>댓글 + <strong>내용 고치기</strong></td></tr>
+</tbody></table></div>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>공유 = 그 링크를 가진 사람은 다 본다.</strong> 사내 단가표, 고객 명단, 개인정보가 들어간 도구를 '링크가 있는 모든 사람'으로 열면 그게 밖으로 나갑니다. 오늘 견적 계산기는 <strong>실습용 숫자라서</strong> 괜찮은 거예요.</p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 공유 설정은 <strong>휴대폰 앱에서는 못 바꿉니다.</strong> 웹(claude.ai)이나 데스크톱 앱에서 하세요. 공유를 멈출 때는 '공유' → <strong>'나만'</strong>으로 바꾸면 됩니다.</p></div>
+<h3 class="sub-head">4-2. 남이 내 도구를 고쳐 쓰려면</h3>
+<p>받은 사람이 <em>"이거 우리 팀 기준으로 바꾸고 싶은데"</em> 할 때가 있죠. 방법은 둘입니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>방법</strong></th><th><strong>언제</strong></th></tr></thead><tbody>
+<tr><td><strong>'편집' 권한으로 공유</strong></td><td>같이 하나를 고쳐 갈 때 — 원본이 바뀝니다</td></tr>
+<tr><td><strong>HTML 파일로 넘기기</strong> (7절)</td><td>각자 자기 버전을 만들 때 — 받은 사람이 자기 대화에 파일을 올리고 <em>"우리 단가로 바꿔줘"</em></td></tr>
+</tbody></table></div>
+<h3 class="sub-head">4-3. AI가 들어간 도구 — 사용량은 누가 내나</h3>
+<p>아티팩트 안에 <strong>Claude를 부르는 기능</strong>을 넣을 수도 있습니다. 예를 들어 <em>"고객 문의를 붙여넣으면 답변 초안을 만들어 주는 도구"</em> 같은 것.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>항목</strong></th><th><strong>내용</strong></th></tr></thead><tbody>
+<tr><td>사용량</td><td><strong>쓰는 사람의 사용량</strong>이 차감됩니다. 만든 사람 부담이 아니에요. API 키도 필요 없습니다</td></tr>
+<tr><td>쓰는 사람</td><td>자기 Claude 계정으로 로그인해야 하고, 처음 쓸 때 <strong>허락을 묻는 창</strong>이 뜹니다</td></tr>
+<tr><td>공유</td><td>AI를 부르거나 다른 앱과 연결된 도구는 <strong>링크로 공유할 수 없습니다</strong></td></tr>
+</tbody></table></div>
+<div class="callout callout--summary"><div class="callout-label">📌 4절 한 줄 요약</div><p>— 기본은 <strong>나만 보기.</strong> 링크로 열어도 <strong>받는 사람도 로그인</strong> 필요. 민감정보는 넣지 않는다. AI 기능 사용량은 <strong>쓰는 사람 부담.</strong></p></div>
+</section>
+
+<section class="lesson-section practice-block">
+<h3 class="sub-head first">PART 3 — 넘기기</h3>
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 G — 공유 전 점검과 사용법 붙이기</div>
+  <p>순서는 <b>① 공개되면 곤란한 것 확인</b> → <b>② 사용법 3줄 넣기</b> → <b>③ 공유하기</b>.<br>실습 D와 <b>같은 대화</b>(견적 계산기)에서 이어갑니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>실습 D까지 검산을 마친 견적 계산기</b> <span class="meta">· 같은 대화에 있음</span></li>
+    </ul>
+  </div>
+  <p class="practice-step">① 공유 전 점검 ← 순서가 중요합니다</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 도구에 들어 있는 정보 중, 외부에 공개되면 곤란한 게 있는지 알려줘."</em></p></div>
+  <p class="practice-step">② 사용법 3줄 넣기</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 계산기 맨 위에 사용법 3줄을 넣어줘. 처음 보는 사람이 뭘 고르고 뭘 넣어야 하는지, 그리고 이 견적의 유효기간(14일) 안내까지."</em></p></div>
+  <p class="practice-step">③ 공유하기 — 플랜에 따라</p>
+  <p><strong>Pro 이상</strong>: 아티팩트의 '공유' → 접근 권한을 정하고 링크 복사. <strong>Free</strong>: 링크 공유가 안 되니, 이 계산기는 <strong>실습 I에서 웹페이지로 배포</strong>합니다.</p>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 처음 보는 사람이 나 없이 쓸 수 있나?</div><p>옆 사람에게 계산기를 보여 주고 <strong>아무 설명 없이</strong> 케이스 1을 넣어 보게 하세요. 막히는 곳이 있으면 그게 사용법에 빠진 줄입니다.</p></div>
+</div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>②를 하면 도구가 자산이 됩니다.</strong> 내가 설명해 줘야 쓸 수 있는 도구는 절반만 완성된 거예요. 그리고 <strong>규칙이 바뀌면 누가 고칠지</strong>도 정해 두세요 — 안 그러면 6개월 뒤에 낡은 단가로 견적이 나갑니다.</p></div>
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">5</span><h2>못 하는 것 — 기대치를 여기 맞추세요</h2></div>
+<p>이 절을 안 읽으면 실습 중반에 실망합니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>못 하는 것</strong></th><th><strong>무슨 뜻인가</strong></th></tr></thead><tbody>
+<tr><td><strong>아무 인터넷이나 불러오지 못한다</strong></td><td>실시간 환율, 사내 시스템 조회 ✗. (Pro 이상은 미리 연결해 둔 일부 앱을 쓸 수 있지만, 그런 도구는 링크 공유가 안 됩니다)</td></tr>
+<tr><td><strong>내가 안 넣은 데이터는 모른다</strong></td><td>우리 회사 재고·주문 내역을 알아서 못 가져옴</td></tr>
+<tr><td><strong>기록을 오래 저장하는 건 제한적이다</strong></td><td>입력한 내용을 남기는 저장 기능은 Pro 이상, 아티팩트 하나당 <strong>20MB · 글자만</strong></td></tr>
+<tr><td><strong>진짜 시스템이 아니다</strong></td><td>로그인·권한·감사 기록이 필요한 업무는 대상이 아님</td></tr>
+<tr><td><strong>Claude 밖으로 꺼내면 일부 기능이 멈춘다</strong></td><td>HTML로 내려받아 배포하면 <strong>AI 부르기·저장 기능은 안 됩니다</strong> (Claude 안에서만 도는 기능이라서). 계산·체크리스트·필터는 그대로 됩니다</td></tr>
+</tbody></table></div>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>첫 줄이 제일 자주 부딪히는 벽입니다.</strong> <em>"우리 재고 시스템이랑 연결해서…"</em> 는 오늘 범위가 아니에요. 그건 <strong>19~20차시 MCP 실전</strong>에서 다룹니다. 오늘 만드는 건 <strong>혼자 완결되는 도구</strong>입니다.</p></div>
+<h3 class="sub-head">그래서 언제 쓰나 — 판단표</h3>
+<div class="table-scroll"><table><thead><tr><th><strong>상황</strong></th><th><strong>답</strong></th></tr></thead><tbody>
+<tr><td>한 번 쓰고 버릴 계산</td><td><strong>대화로</strong> 충분</td></tr>
+<tr><td>매주 같은 계산을 반복 · 규칙이 정해져 있음</td><td><strong>아티팩트</strong> ⭐</td></tr>
+<tr><td>팀원이 나 없이 써야 함</td><td><strong>아티팩트</strong> ⭐ (계정 없는 사람까지면 + <strong>배포</strong>)</td></tr>
+<tr><td>데이터가 매일 바뀌고 원본이 엑셀에 있음</td><td><strong>엑셀</strong> (23차시 스프레드시트 자동화)</td></tr>
+<tr><td>사내 시스템·DB와 연결해야 함</td><td><strong>MCP</strong> (19~20차시) 또는 진짜 개발</td></tr>
+<tr><td>로그인·권한·기록이 필요함</td><td><strong>진짜 개발</strong></td></tr>
+</tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>가운데 두 줄이 오늘의 자리입니다.</strong> 규칙은 정해져 있는데 매번 사람이 계산하고 있다 — 그게 아티팩트 자리예요.</p></div>
+<div class="callout callout--summary"><div class="callout-label">📌 5절 한 줄 요약</div><p>— 아티팩트는 <strong>혼자 완결되는 도구.</strong> 바깥과 연결이 필요하면 다른 방법을 본다.</p></div>
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">6</span><h2>초보가 흔히 하는 실수 5가지</h2></div>
+<div class="table-scroll"><table><thead><tr><th><strong>#</strong></th><th><strong>실수</strong></th><th><strong>대신</strong></th></tr></thead><tbody>
+<tr><td>1</td><td><strong>규칙을 말로 옮겨 적음</strong></td><td>규칙 문서를 <strong>그대로 첨부</strong> — 옮기면 빠뜨립니다</td></tr>
+<tr><td>2</td><td><strong>한 번에 다 만들라고 함</strong></td><td>뼈대 → 하나씩 (2-1절)</td></tr>
+<tr><td>3</td><td><strong>검산 없이 신뢰</strong></td><td>손으로 낸 견적 <strong>2~3건과 대조</strong> (실습 D)</td></tr>
+<tr><td>4</td><td><strong>"이상해요"라고만 함</strong></td><td>어디가 어떻게 틀렸는지 <strong>숫자로</strong> 말하기</td></tr>
+<tr><td>5</td><td><strong>사내 단가·개인정보를 넣고 공유·배포</strong></td><td>공유 전에 <strong>뭐가 들어 있는지</strong> 확인 (실습 G)</td></tr>
+</tbody></table></div>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>1번이 결과 품질을 가장 크게 좌우합니다.</strong> 오늘 견적 규칙에는 <em>"할인 중복 적용 불가"</em>, <em>"10원 단위 버림"</em>, <em>"배송비도 과세 대상"</em> 같은 조건이 숨어 있어요. 말로 옮기면 반드시 몇 개가 날아갑니다. <strong>파일을 붙이세요.</strong></p></div>
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">7</span><h2>HTML로 꺼내서 배포하기</h2></div>
+<p>지금까지 만든 도구는 <strong>Claude 안</strong>에 있습니다. 그래서 여는 사람도 Claude 계정이 필요했죠(4절). 이번엔 도구를 <strong>파일 하나로 꺼내서</strong>, 계정 없이 <strong>누구나 주소로 여는 웹페이지</strong>로 올립니다. "만들 줄 안다"에서 <strong>"배포할 줄 안다"</strong>로 넘어가는 단계예요.</p>
+<h3 class="sub-head">7-1. 단어 셋만 알고 가면 됩니다</h3>
+<div class="term-note">📖 <b>HTML</b> : <strong>웹페이지를 이루는 파일.</strong> 오늘 만든 계산기도 속은 HTML 파일 한 장입니다. 더블클릭하면 인터넷 창으로 열려요</div>
+<div class="term-note">📖 <b>배포</b> : 내 컴퓨터에만 있던 파일을 <strong>인터넷 주소로 누구나 열 수 있게 올리는 것</strong></div>
+<div class="term-note">📖 <b>GitHub Pages</b> : GitHub(코드 보관 사이트)가 주는 <strong>무료 웹페이지 호스팅.</strong> 파일을 올리면 <code>내아이디.github.io/저장소이름/</code> 주소가 생깁니다</div>
+<h3 class="sub-head">7-2. Claude 공유 링크 vs 배포 — 뭐가 다른가</h3>
+<div class="table-scroll"><table><thead><tr><th></th><th><strong>Claude 공유 링크</strong></th><th><strong>GitHub Pages 배포</strong></th></tr></thead><tbody>
+<tr><td>여는 사람</td><td><strong>Claude 로그인 필요</strong></td><td><strong>아무나</strong> (계정 필요 없음)</td></tr>
+<tr><td>Free 플랜</td><td>새 아티팩트는 링크 공유 ✗</td><td><strong>됩니다</strong></td></tr>
+<tr><td>AI 부르기·저장 기능</td><td>됩니다</td><td><strong>안 됩니다</strong> (5절)</td></tr>
+<tr><td>고치면</td><td>바로 반영</td><td>파일을 <strong>다시 올려야</strong> 반영</td></tr>
+<tr><td>공개 범위</td><td>내가 고른 범위</td><td><strong>인터넷 전체 공개</strong> ⚠️</td></tr>
+</tbody></table></div>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>배포는 공유보다 더 넓은 공개입니다.</strong> 주소만 알면 검색으로도 들어올 수 있고, 무료로 쓰려면 저장소를 <strong>Public(공개)</strong>으로 만들어야 해서 <strong>파일 내용까지 누구나 볼 수 있습니다.</strong> 실제 단가·고객 정보가 든 도구는 배포하지 마세요.</p></div>
+<h3 class="sub-head">7-3. 폴더를 이렇게 맞춥니다</h3>
+<p>결과물 여러 개를 <strong>사이트 하나</strong>로 묶습니다. 첫 화면(목차) 하나에, 실습마다 폴더 하나씩.</p>
+<div class="prompt">my-tools/              ← 저장소 하나
+├── index.html         ← 첫 화면: 카드형 목차
+├── practice1/
+│   └── index.html     ← 견적 계산기 (실습 B~D)
+├── practice2/
+│   └── index.html     ← 회의록 리포트 (실습 H)
+└── practice3/
+    └── index.html     ← 설문 대시보드 (실습 F)</div>
+<div class="callout callout--tip"><div class="callout-label">💡 왜 전부 이름이 index.html인가요?</div><p>웹 주소가 폴더에서 끝나면(<code>…/practice1/</code>) 그 폴더의 <strong>index.html을 자동으로 엽니다.</strong> 그래서 파일 이름을 <strong>index.html로 바꿔 두면</strong> 주소가 짧고 깔끔해져요. 이 과정 홈페이지(<code>aaaaxca.github.io/Ai_Agent/</code>)도 같은 방식입니다.</p></div>
+<div class="callout callout--summary"><div class="callout-label">📌 7절 한 줄 요약</div><p>— 도구를 <strong>HTML 파일로 꺼내 GitHub Pages에 올리면</strong>, 계정 없는 사람도 주소로 연다. 대신 <strong>인터넷 전체 공개</strong>다.</p></div>
+</section>
+
+<section class="lesson-section practice-block">
+<h3 class="sub-head first">PART 4 — 꺼내서 배포하기</h3>
+<div class="callout callout--scenario"><p><span class="co-icon">🎯</span> <strong>목표</strong>: 오늘 만든 결과물을 <strong>내 주소가 붙은 사이트 하나</strong>로 묶어서, 옆 사람이 휴대폰으로 열어 보게 하기.</p></div>
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 H — 회의록을 클릭형 HTML 리포트로</div>
+  <p>순서는 <b>① 표로 정리</b> → <b>② 같은 내용을 펼침형 리포트로</b> → <b>③ HTML 파일로 받기</b>.<br><b>새 대화</b>에서 시작합니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>회의록 원본</b>(<code>meeting_minutes_source.docx</code>) <span class="meta">· Word · 두서없이 적힌 회의 메모 1건</span></li>
+    </ul>
+  </div>
+  <p class="practice-step">① 먼저 표로 정리</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 회의록에서 안건 · 논의 내용 · 결정 사항 · 실행 항목을 표로 정리해줘."</em></p></div>
+  <p class="practice-step">② 같은 내용을 클릭형 리포트로</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"같은 내용을 안건별로 클릭하면 펼쳐지는 HTML 리포트로 만들어줘. 실행 항목은 체크박스로, 담당자별로 색을 다르게."</em></p></div>
+  <div class="term-note">📖 <b>아코디언</b> : 제목을 누르면 <strong>내용이 펼쳐지고 다시 누르면 접히는</strong> 화면 형태. 악기 아코디언처럼 접혔다 펴져서 붙은 이름</div>
+  <p class="practice-step">③ HTML 파일로 받기</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 리포트를 인터넷 없이도 열리는 HTML 파일 하나로 만들어서 내려받게 해줘. 파일 이름은 index.html로."</em></p></div>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 표와 비교해 뭐가 편한가? 파일이 열리나?</div><p>표는 위에서부터 다 읽어야 하지만, 펼침형은 <strong>필요한 안건만</strong> 열어 봅니다. 정보가 많을수록 차이가 커져요. 내려받은 파일을 <strong>더블클릭해서 인터넷 창으로 열리면</strong> 성공입니다.</p></div>
+</div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 10차시의 회의록 3층 구조(결정 / 액션 / 보류)를 기억하나요? ②에서 <em>"결정·액션·보류 세 덩어리로 나눠서"</em> 를 붙이면 지난 차시 결과물이 그대로 리포트가 됩니다.</p></div>
+
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 I — 사이트로 묶어 GitHub Pages에 배포 ⭐</div>
+  <p>순서는 <b>① HTML 파일 모으기</b> → <b>② 목차 페이지 만들기</b> → <b>③ 폴더 정리</b> → <b>④ 저장소 만들기</b> → <b>⑤ 파일 올리기</b> → <b>⑥ Pages 켜기</b> → <b>⑦ 고쳐서 다시 올리기</b>.<br>①은 각 실습의 대화로 돌아가서, ②는 <b>새 대화</b>에서 합니다. ④부터는 GitHub 사이트에서 진행합니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>실습 D의 견적 계산기</b> <span class="meta">· 그 대화에 있음 → practice1</span></li>
+      <li><b>실습 H의 회의록 리포트 HTML</b> <span class="meta">· 내려받은 파일 → practice2</span></li>
+      <li><b>실습 F의 설문 대시보드</b> <span class="meta">· 그 대화에 있음 → practice3 (안 만들었으면 빼도 됨)</span></li>
+      <li><b>GitHub 계정</b> <span class="meta">· 로그인된 상태</span></li>
+    </ul>
+  </div>
+  <p class="practice-step">① HTML 파일 모으기</p>
+  <p>사이드바 '아티팩트'에서 견적 계산기를 열고, <strong>그 대화에</strong> 아래를 입력합니다. 설문 대시보드도 똑같이 합니다.</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 도구를 인터넷 없이도 열리는 HTML 파일 하나로 만들어서 내려받게 해줘. 파일 이름은 index.html로."</em></p></div>
+  <p class="practice-step">② 목차 페이지 만들기</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"실습 결과 3개로 가는 카드형 목차 페이지를 index.html 파일로 만들어줘. 카드는 '견적 계산기', '회의록 리포트', '설문 대시보드' 세 개이고, 누르면 각각 practice1/, practice2/, practice3/ 폴더로 이동하게. 맨 위에 내 이름과 '11차시 결과물'이라고 적어줘."</em></p></div>
+  <p class="practice-step">③ 폴더 정리</p>
+  <p>바탕화면에 <code>my-tools</code> 폴더를 만들고, 7-3절 그림처럼 <code>practice1</code> · <code>practice2</code> · <code>practice3</code> 폴더를 만들어 파일을 넣습니다. <strong>폴더 이름은 영어 소문자</strong>로, 목차 index.html은 <code>my-tools</code> 바로 안에 둡니다.</p>
+  <p class="practice-step">④ GitHub에서 저장소 만들기</p>
+  <ol class="steps"><li>github.com 오른쪽 위 <strong>＋ → New repository</strong></li><li><strong>Repository name</strong>: <code>my-tools</code> (영어·숫자·하이픈만)</li><li><strong>Public</strong> 그대로 · <strong>Add README</strong> 켜기</li><li>맨 아래 <strong>Create repository</strong></li></ol>
+  <p class="practice-step">⑤ 파일 올리기</p>
+  <ol class="steps"><li>저장소 화면에서 <strong>Add file → Upload files</strong></li><li><code>my-tools</code> 폴더 <strong>안의 것들</strong>(index.html + practice 폴더 3개)을 <strong>한꺼번에 끌어다 놓기</strong> — 폴더 구조가 그대로 올라갑니다</li><li><strong>Commit directly to the main branch</strong> 선택된 상태로 <strong>Commit changes</strong></li></ol>
+  <p class="practice-step">⑥ Pages 켜기</p>
+  <ol class="steps"><li>저장소 위쪽 <strong>Settings → 왼쪽 메뉴 Pages</strong></li><li><strong>Source</strong>: Deploy from a branch</li><li><strong>Branch</strong>: main · 폴더 <strong>/(root)</strong> → <strong>Save</strong></li><li>1~2분 뒤 새로고침하면 위쪽에 <strong>사이트 주소</strong>가 뜹니다 → <strong>Visit site</strong></li></ol>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 휴대폰으로 주소를 열어 카드 3개가 다 들어가지나?</div><p>주소는 <code>내아이디.github.io/my-tools/</code> 모양입니다. 카드를 눌렀는데 404가 뜨면 <strong>폴더 이름과 목차 링크의 철자</strong>(대소문자 포함)가 같은지 보세요. 계산기에 케이스 1을 넣어 <strong>1,903,170원</strong>이 나오면 배포된 도구도 정상입니다.</p></div>
+  <p class="practice-step">⑦ 고쳐서 다시 올리기 — 실무 재현</p>
+  <p>강사가 피드백을 줍니다: <em>"목차의 이름이 잘못됐어요. 그리고 계산기 사용법에 담당자 연락처를 넣어 주세요."</em> 해당 대화로 돌아가 고치고 → HTML을 다시 받고 → 같은 자리에 <strong>Upload files로 덮어 올리기</strong> → 1~2분 뒤 주소에서 바뀌었는지 확인합니다.</p>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 고친 내용이 주소에 반영됐나?</div><p>안 바뀌어 보이면 <strong>Ctrl + F5</strong>(강력 새로고침)를 누르고 1~2분 더 기다리세요. 그래도 그대로면 파일 이름이 index.html인지, 같은 폴더에 올렸는지 확인합니다.</p></div>
+</div>
+<div class="callout callout--tip"><div class="callout-label">💡 한 걸음 더 — "화면에서 글을 고칠 수 있게" 하면?</div><p><em>"이 페이지의 글을 화면에서 바로 고칠 수 있게 해줘"</em> 라고 하면 글자를 고칠 수는 있게 됩니다. 그런데 <strong>새로고침하면 원래대로 돌아가요.</strong> 고친 내용을 <strong>저장해 둘 곳(서버)</strong>이 없어서입니다. GitHub Pages는 파일을 보여 주기만 하는 곳이거든요. 방문자가 고친 내용까지 남기려면 데이터베이스가 붙은 배포(예: Firebase)가 필요합니다 — 아래 강사용 자료 참고.</p></div>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> 배포한 사이트를 내리려면 저장소 <strong>Settings → Pages</strong>에서 끄거나, 저장소 자체를 지우면 됩니다. <strong>실습이 끝나고 실제 업무 정보를 넣었다면</strong> 꼭 내리세요.</p></div>
+
+<details class="toggle"><summary>🧑‍🏫 강사용 · 선택 — Firebase로 "저장되는 페이지" 배포하기</summary><div class="toggle-body">
+<p>GitHub Pages 다음 단계로, 방문자가 고친 내용이 남는 페이지가 필요할 때만 진행합니다. 터미널(CMD)을 쓰기 때문에 시간이 크게 늘어나니 <strong>시간이 남는 반이나 희망자만</strong> 권합니다. 화면 문구는 Firebase CLI 버전에 따라 조금씩 다릅니다.</p>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 학생에게 정답을 외우게 하지 말고, 아래 해석을 같이 읽으며 <strong>"왜 이 답을 골랐는지"</strong> 말하게 하면 이해도가 훨씬 올라갑니다.</p></div>
+<h4 class="mini-head">0. Firebase 콘솔에서 준비</h4>
+<p>firebase.google.com 로그인 → 콘솔 → <strong>새 프로젝트 만들기</strong> → 왼쪽 메뉴 데이터베이스에서 <strong>Firestore</strong> 만들기. (Node.js가 설치돼 있어야 다음 단계가 됩니다)</p>
+<h4 class="mini-head">1. CMD에서 설치·로그인</h4>
+<div class="prompt">npm install -g firebase-tools     <span class="note">← Firebase 명령어 설치 (처음 한 번)</span>
+firebase login                    <span class="note">← 브라우저가 열리면 Google 계정으로 허용</span></div>
+<div class="table-scroll"><table><thead><tr><th><strong>나오는 질문</strong></th><th><strong>뜻</strong></th><th><strong>답</strong></th></tr></thead><tbody>
+<tr><td>Enable Gemini in Firebase features?</td><td>Firebase 안의 Gemini 부가 기능을 켤까요?</td><td>Yes (켜도 지장 없음)</td></tr>
+<tr><td>Allow Firebase to collect … usage and error reporting?</td><td>사용·오류 정보 수집을 허용할까요?</td><td>Yes 또는 No (어느 쪽이든 무관)</td></tr>
+<tr><td>Success! Logged in as …</td><td>로그인 완료</td><td>—</td></tr>
+</tbody></table></div>
+<h4 class="mini-head">2. 작업 폴더에서 초기화</h4>
+<div class="prompt">cd C:\Users\내이름\Desktop\my-tools   <span class="note">← HTML이 있는 폴더로 이동</span>
+firebase init</div>
+<div class="table-scroll"><table><thead><tr><th><strong>나오는 질문</strong></th><th><strong>뜻</strong></th><th><strong>답</strong></th></tr></thead><tbody>
+<tr><td>Are you ready to proceed?</td><td>이 폴더에 Firebase를 설정할까요?</td><td><strong>y</strong></td></tr>
+<tr><td>Which Firebase features…?</td><td>쓸 기능 고르기 (스페이스로 선택, Enter로 확정)</td><td><strong>Firestore</strong>와 <strong>Hosting</strong> 두 개</td></tr>
+<tr><td>Please select an option</td><td>프로젝트 고르기</td><td><strong>Use an existing project</strong> → 0단계에서 만든 프로젝트</td></tr>
+<tr><td>Firestore Rules / indexes 파일 이름</td><td>규칙·색인 파일 이름 (괄호 안이 기본값)</td><td>둘 다 <strong>Enter</strong>만</td></tr>
+<tr><td>What do you want to use as your public directory?</td><td>공개할 폴더는?</td><td><strong>.</strong> (마침표) — 지금 폴더 그대로. 기본값 public으로 하면 우리 파일을 못 찾습니다</td></tr>
+<tr><td>Configure as a single-page app?</td><td>모든 주소를 첫 화면으로 보낼까요?</td><td><strong>n</strong> — Yes면 practice1/ 같은 하위 페이지로 못 들어갑니다</td></tr>
+<tr><td>Set up automatic builds and deploys with GitHub?</td><td>GitHub와 자동 배포를 연결할까요?</td><td><strong>n</strong> — 직접 배포로 충분</td></tr>
+<tr><td>File index.html already exists. Overwrite?</td><td>index.html을 덮어쓸까요?</td><td><strong>N</strong> — Yes면 목차가 Firebase 견본으로 바뀝니다</td></tr>
+<tr><td>Install agent skills for Firebase?</td><td>AI 코딩 도구용 부가 기능 설치?</td><td><strong>N</strong></td></tr>
+</tbody></table></div>
+<h4 class="mini-head">3. 저장 기능 붙이고 배포</h4>
+<p>Firebase 콘솔 → 프로젝트 설정 → 일반 → 내 앱 → <code>&lt;/&gt;</code>(웹 앱 추가) → 이름 아무거나 → 앱 등록. 화면에 나오는 <code>firebaseConfig</code> 코드를 복사해, Claude에게 <em>"이 설정으로 이 페이지에서 고친 글이 Firestore에 저장되고 다시 열면 불러오게 해줘"</em> 라고 붙여 줍니다.</p>
+<div class="prompt">const firebaseConfig = {
+  apiKey: "내-프로젝트-값",
+  authDomain: "내-프로젝트.firebaseapp.com",
+  projectId: "내-프로젝트",
+  …
+};                                <span class="note">← 콘솔에 나온 내 값을 그대로 사용</span>
+firebase deploy                   <span class="note">← 배포. 끝나면 https://내-프로젝트.web.app 주소가 나옵니다</span></div>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>저장이 안 되면 Firestore 보안 규칙</strong>부터 보세요. 기본 규칙은 쓰기를 막아 두거나, 테스트 모드는 일정 기간 뒤 자동으로 닫힙니다. 실습이 끝나면 아무나 쓰지 못하게 규칙을 다시 잠그는 것까지가 수업입니다.</p></div>
+</div></details>
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">8</span><h2>마스터 프롬프트 — 붙여넣기용 3종</h2></div>
+<div class="callout callout--summary"><div class="callout-label">📌 대괄호 [ ] 는 바꿔 넣는 자리입니다.</div><p>대괄호까지 지우고 내 내용을 쓰세요. 그대로 두면 AI가 헷갈립니다.</p></div>
+<h3 class="sub-head">8-1. 도구 뼈대 만들기</h3>
+<div class="prompt">첨부한 [규칙 문서]를 읽고 [무엇을 하는 도구]를 만들어줘.
+지금은 [규칙 몇 번]만 반영해줘. 나머지는 하나씩 붙일 거야.
+- 입력: [사용자가 고르거나 넣을 것]
+- 결과: [보여줄 것]
+- 값을 바꾸면 바로 반영되게
+- 규칙에서 '이상/초과', '중복 불가'처럼 헷갈리는 조건이 있으면
+  만들기 전에 먼저 나에게 확인해줘</div>
+<h3 class="sub-head">8-2. 부분만 고치기</h3>
+<div class="prompt">[검산 케이스]에서 [어느 칸]이 [맞는 값]이어야 하는데 [나온 값]이 나와.
+[내가 짐작하는 원인]인 것 같아. 다른 부분은 건드리지 말고 이것만 고쳐줘.
+고친 뒤 이 케이스를 다시 계산한 과정도 보여줘.</div>
+<h3 class="sub-head">8-3. 꺼내서 배포 준비</h3>
+<div class="prompt">이 도구를 인터넷 없이도 열리는 HTML 파일 하나로 만들어서 내려받게 해줘.
+파일 이름은 index.html.
+맨 위에 사용법 3줄과 [담당자/문의처]를 넣고,
+외부에 공개되면 곤란한 정보가 들어 있으면 먼저 알려줘.</div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 8-1의 마지막 줄이 숨은 핵심입니다. Claude가 <strong>모호한 조건을 먼저 물어보게</strong> 하면, 실습 B의 '100개에서 5%' 같은 사고가 만들기 전에 걸러집니다.</p></div>
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">9</span><h2>안 될 때 — 트러블슈팅</h2></div>
+<div class="table-scroll"><table><thead><tr><th><strong>증상</strong></th><th><strong>원인</strong></th><th><strong>대응</strong></th></tr></thead><tbody>
+<tr><td><strong>아티팩트 창이 안 열림</strong></td><td>기능이 꺼져 있음</td><td>설정 → 기능 → "코드 실행 및 파일 생성" (1-3절)</td></tr>
+<tr><td><strong>글로만 답함</strong></td><td>도구로 만들 만큼이라고 판단 안 함</td><td><em>"아티팩트로 만들어줘"</em> 라고 명시</td></tr>
+<tr><td><strong>엑셀·워드 파일이 안 올라감</strong></td><td>같은 설정이 꺼져 있음</td><td>1-3절 설정 확인</td></tr>
+<tr><td><strong>숫자가 안 맞음</strong></td><td>규칙을 말로 옮겨서 누락</td><td>규칙 <strong>파일을 첨부</strong>하고 몇 번 항목인지 지목</td></tr>
+<tr><td><strong>할인이 겹쳐 적용됨</strong></td><td>조건을 안 짚어 줌</td><td><em>"둘 이상이면 유리한 쪽 하나만"</em> 명시</td></tr>
+<tr><td><strong>경계값에서 틀림</strong></td><td>이상/초과를 안 지정</td><td><em>"100개 이상"</em> 처럼 명확히</td></tr>
+<tr><td><strong>고쳤더니 다른 게 망가짐</strong></td><td>전체를 다시 만들게 함</td><td>되돌린 뒤(2-3절) <strong>부분만</strong> 수정 요청 (8-2)</td></tr>
+<tr><td><strong>공유 버튼에 링크 옵션이 없음</strong></td><td>Free 플랜 / 회사 계정 정책</td><td>7절 <strong>HTML 배포</strong>로 공유</td></tr>
+<tr><td><strong>받은 사람이 "로그인하래요"</strong></td><td>정상 — 새 아티팩트는 여는 사람도 로그인 필요</td><td>계정이 없는 사람이면 <strong>배포 주소</strong>를 주기</td></tr>
+<tr><td><strong>휴대폰 앱에서 공유 설정이 안 보임</strong></td><td>앱에서는 공유 설정 변경 불가</td><td>웹이나 데스크톱 앱에서</td></tr>
+<tr><td><strong>배포 주소가 404</strong></td><td>아직 준비 중 / 이름 규칙</td><td>1~2분 대기 → 첫 파일 이름이 <strong>index.html</strong>인지, Pages가 main · /(root)인지 확인</td></tr>
+<tr><td><strong>목차 카드를 누르면 404</strong></td><td>폴더 이름과 링크 철자가 다름</td><td>대소문자까지 같게. 폴더 이름은 영어 소문자로</td></tr>
+<tr><td><strong>다시 올렸는데 안 바뀜</strong></td><td>브라우저가 예전 화면을 기억함</td><td><strong>Ctrl + F5</strong>, 1~2분 후 다시</td></tr>
+<tr><td><strong>폴더째 끌어다 놓기가 안 됨</strong></td><td>브라우저가 폴더 업로드를 지원 안 함</td><td>크롬으로 하거나, 폴더별로 파일을 나눠 올리기</td></tr>
+<tr><td><strong>배포한 도구에서 AI 기능이 안 됨</strong></td><td>Claude 밖에서는 동작 안 함</td><td>정상 (5절). AI 기능이 필요하면 Claude 안에서 공유</td></tr>
+</tbody></table></div>
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">10</span><h2>자주 묻는 질문 (FAQ)</h2></div>
+<p><strong>Q. 코드를 몰라도 정말 되나요?</strong> A. 됩니다. 오늘 코드를 한 줄도 안 씁니다. 다만 <strong>규칙을 정확히 말할 수 있어야</strong> 해요. 필요한 건 코딩 능력이 아니라 <strong>업무를 정확히 설명하는 능력</strong> — 2차시에서 배운 그것입니다.</p>
+<p><strong>Q. 만든 도구가 사라지지 않나요?</strong> A. 사이드바 <strong>'아티팩트'</strong> 탭에 남습니다. 중요한 도구는 <strong>HTML 파일로도 받아 두면</strong>(8-3) 더 안전해요.</p>
+<p><strong>Q. 무료 플랜에서도 되나요?</strong> A. <strong>만드는 건 됩니다</strong> (실습 A~F, H). 다만 새 아티팩트를 <strong>링크로 공유하는 건 Pro 이상</strong>이라, 무료 플랜은 실습 I의 <strong>GitHub Pages 배포</strong>로 공유하면 됩니다. 입력한 기록을 저장하는 기능도 Pro 이상입니다.</p>
+<p><strong>Q. 예전에는 '게시(Publish)'하면 로그인 없이 볼 수 있었다던데요?</strong> A. 2026년 9월 16일 전에 만든 <strong>예전 방식 아티팩트</strong> 이야기입니다. 예전 것은 지금도 게시할 수 있지만, <strong>새로 만드는 아티팩트는 오늘 배운 방식</strong>(나만 → 공유 범위 선택)을 따릅니다.</p>
+<p><strong>Q. 엑셀로 하면 되는 걸 왜 아티팩트로 하나요?</strong> A. 갈리는 지점은 <strong>누가 쓰느냐</strong>입니다. 나만 쓰면 엑셀이 편해요. <strong>남에게 넘겨야 하면</strong> 아티팩트가 낫습니다 — 엑셀은 남이 열면 수식을 건드리거나 깨뜨리거든요. 데이터가 매일 바뀌면 엑셀(23차시), 규칙이 고정이면 아티팩트입니다.</p>
+<p><strong>Q. 회사 데이터를 넣어도 되나요?</strong> A. <strong>나만 보는 상태라면</strong> 일반 대화와 같은 수준입니다. 회사 AI 사용 정책을 따르세요. 다만 <strong>공유·배포하는 순간</strong> 범위가 넓어집니다. 특히 GitHub Pages는 <strong>인터넷 전체 공개</strong>예요.</p>
+<p><strong>Q. 결과가 그럴듯한데 맞는지 어떻게 알죠?</strong> A. <strong>손으로 낸 결과와 대조하는 것 말고는 없습니다.</strong> 실습 D가 그래서 있어요. 화면이 깔끔한 것과 숫자가 맞는 건 전혀 다른 얘기입니다.</p>
+<p><strong>Q. GitHub에 올린 파일, 다른 사람이 고칠 수 있나요?</strong> A. 못 고칩니다. 보거나 내려받을 수는 있지만, 저장소를 고칠 수 있는 건 <strong>나(와 내가 초대한 사람)</strong>뿐입니다. 대신 <strong>내용은 누구나 볼 수 있으니</strong> 민감한 건 올리지 마세요.</p>
+<p><strong>Q. Private(비공개) 저장소로 하면 안 되나요?</strong> A. 무료 계정에서는 <strong>Public 저장소만 Pages가 무료</strong>입니다. 비공개 저장소로 Pages를 쓰려면 유료 플랜이 필요해요.</p>
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">11</span><h2>내 업무라면? — 직무별 후보</h2></div>
+<div class="table-scroll"><table><thead><tr><th><strong>직무</strong></th><th><strong>만들 만한 도구</strong></th></tr></thead><tbody>
+<tr><td><strong>영업</strong></td><td>견적 계산기, 할인 승인 기준 판별기, 제안서 체크리스트</td></tr>
+<tr><td><strong>인사</strong></td><td>온보딩 체크리스트, 연차 계산기, 채용 단계별 준비물</td></tr>
+<tr><td><strong>재무</strong></td><td>정산 계산기, 비용 처리 기준 판별기, 예산 잔액 트래커</td></tr>
+<tr><td><strong>마케팅</strong></td><td>캠페인 예산 배분 계산기, 채널별 성과 대시보드</td></tr>
+<tr><td><strong>CS·운영</strong></td><td>응대 기준 판별기(어떤 경우 환불/교환), 이슈 분류 도구</td></tr>
+<tr><td><strong>1인 기업·대표</strong></td><td>상품 가격 계산기, 고객 안내 페이지, 주문 확인 체크리스트 — 배포해서 고객에게 주소로</td></tr>
+</tbody></table></div>
+<div class="callout callout--tip"><div class="callout-label">💡 공통 판별법</div><p><em>"규칙은 정해져 있는데 매번 사람이 계산하거나 판단하고 있다"</em> → 오늘의 대상. 특히 <strong>팀원이 나에게 자꾸 물어보는 기준</strong>이 최고의 후보예요. 그게 곧 <strong>내가 병목</strong>이라는 뜻이거든요.</p></div>
+<h3 class="sub-head">🎯 오늘의 숙제 (한 개만)</h3>
+<p>내 업무에서 <strong>사람들이 자주 물어보는 기준</strong> 하나를 골라 도구로 만들고, <strong>검산 케이스 2개</strong>로 확인한 뒤, 실습 I 사이트에 <code>practice4/</code>로 추가해 보세요.</p>
+<h3 class="sub-head">🎓 도전 과제</h3>
+<ul>
+<li><strong>오답 만들어 보기</strong>: 일부러 <em>"수량 할인을 옵션 빼고 계산해줘"</em> 라고 시킨 뒤 케이스 1로 <strong>얼마나 차이 나는지</strong> 보기 → 실무에서 이 실수가 얼마짜리인지 체감</li>
+<li><strong>규칙이 바뀌면</strong>: <em>"수량 할인 구간을 50/150/300/600으로 바꿔줘"</em> → 몇 초 만에 반영되는 걸 확인. 문서를 고치고 사람에게 다시 공지하는 것과 비교</li>
+<li><strong>견적서로 뽑기</strong>: 계산 결과를 <strong>견적서 문서 형태</strong>로 보여 주는 화면 추가</li>
+<li><strong>인포그래픽 한 장</strong>: 설문 결과를 <em>"외부 라이브러리 없이 순수 SVG로, 막대·원그래프가 들어간 인포그래픽 HTML 한 장"</em> 으로 → 인터넷이 없어도 열리는 파일. 이어서 <em>"3번 문항만 다른 색으로 강조해줘"</em></li>
+<li><strong>AI 넣기</strong>: <em>"고객 문의 문장을 붙여넣으면 제품·수량·옵션을 알아서 채워 주는 기능을 추가해줘"</em> → 아티팩트 안에서 Claude를 부르는 형태 (쓰는 사람 사용량, 링크 공유 불가 — 4-3절)</li>
+<li><strong>10차시와 잇기</strong>: 액션아이템 4요소(무엇·누가·언제·끝난 기준)를 입력 양식으로. <em>"네 칸을 다 안 채우면 '아직 액션아이템이 아닙니다'라고 표시해줘"</em> → 규칙을 사람이 기억하는 대신 <strong>도구가 지키게</strong> 하는 첫 경험</li>
+</ul>
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">✅</span><h2>오늘 자가진단</h2></div>
+<p>답을 떠올린 뒤 <strong>정답 보기</strong>를 눌러 확인하세요.</p>
+<div class="quiz-item"><p class="q">1. 대화로 받은 답과 아티팩트의 가장 큰 차이를 한 줄로 말하면?</p><details><summary>정답 보기</summary><div class="ans"><p>대화는 <strong>답 하나</strong>, 아티팩트는 <strong>도구 자체(물건)</strong>. 남고, 넘길 수 있고, 고쳐 쓸 수 있다. (1-1절)</p></div></details></div>
+<div class="quiz-item"><p class="q">2. 아티팩트 창이 안 열릴 때 켜야 하는 설정은?</p><details><summary>정답 보기</summary><div class="ans"><p>설정 → 기능(Capabilities) → <strong>"코드 실행 및 파일 생성"</strong>. 회사 계정은 관리자가 조직 설정에서 켠다. (1-3절)</p></div></details></div>
+<div class="quiz-item"><p class="q">3. 규칙을 다섯 개 한꺼번에 붙이지 않고 하나씩 붙이는 이유는?</p><details><summary>정답 보기</summary><div class="ans"><p>틀렸을 때 <strong>범인이 항상 방금 붙인 것</strong>이라 바로 찾을 수 있어서. 한꺼번에 붙이면 다섯 개를 다 뒤져야 한다. (2-1절)</p></div></details></div>
+<div class="quiz-item"><p class="q">4. 검산 케이스 2에서 합계가 1,484,340원이 나왔다. 어떤 함정에 걸렸나?</p><details><summary>정답 보기</summary><div class="ans"><p>추가 할인을 <strong>둘 다 적용</strong>(공공 5% + 신규 4%)했다. 중복 불가라 유리한 쪽 하나(공공 5%)만 적용해야 한다 → 정답 1,552,100원. (실습 D)</p></div></details></div>
+<div class="quiz-item"><p class="q">5. 다음 중 고치는 요청으로 가장 좋은 것은? ㉠ "좀 이상한데 다시 만들어줘" ㉡ "더 예쁘게" ㉢ "120개에서 수량 할인이 155,520원이어야 하는데 144,000원이 나와. 소계 기준으로 고쳐줘"</p><details><summary>정답 보기</summary><div class="ans"><p><strong>㉢</strong> — 어느 칸이 얼마여야 하는데 얼마가 나왔는지 <strong>숫자로</strong> 짚었다. (2-2절)</p></div></details></div>
+<div class="quiz-item"><p class="q">6. Pro 플랜에서 '링크가 있는 모든 사람'으로 공유했다. Claude 계정이 없는 거래처가 열 수 있나?</p><details><summary>정답 보기</summary><div class="ans"><p><strong>못 연다.</strong> 새 아티팩트는 링크로 열어도 <strong>Claude 로그인</strong>이 필요하다. 계정 없는 사람에게는 <strong>GitHub Pages 배포 주소</strong>를 준다. (4-1절 · 7절)</p></div></details></div>
+<div class="quiz-item"><p class="q">7. AI 기능이 들어간 도구를 동료 10명이 쓰면, 사용량은 누가 부담하나?</p><details><summary>정답 보기</summary><div class="ans"><p><strong>쓰는 각자</strong>의 사용량에서 차감된다. 만든 사람 부담이 아니다. (4-3절)</p></div></details></div>
+<div class="quiz-item"><p class="q">8. "우리 재고 시스템이랑 연결된 계산기"를 만들고 싶다. 오늘 배운 아티팩트가 맞나?</p><details><summary>정답 보기</summary><div class="ans"><p>아니다. 아티팩트는 <strong>혼자 완결되는 도구</strong>. 사내 시스템 연결은 <strong>MCP(19~20차시)</strong>나 진짜 개발의 일이다. (5절)</p></div></details></div>
+<div class="quiz-item"><p class="q">9. GitHub Pages에서 폴더마다 파일 이름을 index.html로 바꾸는 이유는?</p><details><summary>정답 보기</summary><div class="ans"><p>주소가 폴더로 끝나면 그 폴더의 <strong>index.html을 자동으로 열기</strong> 때문. 그래서 <code>…/practice1/</code>만으로 들어갈 수 있다. (7-3절)</p></div></details></div>
+<div class="quiz-item"><p class="q">10. 배포한 페이지에서 글을 고쳤는데 새로고침하니 원래대로 돌아갔다. 왜일까?</p><details><summary>정답 보기</summary><div class="ans"><p>고친 내용을 <strong>저장해 둘 곳(서버·데이터베이스)</strong>이 없어서. GitHub Pages는 파일을 보여 주기만 한다. 남기려면 Firebase 같은 저장소가 필요하다. (실습 I)</p></div></details></div>
+<h3 class="sub-head">오늘의 결과물 체크리스트</h3>
+<div class="table-scroll"><table><thead><tr><th><strong>결과물</strong></th><th><strong>어느 실습</strong></th></tr></thead><tbody>
+<tr><td>[ ] 회의 비용 계산기</td><td>A</td></tr>
+<tr><td>[ ] 견적 계산기 (규칙 6개 전부 반영)</td><td>B·C ⭐</td></tr>
+<tr><td>[ ] 검산 결과 3케이스 모두 일치</td><td>D ⭐</td></tr>
+<tr><td>[ ] 온보딩 체크리스트 생성기</td><td>E</td></tr>
+<tr><td>[ ] 설문 대시보드 (필터 + 전체 대비)</td><td>F</td></tr>
+<tr><td>[ ] 사용법 3줄 + 공유 전 점검</td><td>G</td></tr>
+<tr><td>[ ] 클릭형 회의록 리포트 HTML</td><td>H</td></tr>
+<tr><td>[ ] <strong>내 주소의 사이트</strong> (목차 + 결과물) · 수정 후 재배포까지</td><td>I ⭐</td></tr>
+</tbody></table></div>
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">＊</span><h2>오늘 정리</h2></div>
+<h3 class="sub-head first">🎯 세 개만 기억한다면</h3>
+<ol><li><strong>아티팩트는 답이 아니라 물건</strong> — 남고, 넘기고, 고쳐 쓴다</li><li><strong>뼈대 → 하나씩 → 검산</strong> — 한 번에 다 만들면 어디가 틀렸는지 모른다</li><li><strong>공유는 범위를 고르고, 배포는 전체 공개</strong> — 민감한 정보는 넣지 않는다</li></ol>
+<h3 class="sub-head">전체 정리</h3>
+<ul>
+<li>10차시까지는 AI에게 <strong>일을 시켰다.</strong> 오늘은 AI에게 <strong>도구를 만들게</strong> 했다</li>
+<li>아티팩트는 대화 옆 창에 열리는 <strong>결과물</strong>이고, 사이드바 <strong>'아티팩트'</strong> 탭에 모인다</li>
+<li>모든 플랜에서 만들 수 있다. 설정에서 <strong>"코드 실행 및 파일 생성"</strong> 이 켜져 있어야 한다</li>
+<li>만드는 순서는 <strong>① 규칙 파일 붙이기 ② 뼈대 ③ 하나씩 ④ 검산</strong></li>
+<li><strong>규칙은 말로 옮기지 말고 파일을 붙여라.</strong> 옮기면 조건이 날아간다</li>
+<li>고칠 땐 전체를 다시 만들지 말고 <strong>어디가 어떻게 틀렸는지 숫자로</strong> 말한다. 망가지면 되돌리면 된다</li>
+<li><strong>경계값</strong>(이상? 초과?)과 <strong>중복 불가 조건</strong>이 가장 자주 틀린다</li>
+<li>계산기는 <strong>숫자</strong>, 체크리스트는 <strong>빠진 항목</strong>, 대시보드는 <strong>비교 대상</strong>으로 검산한다</li>
+<li>새 아티팩트는 <strong>처음엔 나만</strong> 본다. 링크로 공유해도 <strong>여는 사람도 Claude 로그인</strong>이 필요하다 (Free는 새 아티팩트 링크 공유 불가)</li>
+<li>AI 기능이 든 도구는 <strong>쓰는 사람의 사용량</strong>이 차감되고, 링크로는 공유할 수 없다</li>
+<li>아티팩트는 <strong>혼자 완결되는 도구.</strong> 사내 시스템 연결은 MCP나 개발의 일이다</li>
+<li>도구를 <strong>HTML 파일로 꺼내 GitHub Pages에 올리면</strong> 계정 없는 사람도 주소로 연다. 대신 <strong>인터넷 전체 공개</strong>이고 AI·저장 기능은 멈춘다</li>
+<li>배포한 페이지는 <strong>고치면 다시 올려야</strong> 바뀐다. 방문자가 고친 내용을 남기려면 서버(데이터베이스)가 필요하다</li>
+<li><strong>팀원이 나에게 자꾸 물어보는 기준</strong>이 있다면, 그건 내가 병목이라는 뜻이고 도구로 만들 신호다</li>
+</ul>
+<h3 class="sub-head">📖 오늘의 용어 사전</h3>
+<div class="table-scroll"><table><thead><tr><th><strong>용어</strong></th><th><strong>쉬운 뜻</strong></th></tr></thead><tbody>
+<tr><td><strong>아티팩트</strong></td><td>대화 옆 창에 따로 만들어져 남는 결과물(도구·문서·그림)</td></tr>
+<tr><td><strong>인터랙티브</strong></td><td>값을 넣거나 누르면 반응하는 것</td></tr>
+<tr><td><strong>뼈대</strong></td><td>가장 기본 기능만 되는 첫 버전</td></tr>
+<tr><td><strong>검산</strong></td><td>손으로 계산한 정답과 도구의 숫자를 대조하는 것</td></tr>
+<tr><td><strong>경계값</strong></td><td>구간이 바뀌는 바로 그 숫자(100개, 100만원)</td></tr>
+<tr><td><strong>접근 권한</strong></td><td>공유할 때 누가 볼 수 있는지(나만·초대한 사람·링크 가진 사람)와 무엇을 할 수 있는지(보기·댓글·편집)</td></tr>
+<tr><td><strong>HTML</strong></td><td>웹페이지를 이루는 파일</td></tr>
+<tr><td><strong>배포</strong></td><td>파일을 인터넷 주소로 누구나 열 수 있게 올리는 것</td></tr>
+<tr><td><strong>저장소(Repository)</strong></td><td>GitHub에서 파일을 모아 두는 폴더 하나</td></tr>
+<tr><td><strong>커밋(Commit)</strong></td><td>올린 파일을 저장소에 "확정 저장"하는 것</td></tr>
+<tr><td><strong>GitHub Pages</strong></td><td>저장소 파일을 웹페이지로 보여 주는 GitHub의 무료 기능</td></tr>
+<tr><td><strong>index.html</strong></td><td>폴더 주소로 들어갔을 때 자동으로 열리는 첫 페이지 파일</td></tr>
+<tr><td><strong>Firebase</strong></td><td>구글의 배포·데이터베이스 서비스. 고친 내용을 저장하는 페이지에 쓴다</td></tr>
+</tbody></table></div>
+</section>
+
+<details class="toggle"><summary>🧑‍🏫 강사용 — 수업 전 체크리스트</summary><div class="toggle-body">
+<ul class="checklist">
+<li>학생 전원 <strong>GitHub 계정</strong> 보유 여부 사전 확인 (없으면 전날 가입 안내 — 이메일 인증 필요)</li>
+<li>실습 파일 4종(<code>quote_rules</code> · <code>onboarding_rules</code> · <code>team_pulse</code> · <code>meeting_minutes_source</code>) 자료 드라이브에 업로드</li>
+<li>학생 플랜 확인 — <strong>Free 학생은 4절 링크 공유가 안 되므로</strong> 실습 G ③은 건너뛰고 실습 I로 공유</li>
+<li>"Public 저장소여야 Pages가 무료"라는 점 강조 (Private는 유료)</li>
+<li>폴더째 업로드가 안 되는 브라우저 대비 — 크롬 권장, 안 되면 폴더별 개별 업로드</li>
+<li>마무리에 학생 배포 주소를 <strong>공용 채팅방</strong>에 모아 서로 열어 보게 하기 (동기부여 효과 큼)</li>
+<li>수업 후 실제 업무 정보를 넣은 학생이 있으면 <strong>Pages 끄기</strong> 안내</li>
+</ul>
+</div></details>
+
+<a class="next-lesson" href="lesson12.html"><div><span class="label">다음 차시</span><h3><strong>12차시 — 방학 프로젝트: 결정 하나를 끝까지</strong></h3></div><span class="arrow">→</span></a>
+  </main>
+
+  <footer class="page-footer">
+    <p>그린컵 AI 에이전트 과정 · 11차시 아티팩트 — 말로 내 도구 만들기</p>
+  </footer>
+
+</div>
+</body>
+</html>
