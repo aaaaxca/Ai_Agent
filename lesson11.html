@@ -460,7 +460,7 @@
     <h1>아티팩트 — 말로 내 도구 만들기</h1>
     <p class="lede">&ldquo;텀블러 120개에 로고 넣으면 얼마예요?&rdquo; — 하루 다섯 번 오는 같은 계산을, 오늘은 <strong>말로 도구를 만들어</strong> 끝냅니다. 그리고 그 도구를 <strong>내 주소가 붙은 웹페이지로 배포</strong>하는 데까지 갑니다.</p>
     <div class="meta-row">
-      <span>📍 <b>오늘 배우는 것</b> — 아티팩트가 뭔지(답이 아니라 물건), 기능 켜기, 만드는 4단계(규칙 붙이기·뼈대·하나씩·검산), 부분 수정과 되돌리기, 공유하면 누가 열 수 있는지와 사용량, 아티팩트가 못 하는 것과 판단표, HTML 파일로 내려받아 GitHub Pages로 배포하기</span>
+      <span>📍 <b>오늘 배우는 것</b> — 아티팩트가 뭔지(답이 아니라 물건), 기능 켜기, 만드는 4단계(규칙 붙이기·뼈대·하나씩·검산), 부분 수정과 되돌리기, 공유하면 누가 열 수 있는지와 사용량, 아티팩트가 못 하는 것과 판단표, Firebase로 매주 회의가 쌓이는 페이지 배포하기</span>
     </div>
   </header>
 
@@ -468,46 +468,39 @@
 <div class="callout callout--scenario"><div class="callout-label">🎯 오늘의 가상 문제상황</div><p>그린컵 영업팀에 단체주문 문의가 옵니다. <em>"텀블러 120개에 로고 넣으면 얼마예요?"</em> 견적 규칙 문서를 열고, 엑셀을 켜고, 기본가 × 수량 하고, 옵션 더하고, 수량 할인 8% 빼고, 재구매 고객이니 3% 더 빼고, 배송비 보고, 부가세 붙이고… <strong>10분.</strong> 문제는 이게 <strong>하루에 다섯 번</strong> 온다는 겁니다. 그리고 신입이 계산하면 <strong>자꾸 틀립니다</strong> — 할인을 두 개 겹쳐 적용하거든요. <em>"이거 계산기로 만들면 되잖아"</em> 라고 생각은 하는데, 개발자에게 부탁할 일은 아니고요. <strong>오늘 그걸 직접 만듭니다.</strong> 코드 한 줄 안 쓰고, 팀원에게 링크로 넘길 수 있는 상태로.</p></div>
 <div class="term-note">📖 <b>아티팩트(Artifact)</b> : 영어로 <strong>"만들어진 물건, 산출물".</strong> 대화 중에 오간 말이 아니라, <strong>따로 만들어져 남는 결과물</strong>을 가리킵니다</div>
 
-<section class="lesson-section"><div class="section-head"><span class="section-mark">＊</span><h2>오늘 전체 수업 흐름</h2></div>
-<p>10차시까지는 <strong>AI에게 일을 시켰습니다.</strong> 오늘은 <strong>AI에게 도구를 만들게 합니다.</strong> 이 차이가 오늘 전부예요. 그리고 마지막에는 그 도구를 Claude 밖으로 꺼내 <strong>누구나 여는 웹페이지</strong>로 올립니다.</p>
-<div class="table-scroll"><table><thead><tr><th><strong>순서</strong></th><th><strong>배우는 것</strong></th><th><strong>실습</strong></th></tr></thead><tbody>
-<tr><td><strong>1절</strong></td><td>아티팩트가 뭔가 · 기능 켜기</td><td>A 5분 맛보기</td></tr>
-<tr><td><strong>2절</strong></td><td>만드는 순서 4단계 · 부분 수정 · 되돌리기</td><td>B 뼈대 → C 하나씩 → D 검산 ⭐</td></tr>
-<tr><td><strong>3절</strong></td><td>조건이 갈리는 도구 · 데이터 도구</td><td>E 체크리스트 · F 대시보드</td></tr>
-<tr><td><strong>4절</strong></td><td>공유 — 누가 열 수 있고, 사용량은 누가 내나</td><td>G 공유 전 점검</td></tr>
-<tr><td><strong>5절</strong></td><td>아티팩트가 못 하는 것 · 언제 쓰나</td><td>—</td></tr>
-<tr><td><strong>6절</strong></td><td>초보가 흔히 하는 실수</td><td>—</td></tr>
-<tr><td><strong>7절</strong></td><td>HTML로 꺼내서 배포하기</td><td>H 회의록 리포트 → I GitHub Pages 배포 ⭐</td></tr>
-<tr><td><strong>정리</strong></td><td>마스터 프롬프트 · 안 될 때 · FAQ · 내 업무라면 · 자가진단</td><td></td></tr>
+<section class="lesson-section practice-block">
+<h3 class="sub-head first">PART 0 — 5분 맛보기</h3>
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 A — 5분 맛보기: 회의 비용 계산기</div>
+  <p>순서는 <b>① 기능 켜기</b> → <b>② 붙여넣기</b> → <b>③ 숫자 바꿔 보기</b>.<br><b>새 대화</b>에서 시작합니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>파일 없음</b> <span class="meta">· Claude 설정 "코드 실행 및 파일 생성" 켜기 (① 단계)</span></li>
+    </ul>
+  </div>
+  <p class="practice-step">① 기능 켜기 (1분)</p>
+
+<p>아티팩트는 <strong>Free · Pro · Max · Team · Enterprise 모든 플랜</strong>에서 만들 수 있습니다. 다만 설정 하나가 켜져 있어야 해요.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>플랜</strong></th><th><strong>어디서</strong></th></tr></thead><tbody>
+<tr><td>Free · Pro · Max</td><td><strong>설정 → 기능(Capabilities)</strong> 에서 <strong>"코드 실행 및 파일 생성"</strong>(Cloud code execution and file creation) 켜기</td></tr>
+<tr><td>Team · Enterprise</td><td><strong>조직 설정 → 기능</strong> 에서 관리자가 켜야 합니다</td></tr>
 </tbody></table></div>
-<h3 class="sub-head">⏱️ 시간 배분</h3>
-<div class="table-scroll"><table><thead><tr><th><strong>실습</strong></th><th><strong>시간</strong></th><th><strong>필수?</strong></th></tr></thead><tbody>
-<tr><td>A. 5분 맛보기</td><td>5분</td><td><strong>필수</strong></td></tr>
-<tr><td>B. 견적 계산기 뼈대</td><td>15분</td><td><strong>필수</strong></td></tr>
-<tr><td>C. 규칙 하나씩 붙이기</td><td>25분</td><td><strong>필수</strong> ⭐</td></tr>
-<tr><td>D. 검산</td><td>15분</td><td><strong>필수</strong> ⭐</td></tr>
-<tr><td>E. 온보딩 체크리스트</td><td>15분</td><td>권장</td></tr>
-<tr><td>F. 설문 대시보드</td><td>15분</td><td>권장</td></tr>
-<tr><td>G. 공유 전 점검</td><td>10분</td><td><strong>필수</strong></td></tr>
-<tr><td>H. 회의록 → 클릭형 리포트</td><td>15분</td><td>권장</td></tr>
-<tr><td>I. 사이트로 묶어 배포</td><td>30분</td><td><strong>필수</strong> ⭐</td></tr>
-<tr><td><strong>합계</strong></td><td><strong>약 145분</strong></td><td></td></tr>
-</tbody></table></div>
-<div class="callout callout--tip"><p><span class="co-icon">💡</span> 시간이 모자라면 <strong>B·C·D → G → I</strong> 만. 도구 하나를 <strong>만들고 → 검산하고 → 배포</strong>까지 끝까지 도는 게, 다섯 개를 대충 만드는 것보다 낫습니다. 실습 I에서 묶을 결과물이 모자라면 견적 계산기 하나만 올려도 됩니다.</p></div>
-<h3 class="sub-head">📁 오늘 준비물 — 자료 드라이브에서 내려받기</h3>
-<p><a href="https://naver.me/xllcXgmH" target="_blank" rel="noopener">📁 자료 드라이브 바로가기</a></p>
-<div class="table-scroll"><table><thead><tr><th><strong>파일</strong></th><th><strong>만들 것</strong></th><th><strong>실습</strong></th></tr></thead><tbody>
-<tr><td><code>quote_rules.docx</code></td><td><strong>견적 계산기</strong> — 숫자가 맞아야 함</td><td>B·C·D·G</td></tr>
-<tr><td><code>onboarding_rules.docx</code></td><td><strong>체크리스트 생성기</strong> — 조건에 따라 항목이 갈림</td><td>E</td></tr>
-<tr><td><code>team_pulse.xlsx</code></td><td><strong>설문 대시보드</strong> — 필터가 있어야 읽힘</td><td>F</td></tr>
-<tr><td><code>meeting_minutes_source.docx</code></td><td><strong>클릭형 회의록 리포트</strong></td><td>H</td></tr>
-<tr><td><strong>GitHub 계정</strong></td><td>배포용 (무료) — github.com 에서 가입</td><td>I</td></tr>
-</tbody></table></div>
-<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>GitHub 계정은 수업 전에 만들어 오세요.</strong> 가입할 때 이메일 인증이 필요해서, 수업 중에 만들면 실습 I에서 10분 이상 밀립니다.</p></div>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>회사 계정인데 안 켜진다면</strong> 관리자 권한이 필요합니다. 오늘은 개인 계정으로 실습하고, 회사 도입은 따로 요청하세요.</p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 메뉴 이름은 업데이트마다 조금씩 바뀝니다. 못 찾겠으면 Claude에게 물어보세요 — <em>"아티팩트를 만들려면 설정 어디를 켜야 해?"</em></p></div>
+<p class="practice-step">② 아래를 그대로 붙여넣기</p>
+  <p>설명 전에 하나 만들어 봅니다. 파일은 필요 없어요.</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"회의 시간 비용 계산기를 만들어줘.<br>- 참석자 수, 회의 시간(분), 평균 시급을 입력하면 이 회의에 든 인건비가 나오게<br>- 숫자를 바꾸면 결과가 바로 바뀌게<br>- 결과 밑에 '이 회의를 30분 줄이면 얼마가 절약되는지'도 같이 보여줘"</em></p></div>
+  <p class="practice-step">③ 숫자 바꿔 보기</p>
+  <p>대화 옆에 <strong>창이 하나 열리고</strong>, 그 안에 실제로 동작하는 계산기가 있습니다. 참석자 수를 바꿔 보세요.</p>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 숫자를 바꾸면 결과가 바로 바뀌나?</div><p>참석자 8명 · 60분 · 시급 30,000원이면 <strong>240,000원</strong>, 30분 줄이면 <strong>120,000원 절약</strong>이 나와야 합니다. 직접 곱해서 맞는지 보세요 — 오늘 내내 할 <strong>검산</strong>의 첫 연습입니다.</p></div>
+</div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 창이 안 열리고 글로만 나왔다면 — 순서대로 해보세요.</div><ol><li><em>"이걸 아티팩트로 만들어줘"</em> 라고 한 번 더 말하기</li><li>그래도 안 되면 <strong>설정에서 기능이 꺼진 것</strong>입니다 → 실습 A ①</li></ol></div>
 </section>
 
 <section class="lesson-section"><div class="section-head"><span class="section-mark">1</span><h2>아티팩트가 뭔가</h2></div>
-<h3 class="sub-head first">1-1. 대화로 받는 것과 뭐가 다른가</h3>
+<div class="callout callout--tip"><div class="callout-label">💡 방금 만든 게 아티팩트입니다.</div><p>대화 속 텍스트가 아니라, <strong>따로 열린 창에 담긴 결과물</strong>이에요. 사이드바 '아티팩트' 탭에 가 보면 방금 만든 계산기가 들어 있습니다.</p></div>
+<h3 class="sub-head">1-1. 대화로 받는 것과 뭐가 다른가</h3>
 <p>같은 질문인데 <strong>결과의 형태</strong>가 다릅니다.</p>
 <div class="table-scroll"><table><thead><tr><th></th><th><strong>대화로 받으면</strong></th><th><strong>아티팩트로 받으면</strong></th></tr></thead><tbody>
 <tr><td>받는 것</td><td>계산된 <strong>답 하나</strong></td><td><strong>계산기 자체</strong></td></tr>
@@ -527,65 +520,8 @@
 </tbody></table></div>
 <div class="term-note">📖 <b>인터랙티브</b> : 쓰는 사람이 <strong>값을 넣거나 누르면 반응하는 것.</strong> 문서는 읽기만 하지만, 도구는 반응합니다. 그래서 남에게 넘길 수 있어요</div>
 <div class="callout callout--tip"><p><span class="co-icon">💡</span> 유료 플랜에는 <strong>문서·슬라이드·디자인 템플릿</strong>도 있어서 화면에서 바로 고칠 수 있습니다. 오늘은 그중 <strong>계산기·체크리스트 같은 도구</strong>에 집중합니다.</p></div>
-<p><strong>만든 걸 다시 여는 곳</strong> — 만든 것은 모두 왼쪽 <strong>사이드바의 '아티팩트'(Artifacts) 탭</strong>에 모입니다. 오늘 도구를 여러 개 만들 텐데, 중간에 길을 잃으면 <strong>사이드바에서 찾으세요.</strong></p>
-<h3 class="sub-head">1-3. 실습 전 준비 — 기능 켜기 (1분)</h3>
-<p>아티팩트는 <strong>Free · Pro · Max · Team · Enterprise 모든 플랜</strong>에서 만들 수 있습니다. 다만 설정 하나가 켜져 있어야 해요.</p>
-<div class="table-scroll"><table><thead><tr><th><strong>플랜</strong></th><th><strong>어디서</strong></th></tr></thead><tbody>
-<tr><td>Free · Pro · Max</td><td><strong>설정 → 기능(Capabilities)</strong> 에서 <strong>"코드 실행 및 파일 생성"</strong>(Cloud code execution and file creation) 켜기</td></tr>
-<tr><td>Team · Enterprise</td><td><strong>조직 설정 → 기능</strong> 에서 관리자가 켜야 합니다</td></tr>
-</tbody></table></div>
-<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>회사 계정인데 안 켜진다면</strong> 관리자 권한이 필요합니다. 오늘은 개인 계정으로 실습하고, 회사 도입은 따로 요청하세요.</p></div>
-<div class="callout callout--tip"><p><span class="co-icon">💡</span> 메뉴 이름은 업데이트마다 조금씩 바뀝니다. 못 찾겠으면 Claude에게 물어보세요 — <em>"아티팩트를 만들려면 설정 어디를 켜야 해?"</em></p></div>
+<p><strong>만든 걸 다시 여는 곳</strong> — 방금 만든 계산기처럼, 만든 것은 모두 왼쪽 <strong>사이드바의 '아티팩트'(Artifacts) 탭</strong>에 모입니다. 오늘 도구를 여러 개 만들 텐데, 중간에 길을 잃으면 <strong>사이드바에서 찾으세요.</strong></p>
 <div class="callout callout--summary"><div class="callout-label">📌 1절 한 줄 요약</div><p>— 아티팩트는 <strong>답이 아니라 물건.</strong> 남고, 넘길 수 있고, 고쳐 쓸 수 있다.</p></div>
-</section>
-
-<section class="lesson-section practice-block">
-<div class="practice-card">
-  <div class="practice-title">🛠 실습 A — 5분 맛보기: 회의 비용 계산기</div>
-  <p>순서는 <b>① 붙여넣기</b> → <b>② 숫자 바꿔 보기</b>.<br><b>새 대화</b>에서 시작합니다.</p>
-  <div class="practice-prep">
-    <div class="prep-label">📎 준비물</div>
-    <ul>
-      <li><b>없음</b> <span class="meta">· 1-3절 설정만 켜져 있으면 됩니다</span></li>
-    </ul>
-  </div>
-  <p class="practice-step">① 아래를 그대로 붙여넣기</p>
-  <p>설명 전에 하나 만들어 봅니다. 파일은 필요 없어요.</p>
-  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"회의 시간 비용 계산기를 만들어줘.<br>- 참석자 수, 회의 시간(분), 평균 시급을 입력하면 이 회의에 든 인건비가 나오게<br>- 숫자를 바꾸면 결과가 바로 바뀌게<br>- 결과 밑에 '이 회의를 30분 줄이면 얼마가 절약되는지'도 같이 보여줘"</em></p></div>
-  <p class="practice-step">② 숫자 바꿔 보기</p>
-  <p>대화 옆에 <strong>창이 하나 열리고</strong>, 그 안에 실제로 동작하는 계산기가 있습니다. 참석자 수를 바꿔 보세요.</p>
-  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 숫자를 바꾸면 결과가 바로 바뀌나?</div><p>참석자 8명 · 60분 · 시급 30,000원이면 <strong>240,000원</strong>, 30분 줄이면 <strong>120,000원 절약</strong>이 나와야 합니다. 직접 곱해서 맞는지 보세요 — 오늘 내내 할 <strong>검산</strong>의 첫 연습입니다.</p></div>
-</div>
-<div class="callout callout--tip"><div class="callout-label">💡 방금 만든 게 아티팩트입니다.</div><p>대화 속 텍스트가 아니라, <strong>따로 열린 창에 담긴 결과물</strong>이에요. 사이드바 '아티팩트' 탭에 가 보면 방금 만든 계산기가 들어 있습니다.</p></div>
-<div class="callout callout--warning"><div class="callout-label">⚠️ 창이 안 열리고 글로만 나왔다면 — 순서대로 해보세요.</div><ol><li><em>"이걸 아티팩트로 만들어줘"</em> 라고 한 번 더 말하기</li><li>그래도 안 되면 <strong>설정에서 기능이 꺼진 것</strong>입니다 → 1-3절</li></ol></div>
-</section>
-
-<section class="lesson-section"><div class="section-head"><span class="section-mark">2</span><h2>만드는 순서 — 한 번에 완성하려 하지 마세요</h2></div>
-<p>초보가 가장 많이 하는 실수가 <strong>규칙을 통째로 붙이고 "다 만들어줘"</strong> 입니다. 뭔가 나오긴 하는데, <strong>어디가 틀렸는지 알 수 없습니다.</strong></p>
-<h3 class="sub-head">2-1. 네 단계로</h3>
-<div class="table-scroll"><table><thead><tr><th><strong>단계</strong></th><th><strong>무엇</strong></th><th><strong>왜</strong></th></tr></thead><tbody>
-<tr><td><strong>① 규칙을 붙인다</strong></td><td>계산 규칙 문서를 그대로 첨부</td><td>말로 옮기면 반드시 빠뜨립니다</td></tr>
-<tr><td><strong>② 뼈대만 만든다</strong></td><td>기본가 × 수량만 되는 계산기</td><td>여기가 맞아야 나머지가 의미 있음</td></tr>
-<tr><td><strong>③ 하나씩 붙인다</strong></td><td>옵션 → 수량 할인 → 추가 할인 → 배송 → 부가세</td><td><strong>한 번에 하나씩.</strong> 틀리면 방금 붙인 게 범인</td></tr>
-<tr><td><strong>④ 숫자로 검산한다</strong></td><td>손으로 낸 견적과 대조</td><td>화면이 예쁘다고 맞는 게 아님</td></tr>
-</tbody></table></div>
-<div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>③의 "한 번에 하나씩"이 핵심입니다.</strong> 다섯 개를 한꺼번에 붙이고 결과가 틀리면 다섯 개를 다 뒤져야 해요. 하나씩 붙이면 <strong>범인은 항상 방금 그것</strong>입니다.</p></div>
-<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>④를 건너뛰지 마세요.</strong> 아티팩트는 결과가 <strong>너무 그럴듯하게</strong> 나옵니다. 화면이 깔끔하고 숫자가 딱 떨어지니 맞는 것 같죠. 8차시에서 배운 그 문제 — <strong>그럴듯함이 정확함은 아닙니다.</strong></p></div>
-<h3 class="sub-head">2-2. 고칠 때는 부분만</h3>
-<p>전체를 다시 만들게 하지 마세요. <strong>어디를 어떻게</strong> 바꿀지 짚어 줍니다.</p>
-<div class="table-scroll"><table><thead><tr><th><strong>나쁜 요청</strong></th><th><strong>좋은 요청</strong></th></tr></thead><tbody>
-<tr><td><em>"좀 이상한데 다시 만들어줘"</em></td><td><em>"수량 할인이 옵션 금액을 빼고 계산되고 있어. 옵션 포함 소계에 적용되게 고쳐줘"</em></td></tr>
-<tr><td><em>"더 예쁘게"</em></td><td><em>"입력칸을 왼쪽, 결과를 오른쪽에 두고, 최종 금액만 크게 보여줘"</em></td></tr>
-<tr><td><em>"기능 더 넣어줘"</em></td><td><em>"제주·도서산간 체크박스를 추가하고, 체크하면 배송비에 25,000원을 더해줘"</em></td></tr>
-</tbody></table></div>
-<div class="callout callout--summary"><div class="callout-label">📌 어디에 입력하나요?</div><p>아티팩트를 만든 <strong>그 대화에 이어서</strong> 말하면 됩니다. 새 대화를 열면 Claude가 그 도구를 모릅니다. 옆 창은 그대로 두고 <strong>대화창에</strong> 입력하세요.</p></div>
-<h3 class="sub-head">2-3. 망가졌을 때 — 되돌리는 두 가지 방법</h3>
-<div class="table-scroll"><table><thead><tr><th><strong>방법</strong></th><th><strong>이렇게</strong></th></tr></thead><tbody>
-<tr><td><strong>① 말로 되돌리기</strong></td><td><em>"방금 바꾼 것 취소하고, 그 전 상태로 돌려줘"</em></td></tr>
-<tr><td><strong>② 갈래 만들기</strong></td><td>고치기 <strong>전에 보냈던 내 메시지를 편집</strong>해서 다시 보내면, 대화가 그 시점에서 갈라져 새로 만들어집니다</td></tr>
-</tbody></table></div>
-<div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>그래서 과감하게 고쳐도 됩니다.</strong> 초보는 "건드렸다가 망가질까 봐" 못 고치는 경우가 많은데, 그럴 필요 없어요. 다만 <strong>잘 되는 상태일 때 검산 결과를 메모해 두면</strong>, 고친 뒤에 같은 숫자가 나오는지 바로 확인할 수 있습니다.</p></div>
-<div class="callout callout--summary"><div class="callout-label">📌 2절 한 줄 요약</div><p>— <strong>뼈대 → 하나씩 → 검산.</strong> 고칠 땐 전체가 아니라 <strong>부분을 짚어서.</strong></p></div>
 </section>
 
 <section class="lesson-section practice-block">
@@ -594,7 +530,8 @@
 
 <div class="practice-card">
   <div class="practice-title">🛠 실습 B — 견적 계산기 뼈대</div>
-  <p>순서는 <b>① 규칙 문서 붙이기</b> → <b>② 뼈대만 만들기</b> → <b>③ 경계값 확인</b>.<br><b>새 대화</b>에서 시작합니다. (C·D·G까지 이 대화에서 이어갑니다)</p>
+  <p>순서는 <b>① 규칙 문서 붙이기</b> → <b>② 뼈대만 만들기</b> → <b>③ 경계값 확인</b>.<br><b>새 대화</b>에서 시작합니다. (C·D·G까지 이 대화에서 이어갑니다) 대화 이름을 <b>'11차시 실습 B~D — 견적 계산기'</b>로 바꿔 두세요.</p>
+  <div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>대화 이름 바꾸는 법</strong> — 대화 맨 위의 제목을 누르거나, 왼쪽 사이드바에서 대화에 마우스를 올리고 <strong>⋯ → 이름 변경</strong>. 오늘은 이 실습부터 새 대화를 여러 번 엽니다. 이름을 붙여 두면 실습 I에서 결과물을 다시 찾을 때 헤매지 않아요.</p></div>
   <div class="practice-prep">
     <div class="prep-label">📎 준비물</div>
     <ul>
@@ -606,9 +543,9 @@
   <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 견적 규칙 문서를 읽고, 단체주문 견적 계산기를 만들려고 해. 지금은 1번(기본 단가)과 3번(수량 할인)만 반영해줘. 나머지는 나중에 붙일 거야. 제품을 고르고 수량을 넣으면 소계와 할인이 적용된 금액이 나오게. 숫자를 바꾸면 바로 반영되게."</em></p></div>
   <p class="practice-step">② 경계값 넣어 보기</p>
   <p>수량칸에 <strong>20, 99, 100</strong>을 차례로 넣어 봅니다.</p>
-  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 제품 4종, 할인 4단계, 100개에서 8%?</div><ul class="checklist"><li>제품 4종이 다 들어갔나 (350ml · 500ml · 보온병 500 · 750)</li><li>수량 할인 구간이 <strong>4단계</strong>인가 (50 · 100 · 300 · 500)</li><li>20개일 때 할인 <strong>0%</strong>, 100개일 때 <strong>8%</strong>인가 (5%가 아니라)</li></ul></div>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 제품 4종, 할인 4단계, 100개에서 8%?</div><ul class="checklist"><li>제품 4종이 다 들어갔나 (베이직 350ml · 500ml / 보온병 500ml · 750ml)</li><li>수량 할인 구간이 <strong>4단계</strong>인가 (50 · 100 · 300 · 500)</li><li>20개일 때 할인 <strong>0%</strong>, 100개일 때 <strong>8%</strong>인가 (5%가 아니라)</li></ul></div>
 </div>
-<div class="callout callout--tip"><p><span class="co-icon">💡</span> 마지막 항목이 함정입니다. 규칙은 <em>"100개 이상 8%"</em> 인데, 구간을 '초과'로 잡으면 100개에서 5%가 나옵니다. 8차시에서 배운 <strong>경계값 검증</strong>이 여기서 또 나와요.</p></div>
+<div class="callout callout--tip"><div class="callout-label">💡 마지막 항목이 함정입니다 — '이상'과 '초과'</div><p>규칙은 <em>"100개 이상 8%"</em> 입니다. '이상'은 <strong>100개부터</strong>라는 뜻이라, 딱 100개를 주문한 고객은 8%를 받아야 해요. '초과'는 <strong>100개를 넘어야</strong>, 즉 101개부터라는 뜻입니다. 그런데 AI가 이걸 '초과'로 잘못 만들면, 100개는 아직 8% 구간에 못 들어가서 한 단계 아래인 <strong>5%</strong>로 계산됩니다. 99개나 101개를 넣으면 둘 다 같은 답이 나와서 티가 안 나고, <strong>딱 100개를 넣었을 때만</strong> 틀린 게 드러나요. 그래서 구간이 바뀌는 바로 그 숫자를 꼭 직접 넣어 봅니다 — 8차시에서 배운 <strong>경계값 검증</strong>이 여기서 또 나와요.</p></div>
 <div class="term-note">📖 <b>경계값</b> : 구간이 바뀌는 <strong>바로 그 숫자</strong>(100개, 100만원). '이상'인지 '초과'인지에 따라 결과가 갈려서 가장 자주 틀립니다</div>
 
 <div class="practice-card">
@@ -629,7 +566,7 @@
   <p class="practice-step">④ 배송비</p>
   <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"5번 배송비를 넣어줘. 100만원 기준으로 갈리고, 제주·도서산간은 체크박스로 25,000원 추가야."</em></p></div>
   <p class="practice-step">⑤ 마무리 규칙</p>
-  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"6번 규칙을 넣어줘. 최소 주문 20개 미만이면 견적이 안 나오고 안내 문구가 뜨게. 부가세 10%는 별도로 더하고, 배송비에도 부가세가 붙어. 최종 금액은 10원 단위 버림."</em></p></div>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"6번 규칙을 넣어줘. 최소 주문 20개 미만이면 견적이 안 나오고 안내 문구가 뜨게. 부가세 10%는 별도로 더하고, 배송비에도 부가세가 붙어. 최종 금액은 10원 단위에서 버림."</em></p></div>
   <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 붙일 때마다 이것만 보세요</div><div class="table-scroll"><table><thead><tr><th><strong>붙인 것</strong></th><th><strong>확인</strong></th></tr></thead><tbody>
   <tr><td>① 옵션</td><td>옵션을 켜면 금액이 <strong>수량만큼</strong> 늘어나나</td></tr>
   <tr><td>② 기준</td><td>옵션을 켜면 <strong>할인액도</strong> 같이 커지나 (소계 기준이니까)</td></tr>
@@ -660,8 +597,9 @@
   <tr><td>할인 후</td><td></td><td><strong>1,730,160</strong></td></tr>
   <tr><td>배송비 (100만원 이상)</td><td></td><td>0</td></tr>
   <tr><td>부가세 10%</td><td></td><td>+173,016</td></tr>
-  <tr><td>합계</td><td>1,903,176 → 10원 단위 버림</td><td><strong>1,903,170원</strong></td></tr>
+  <tr><td>합계</td><td>1,903,176 → 10원 단위에서 버림 (−76)</td><td><strong>1,903,100원</strong></td></tr>
   </tbody></table></div>
+  <div class="callout callout--tip"><div class="callout-label">💡 1,903,170원이 나왔다면 — '10원 단위에서 버림'을 다르게 읽은 것</div><p>규칙 문서는 <em>"10원 단위에서 버림"</em> 입니다. 10원 자리와 1원 자리를 모두 버려서 <strong>1,903,100원</strong>이 맞습니다. 그런데 이 문장을 '1원 자리만 버려 10원 단위로 맞춘다'로 읽으면 1,903,170원이 나와요. 규칙 문장이 애매하면 AI는 한쪽으로 정해서 만들어 버립니다. 그래서 계산기 화면에 <strong>어떻게 버렸는지</strong>(예: "100원 미만 버림 −76원")가 보이는지 확인하고, 실무에서는 규칙을 정한 사람에게 뜻을 한 번 더 확인합니다.</p></div>
   <p class="practice-step">② 검산 케이스 2 — 함정</p>
   <p>써모 보온병 500ml · <strong>50개</strong> · 각인 + 선물포장 · <strong>공공기관이면서 신규 거래처</strong> · 제주</p>
   <div class="table-scroll"><table><thead><tr><th><strong>단계</strong></th><th><strong>계산</strong></th><th><strong>값</strong></th></tr></thead><tbody>
@@ -677,7 +615,7 @@
   </tbody></table></div>
   <p>이 케이스는 함정 셋을 잡아냅니다. 내 계산기 숫자가 아래 중 하나라면 그 함정에 걸린 거예요.</p>
   <div class="table-scroll"><table><thead><tr><th><strong>함정</strong></th><th><strong>틀리면 이렇게 나온다</strong></th></tr></thead><tbody>
-  <tr><td>추가 할인을 <strong>둘 다</strong> 적용 (공공 5% + 신규 4%)</td><td>1,484,340원 — <strong>67,760원 적게</strong> 청구</td></tr>
+  <tr><td>추가 할인을 <strong>둘 다</strong> 적용 (공공 5% + 신규 4%)</td><td>1,484,300원 — <strong>67,800원 적게</strong> 청구</td></tr>
   <tr><td>제주 배송비를 <strong>빼먹음</strong></td><td>1,524,600원</td></tr>
   <tr><td>배송비에 <strong>부가세를 안 붙임</strong></td><td>1,549,600원</td></tr>
   </tbody></table></div>
@@ -686,52 +624,71 @@
   <p class="practice-step">④ 틀린 곳이 있으면 — 숫자로 짚어 고치기</p>
   <p>"이상해요"가 아니라, <strong>어느 칸이 얼마여야 하는데 얼마가 나왔는지</strong>를 말합니다. 예를 들어 케이스 1에서 수량 할인이 144,000원으로 나왔다면:</p>
   <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"120개 케이스에서 수량 할인이 155,520원이어야 하는데 144,000원이 나와. 옵션 금액을 빼고 계산한 것 같아. 옵션 포함 소계 기준으로 고쳐줘."</em></p></div>
-  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 세 케이스가 모두 맞나?</div><p><strong>1,903,170원 · 1,552,100원 · 견적 안 나옴</strong> — 셋 다 맞으면 이 도구는 쓸 수 있습니다. 하나라도 다르면 위 함정표에서 어느 단계가 갈라졌는지 찾아 ④처럼 고치세요.</p></div>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 세 케이스가 모두 맞나?</div><p><strong>1,903,100원 · 1,552,100원 · 견적 안 나옴</strong> — 셋 다 맞으면 이 도구는 쓸 수 있습니다. 하나라도 다르면 위 함정표에서 어느 단계가 갈라졌는지 찾아 ④처럼 고치세요.</p></div>
 </div>
 <div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>"대충 맞는 것 같다"로 넘어가지 마세요.</strong> 이 도구는 <strong>고객에게 나갈 금액</strong>을 계산합니다. 8차시의 판단 기준 그대로 — <strong>되돌리기 어려운 결정</strong>이면 검산까지 합니다.</p></div>
 <div class="callout callout--summary"><div class="callout-label">📌 PART 1 정리</div><p>— 규칙 파일을 붙이고, 뼈대부터, 하나씩, 그리고 <strong>손 계산과 숫자로 대조.</strong> 셋 다 맞을 때까지가 '완성'입니다.</p></div>
 </section>
 
-<section class="lesson-section"><div class="section-head"><span class="section-mark">3</span><h2>계산 말고도 — 조건 도구 · 데이터 도구</h2></div>
-<p>견적 계산기는 <strong>숫자</strong>를 다뤘습니다. 업무 도구는 크게 세 종류예요.</p>
-<div class="table-scroll"><table><thead><tr><th><strong>도구 종류</strong></th><th><strong>하는 일</strong></th><th><strong>제일 중요한 확인</strong></th><th><strong>실습</strong></th></tr></thead><tbody>
-<tr><td><strong>계산기</strong></td><td>규칙대로 숫자를 낸다</td><td>손 계산과 <strong>숫자가 같나</strong></td><td>B·C·D</td></tr>
-<tr><td><strong>체크리스트 생성기</strong></td><td>조건을 고르면 <strong>필요한 항목만</strong> 보여준다</td><td><strong>나오면 안 되는 항목</strong>이 빠졌나</td><td>E</td></tr>
-<tr><td><strong>대시보드</strong></td><td>데이터를 <strong>필터로 걸러</strong> 보여준다</td><td><strong>비교 대상</strong>(전체 평균)이 같이 보이나</td><td>F</td></tr>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">2</span><h2>만드는 순서 — 한 번에 완성하려 하지 마세요</h2></div>
+<p>방금 실습 B~D에서 <strong>규칙 파일 붙이기 → 뼈대 → 하나씩 → 검산</strong> 순서로 만들었죠. 왜 이 순서였는지 정리합니다. 초보가 가장 많이 하는 실수가 <strong>규칙을 통째로 붙이고 "다 만들어줘"</strong> 입니다. 뭔가 나오긴 하는데, <strong>어디가 틀렸는지 알 수 없습니다.</strong></p>
+<h3 class="sub-head">2-1. 네 단계로 — 실습 B·C·D가 이 순서였습니다</h3>
+<div class="table-scroll"><table><thead><tr><th><strong>단계</strong></th><th><strong>무엇</strong></th><th><strong>왜</strong></th></tr></thead><tbody>
+<tr><td><strong>① 규칙을 붙인다</strong></td><td>계산 규칙 문서를 그대로 첨부</td><td>말로 옮기면 반드시 빠뜨립니다</td></tr>
+<tr><td><strong>② 뼈대만 만든다</strong></td><td>기본가 × 수량만 되는 계산기</td><td>여기가 맞아야 나머지가 의미 있음</td></tr>
+<tr><td><strong>③ 하나씩 붙인다</strong></td><td>옵션 → 수량 할인 → 추가 할인 → 배송 → 부가세</td><td><strong>한 번에 하나씩.</strong> 틀리면 방금 붙인 게 범인</td></tr>
+<tr><td><strong>④ 숫자로 검산한다</strong></td><td>손으로 낸 견적과 대조</td><td>화면이 예쁘다고 맞는 게 아님</td></tr>
 </tbody></table></div>
-<div class="callout callout--tip"><p><span class="co-icon">💡</span> 만드는 순서(규칙 붙이기 → 뼈대 → 하나씩 → 검산)는 셋 다 같습니다. <strong>검산하는 방법만 다를 뿐</strong>이에요.</p></div>
-<div class="callout callout--summary"><div class="callout-label">📌 3절 한 줄 요약</div><p>— 계산기는 <strong>숫자</strong>, 체크리스트는 <strong>빠진 것</strong>, 대시보드는 <strong>비교</strong>를 확인한다.</p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>③의 "한 번에 하나씩"이 핵심입니다.</strong> 다섯 개를 한꺼번에 붙이고 결과가 틀리면 다섯 개를 다 뒤져야 해요. 하나씩 붙이면 <strong>범인은 항상 방금 그것</strong>입니다.</p></div>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>④를 건너뛰지 마세요.</strong> 아티팩트는 결과가 <strong>너무 그럴듯하게</strong> 나옵니다. 화면이 깔끔하고 숫자가 딱 떨어지니 맞는 것 같죠. 8차시에서 배운 그 문제 — <strong>그럴듯함이 정확함은 아닙니다.</strong></p></div>
+<h3 class="sub-head">2-2. 고칠 때는 부분만</h3>
+<p>전체를 다시 만들게 하지 마세요. <strong>어디를 어떻게</strong> 바꿀지 짚어 줍니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>나쁜 요청</strong></th><th><strong>좋은 요청</strong></th></tr></thead><tbody>
+<tr><td><em>"좀 이상한데 다시 만들어줘"</em></td><td><em>"수량 할인이 옵션 금액을 빼고 계산되고 있어. 옵션 포함 소계에 적용되게 고쳐줘"</em></td></tr>
+<tr><td><em>"더 예쁘게"</em></td><td><em>"입력칸을 왼쪽, 결과를 오른쪽에 두고, 최종 금액만 크게 보여줘"</em></td></tr>
+<tr><td><em>"기능 더 넣어줘"</em></td><td><em>"제주·도서산간 체크박스를 추가하고, 체크하면 배송비에 25,000원을 더해줘"</em></td></tr>
+</tbody></table></div>
+<div class="callout callout--summary"><div class="callout-label">📌 어디에 입력하나요?</div><p>아티팩트를 만든 <strong>그 대화에 이어서</strong> 말하면 됩니다. 새 대화를 열면 Claude가 그 도구를 모릅니다. 옆 창은 그대로 두고 <strong>대화창에</strong> 입력하세요.</p></div>
+<h3 class="sub-head">2-3. 망가졌을 때 — 되돌리는 두 가지 방법</h3>
+<div class="table-scroll"><table><thead><tr><th><strong>방법</strong></th><th><strong>이렇게</strong></th></tr></thead><tbody>
+<tr><td><strong>① 말로 되돌리기</strong></td><td><em>"방금 바꾼 것 취소하고, 그 전 상태로 돌려줘"</em></td></tr>
+<tr><td><strong>② 갈래 만들기</strong></td><td>고치기 <strong>전에 보냈던 내 메시지를 편집</strong>해서 다시 보내면, 대화가 그 시점에서 갈라져 새로 만들어집니다</td></tr>
+</tbody></table></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>그래서 과감하게 고쳐도 됩니다.</strong> 초보는 "건드렸다가 망가질까 봐" 못 고치는 경우가 많은데, 그럴 필요 없어요. 다만 <strong>잘 되는 상태일 때 검산 결과를 메모해 두면</strong>, 고친 뒤에 같은 숫자가 나오는지 바로 확인할 수 있습니다.</p></div>
+<div class="callout callout--summary"><div class="callout-label">📌 2절 한 줄 요약</div><p>— <strong>뼈대 → 하나씩 → 검산.</strong> 고칠 땐 전체가 아니라 <strong>부분을 짚어서.</strong></p></div>
 </section>
 
 <section class="lesson-section practice-block">
 <h3 class="sub-head first">PART 2 — 조건이 갈리는 도구 · 데이터 도구</h3>
 <div class="practice-card">
   <div class="practice-title">🛠 실습 E — 온보딩 체크리스트 생성기</div>
-  <p>순서는 <b>① 체크리스트 도구 만들기</b> → <b>② 조건별로 확인</b> → <b>③ 복사 버튼 붙이기</b>.<br><b>새 대화</b>에서 시작합니다.</p>
+  <p>순서는 <b>① 체크리스트 도구 만들기</b> → <b>② 조건별로 확인</b> → <b>③ 부서별 요청 메시지 버튼 붙이기</b>.<br><b>새 대화</b>에서 시작합니다. 대화 이름을 <b>'11차시 실습 E — 온보딩 체크리스트'</b>로 바꿔 두세요.</p>
   <div class="practice-prep">
     <div class="prep-label">📎 준비물</div>
     <ul>
-      <li><b>신규 입사자 준비 규칙</b>(<code>onboarding_rules.docx</code>) <span class="meta">· Word · 고용형태·직군·근무지별 규칙</span></li>
+      <li><b>신규 입사자 준비 규칙</b>(<code>onboarding_rules.docx</code>) <span class="meta">· Word · 고용형태·직군·근무지별 규칙 + 항목별 담당 부서</span></li>
     </ul>
   </div>
   <p class="practice-step">① 체크리스트 도구 만들기</p>
   <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 규칙으로 신규 입사자 준비 체크리스트를 만들어주는 도구를 만들어줘. 고용형태 · 직군 · 근무지를 고르면, 그 사람에게 필요한 항목만 체크리스트로 나오게. 각 항목에 언제까지 해야 하는지도 같이 보여줘. 리드타임이 긴 항목(노트북 5일, 법인카드 2주)은 눈에 띄게 표시해줘."</em></p></div>
   <p class="practice-step">② 조건을 바꿔 가며 확인</p>
-  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 조건마다 나와야 할 것</div><div class="table-scroll"><table><thead><tr><th><strong>조건</strong></th><th><strong>나와야 할 것</strong></th></tr></thead><tbody>
-  <tr><td><strong>프리랜서</strong> 선택</td><td>사원증·복지포인트가 <strong>안 나와야</strong> 함</td></tr>
-  <tr><td><strong>영업 직군</strong> 선택</td><td>법인카드가 <strong>눈에 띄게</strong> (2주 소요)</td></tr>
-  <tr><td><strong>재택 병행</strong> 선택</td><td>VPN · 서약서 · 모니터 대여</td></tr>
-  <tr><td><strong>인턴 + 개발 + 본사</strong></td><td>공통 5 + 인턴 2 + 개발 3 + 본사 2 = <strong>12개</strong></td></tr>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 조건을 바꾸면 체크리스트가 맞게 바뀌나?</div><div class="table-scroll"><table><thead><tr><th><strong>조건</strong></th><th><strong>확인할 결과</strong></th></tr></thead><tbody>
+  <tr><td><strong>프리랜서</strong> 선택</td><td>사원증·복지포인트가 <strong>빠져 있는지</strong></td></tr>
+  <tr><td><strong>영업 직군</strong> 선택</td><td>법인카드가 <strong>눈에 띄게</strong> 표시되는지 (2주 소요)</td></tr>
+  <tr><td><strong>재택 병행</strong> 선택</td><td>VPN · 서약서 · 모니터 대여가 <strong>들어 있는지</strong></td></tr>
+  <tr><td><strong>인턴 + 개발 + 본사</strong></td><td>항목이 <strong>12개</strong>인지 (공통 5 + 인턴 2 + 개발 3 + 본사 2)</td></tr>
   </tbody></table></div></div>
-  <p class="practice-step">③ 메신저로 옮길 수 있게</p>
-  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"체크리스트를 복사해서 메신저에 붙여넣을 수 있는 형태로 내보내는 버튼을 추가해줘."</em></p></div>
+  <div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>프리랜서 케이스가 함정입니다.</strong> 규칙 문서에 <em>"프리랜서는 사원증·복지포인트 대상이 아닙니다"</em> 가 <strong>본문이 아니라 '주의' 항목에</strong> 적혀 있어요. 문서를 끝까지 안 읽으면 놓칩니다 — <strong>AI도 그렇습니다.</strong> 프리랜서에게 사원증이 나오면 <em>"규칙 문서 맨 아래 주의사항을 반영해줘"</em> 라고 짚어 주세요.</p></div>
+  <p class="practice-step">③ 부서별 요청 메시지 버튼 붙이기</p>
+  <p>체크리스트가 맞게 나오면, 이제 각 부서에 보낼 요청을 만듭니다. 규칙 문서의 항목마다 <strong>[ ] 안에 담당 부서</strong>가 적혀 있어요. 인사팀은 이 체크리스트를 들고 <strong>다른 부서에 요청하고, 처리됐는지 챙기는</strong> 쪽입니다.</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"입력칸에 입사자 이름과 입사일을 추가해줘. 그리고 체크리스트를 규칙 문서의 담당 부서별로 나눠서, 부서마다 메신저에 바로 붙여넣을 수 있는 요청 메시지로 복사하는 버튼을 만들어줘. 메시지에는 입사자 이름·입사일, 요청 항목, 항목별 기한 날짜를 넣어줘. 인사팀 항목은 요청 메시지가 아니라 '내 할 일'로 따로 보여줘."</em></p></div>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 부서별로 맞게 나뉘었나?</div><p><strong>인턴 + 개발 + 본사</strong>로 놓고 보세요. 요청 메시지는 <strong>IT팀 5개</strong>(메일·메신저·노트북·코드 저장소·개발 서버), <strong>총무팀 4개</strong>(사원증·환영 키트·좌석·사물함), <strong>배치 부서 팀장 1개</strong>(멘토 배정)이고, 인사팀 2개(근로계약서·인턴 교육 일정)는 '내 할 일'로 따로 나와야 합니다. 합쳐서 ②의 12개와 같은지, 기한이 "입사 3일 전"이 아니라 <strong>실제 날짜</strong>로 바뀌어 있는지도 확인하세요.</p></div>
+  <div class="callout callout--tip"><p><span class="co-icon">💡</span> 체크리스트를 통째로 복사해 보내면, 받는 사람이 그중 자기 일을 다시 골라내야 합니다. <strong>부서마다 그 부서 일만, 날짜까지 박아서</strong> 보내야 바로 처리됩니다. 메시지를 보내는 건 버튼이 아니라 사람이 직접 메신저에 붙여넣어서 합니다 — 아티팩트는 메신저와 연결되지 않아요.</p></div>
 </div>
-<div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>프리랜서 케이스가 함정입니다.</strong> 규칙 문서에 <em>"프리랜서는 사원증·복지포인트 대상이 아닙니다"</em> 가 <strong>본문이 아니라 '주의' 항목에</strong> 적혀 있어요. 문서를 끝까지 안 읽으면 놓칩니다 — <strong>AI도 그렇습니다.</strong> 프리랜서에게 사원증이 나오면 <em>"규칙 문서 맨 아래 주의사항을 반영해줘"</em> 라고 짚어 주세요.</p></div>
-<div class="callout callout--tip"><p><span class="co-icon">💡</span> ③의 한 줄이 도구를 실무로 밀어 넣습니다. 아무리 좋은 도구도 <strong>결과를 옮길 수 없으면 안 씁니다.</strong></p></div>
 
 <div class="practice-card">
   <div class="practice-title">🛠 실습 F — 설문 대시보드</div>
-  <p>순서는 <b>① 대시보드 만들기</b> → <b>② 필터 걸어 확인</b>.<br><b>새 대화</b>에서 시작합니다.</p>
+  <p>순서는 <b>① 대시보드 만들기</b> → <b>② 필터 걸어 확인</b>.<br><b>새 대화</b>에서 시작합니다. 대화 이름을 <b>'11차시 실습 F — 설문 대시보드'</b>로 바꿔 두세요.</p>
   <div class="practice-prep">
     <div class="prep-label">📎 준비물</div>
     <ul>
@@ -747,38 +704,15 @@
 <div class="callout callout--warning"><p><span class="co-icon">⚠️</span> 8차시의 <strong>자료 사각지대</strong>를 떠올리세요. 이 설문에는 <strong>이미 퇴사한 사람의 응답이 없습니다.</strong> 대시보드가 예뻐도 그 한계는 그대로예요. 도구는 데이터의 한계를 고쳐 주지 않습니다.</p></div>
 </section>
 
-<section class="lesson-section"><div class="section-head"><span class="section-mark">4</span><h2>공유 — 누가 열 수 있고, 사용량은 누가 내나</h2></div>
-<p>만든 도구를 팀원에게 넘기려면 공유해야 합니다. 그런데 <strong>2026년 9월 16일 아티팩트가 새로 바뀌면서</strong> 공유 방식도 달라졌어요. 예전 자료에서 본 내용과 다를 수 있으니 이 절을 기준으로 하세요.</p>
-<h3 class="sub-head">4-1. 기본은 '나만 보기'</h3>
-<p>새로 만든 아티팩트는 <strong>처음엔 나만 볼 수 있습니다.</strong> 공유하기 전까지는 아무에게도 안 보여요. 아티팩트를 열고 <strong>'공유'(Share)</strong> 버튼 → <strong>'접근 권한'(Who has access)</strong>에서 고릅니다.</p>
-<div class="table-scroll"><table><thead><tr><th><strong>플랜</strong></th><th><strong>고를 수 있는 공유 범위</strong></th></tr></thead><tbody>
-<tr><td><strong>Free</strong></td><td>새 아티팩트는 <strong>링크 공유가 안 됩니다</strong> → 7절의 <strong>HTML 배포</strong>가 대안입니다</td></tr>
-<tr><td><strong>Pro · Max</strong></td><td>나만 / 이메일로 특정인 초대(베타) / <strong>링크가 있는 모든 사람</strong></td></tr>
-<tr><td><strong>Team · Enterprise</strong></td><td>특정인 / 조직 전체. <strong>조직 밖 공유는 관리자가 허용해야</strong> 됩니다</td></tr>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">3</span><h2>계산 말고도 — 조건 도구 · 데이터 도구</h2></div>
+<p>실습 B~F에서 도구 세 개를 만들었습니다. 견적 계산기는 <strong>숫자</strong>, 체크리스트는 <strong>조건</strong>, 대시보드는 <strong>데이터</strong>를 다뤘죠. 업무 도구는 크게 세 종류예요.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>도구 종류</strong></th><th><strong>하는 일</strong></th><th><strong>제일 중요한 확인</strong></th><th><strong>실습</strong></th></tr></thead><tbody>
+<tr><td><strong>계산기</strong></td><td>규칙대로 숫자를 낸다</td><td>손 계산과 <strong>숫자가 같나</strong></td><td>B·C·D</td></tr>
+<tr><td><strong>체크리스트 생성기</strong></td><td>조건을 고르면 <strong>필요한 항목만</strong> 보여준다</td><td><strong>나오면 안 되는 항목</strong>이 빠졌나</td><td>E</td></tr>
+<tr><td><strong>대시보드</strong></td><td>데이터를 <strong>필터로 걸러</strong> 보여준다</td><td><strong>비교 대상</strong>(전체 평균)이 같이 보이나</td><td>F</td></tr>
 </tbody></table></div>
-<div class="callout callout--warning"><div class="callout-label">⚠️ 링크를 받은 사람도 Claude에 로그인해야 열립니다.</div><p>'링크가 있는 모든 사람'은 <strong>Claude 계정으로 로그인한 사람 중</strong> 링크를 가진 누구나라는 뜻이에요. 계정이 없는 고객이나 거래처에게 링크만 주면 못 엽니다. 그럴 때가 바로 <strong>7절(배포)</strong>이 필요한 순간입니다.</p></div>
-<p><strong>권한은 세 단계</strong>로 줄 수 있습니다.</p>
-<div class="table-scroll"><table><thead><tr><th><strong>권한</strong></th><th><strong>할 수 있는 것</strong></th></tr></thead><tbody>
-<tr><td><strong>보기</strong></td><td>열어서 쓰기, 댓글 읽기</td></tr>
-<tr><td><strong>댓글</strong></td><td>보기 + 댓글 달기 + 도구가 주는 파일 내려받기</td></tr>
-<tr><td><strong>편집</strong></td><td>댓글 + <strong>내용 고치기</strong></td></tr>
-</tbody></table></div>
-<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>공유 = 그 링크를 가진 사람은 다 본다.</strong> 사내 단가표, 고객 명단, 개인정보가 들어간 도구를 '링크가 있는 모든 사람'으로 열면 그게 밖으로 나갑니다. 오늘 견적 계산기는 <strong>실습용 숫자라서</strong> 괜찮은 거예요.</p></div>
-<div class="callout callout--tip"><p><span class="co-icon">💡</span> 공유 설정은 <strong>휴대폰 앱에서는 못 바꿉니다.</strong> 웹(claude.ai)이나 데스크톱 앱에서 하세요. 공유를 멈출 때는 '공유' → <strong>'나만'</strong>으로 바꾸면 됩니다.</p></div>
-<h3 class="sub-head">4-2. 남이 내 도구를 고쳐 쓰려면</h3>
-<p>받은 사람이 <em>"이거 우리 팀 기준으로 바꾸고 싶은데"</em> 할 때가 있죠. 방법은 둘입니다.</p>
-<div class="table-scroll"><table><thead><tr><th><strong>방법</strong></th><th><strong>언제</strong></th></tr></thead><tbody>
-<tr><td><strong>'편집' 권한으로 공유</strong></td><td>같이 하나를 고쳐 갈 때 — 원본이 바뀝니다</td></tr>
-<tr><td><strong>HTML 파일로 넘기기</strong> (7절)</td><td>각자 자기 버전을 만들 때 — 받은 사람이 자기 대화에 파일을 올리고 <em>"우리 단가로 바꿔줘"</em></td></tr>
-</tbody></table></div>
-<h3 class="sub-head">4-3. AI가 들어간 도구 — 사용량은 누가 내나</h3>
-<p>아티팩트 안에 <strong>Claude를 부르는 기능</strong>을 넣을 수도 있습니다. 예를 들어 <em>"고객 문의를 붙여넣으면 답변 초안을 만들어 주는 도구"</em> 같은 것.</p>
-<div class="table-scroll"><table><thead><tr><th><strong>항목</strong></th><th><strong>내용</strong></th></tr></thead><tbody>
-<tr><td>사용량</td><td><strong>쓰는 사람의 사용량</strong>이 차감됩니다. 만든 사람 부담이 아니에요. API 키도 필요 없습니다</td></tr>
-<tr><td>쓰는 사람</td><td>자기 Claude 계정으로 로그인해야 하고, 처음 쓸 때 <strong>허락을 묻는 창</strong>이 뜹니다</td></tr>
-<tr><td>공유</td><td>AI를 부르거나 다른 앱과 연결된 도구는 <strong>링크로 공유할 수 없습니다</strong></td></tr>
-</tbody></table></div>
-<div class="callout callout--summary"><div class="callout-label">📌 4절 한 줄 요약</div><p>— 기본은 <strong>나만 보기.</strong> 링크로 열어도 <strong>받는 사람도 로그인</strong> 필요. 민감정보는 넣지 않는다. AI 기능 사용량은 <strong>쓰는 사람 부담.</strong></p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 만드는 순서(규칙 붙이기 → 뼈대 → 하나씩 → 검산)는 셋 다 같습니다. <strong>검산하는 방법만 다를 뿐</strong>이에요.</p></div>
+<div class="callout callout--summary"><div class="callout-label">📌 3절 한 줄 요약</div><p>— 계산기는 <strong>숫자</strong>, 체크리스트는 <strong>빠진 것</strong>, 대시보드는 <strong>비교</strong>를 확인한다.</p></div>
 </section>
 
 <section class="lesson-section practice-block">
@@ -797,20 +731,176 @@
   <p class="practice-step">② 사용법 3줄 넣기</p>
   <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 계산기 맨 위에 사용법 3줄을 넣어줘. 처음 보는 사람이 뭘 고르고 뭘 넣어야 하는지, 그리고 이 견적의 유효기간(14일) 안내까지."</em></p></div>
   <p class="practice-step">③ 공유하기 — 플랜에 따라</p>
-  <p><strong>Pro 이상</strong>: 아티팩트의 '공유' → 접근 권한을 정하고 링크 복사. <strong>Free</strong>: 링크 공유가 안 되니, 이 계산기는 <strong>실습 I에서 웹페이지로 배포</strong>합니다.</p>
-  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 처음 보는 사람이 나 없이 쓸 수 있나?</div><p>옆 사람에게 계산기를 보여 주고 <strong>아무 설명 없이</strong> 케이스 1을 넣어 보게 하세요. 막히는 곳이 있으면 그게 사용법에 빠진 줄입니다.</p></div>
+  <p>공유 범위와 권한은 바로 아래 <strong>4절</strong>에서 정리합니다. <strong>Pro 이상</strong>: 아티팩트의 '공유' → 접근 권한을 정하고 링크 복사. <strong>Free</strong>: 링크 공유가 안 됩니다. 계정 없는 사람에게 주소로 주는 방법은 <strong>PART 4 배포</strong>에서 배웁니다.</p>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 처음 보는 사람이 나 없이 쓸 수 있나?</div><p>이 계산기가 <strong>어떻게 돌아가는지 모르는 사람</strong>에게 보여 주고, <strong>아무 설명 없이</strong> 케이스 1을 넣어 보게 하세요. 같은 실습을 한 옆 사람은 이미 알고 있어서 시험이 안 됩니다. 막히는 곳이 있으면 그게 사용법에 빠진 줄입니다.</p></div>
 </div>
 <div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>②를 하면 도구가 자산이 됩니다.</strong> 내가 설명해 줘야 쓸 수 있는 도구는 절반만 완성된 거예요. 그리고 <strong>규칙이 바뀌면 누가 고칠지</strong>도 정해 두세요 — 안 그러면 6개월 뒤에 낡은 단가로 견적이 나갑니다.</p></div>
 </section>
 
-<section class="lesson-section"><div class="section-head"><span class="section-mark">5</span><h2>못 하는 것 — 기대치를 여기 맞추세요</h2></div>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">4</span><h2>공유 — 누가 열 수 있고, 사용량은 누가 내나</h2></div>
+<p>실습 G에서 공유 버튼을 눌러 봤습니다. 이제 <strong>누가 열 수 있는지</strong> 정리합니다. 그런데 <strong>2026년 9월 16일 아티팩트가 새로 바뀌면서</strong> 공유 방식도 달라졌어요. 예전 자료에서 본 내용과 다를 수 있으니 이 절을 기준으로 하세요.</p>
+<h3 class="sub-head">4-1. 기본은 '나만 보기'</h3>
+<p>새로 만든 아티팩트는 <strong>처음엔 나만 볼 수 있습니다.</strong> 공유하기 전까지는 아무에게도 안 보여요. 아티팩트를 열고 <strong>'공유'(Share)</strong> 버튼 → <strong>'접근 권한'(Who has access)</strong>에서 고릅니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>플랜</strong></th><th><strong>고를 수 있는 공유 범위</strong></th></tr></thead><tbody>
+<tr><td><strong>Free</strong></td><td>새 아티팩트는 <strong>링크 공유가 안 됩니다</strong> → 실습 I의 <strong>HTML 배포</strong>가 대안입니다</td></tr>
+<tr><td><strong>Pro · Max</strong></td><td>나만 / 이메일로 특정인 초대(베타) / <strong>링크가 있는 모든 사람</strong></td></tr>
+<tr><td><strong>Team · Enterprise</strong></td><td>특정인 / 조직 전체. <strong>조직 밖 공유는 관리자가 허용해야</strong> 됩니다</td></tr>
+</tbody></table></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 링크를 받은 사람도 Claude에 로그인해야 열립니다.</div><p>'링크가 있는 모든 사람'은 <strong>Claude 계정으로 로그인한 사람 중</strong> 링크를 가진 누구나라는 뜻이에요. 계정이 없는 고객이나 거래처에게 링크만 주면 못 엽니다. 그럴 때가 바로 다음 실습 <strong>H·I(배포)</strong>가 필요한 순간입니다.</p></div>
+<p><strong>권한은 세 단계</strong>로 줄 수 있습니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>권한</strong></th><th><strong>할 수 있는 것</strong></th></tr></thead><tbody>
+<tr><td><strong>보기</strong></td><td>열어서 쓰기, 댓글 읽기</td></tr>
+<tr><td><strong>댓글</strong></td><td>보기 + 댓글 달기 + 도구가 주는 파일 내려받기</td></tr>
+<tr><td><strong>편집</strong></td><td>댓글 + <strong>내용 고치기</strong></td></tr>
+</tbody></table></div>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>공유 = 그 링크를 가진 사람은 다 본다.</strong> 사내 단가표, 고객 명단, 개인정보가 들어간 도구를 '링크가 있는 모든 사람'으로 열면 그게 밖으로 나갑니다. 오늘 견적 계산기는 <strong>실습용 숫자라서</strong> 괜찮은 거예요.</p></div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 공유 설정은 <strong>휴대폰 앱에서는 못 바꿉니다.</strong> 웹(claude.ai)이나 데스크톱 앱에서 하세요. 공유를 멈출 때는 '공유' → <strong>'나만'</strong>으로 바꾸면 됩니다.</p></div>
+<h3 class="sub-head">4-2. 남이 내 도구를 고쳐 쓰려면</h3>
+<p>받은 사람이 <em>"이거 우리 팀 기준으로 바꾸고 싶은데"</em> 할 때가 있죠. 방법은 둘입니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>방법</strong></th><th><strong>언제</strong></th></tr></thead><tbody>
+<tr><td><strong>'편집' 권한으로 공유</strong></td><td>같이 하나를 고쳐 갈 때 — 원본이 바뀝니다</td></tr>
+<tr><td><strong>HTML 파일로 넘기기</strong> (실습 H·I)</td><td>각자 자기 버전을 만들 때 — 받은 사람이 자기 대화에 파일을 올리고 <em>"우리 단가로 바꿔줘"</em></td></tr>
+</tbody></table></div>
+<h3 class="sub-head">4-3. AI가 들어간 도구 — 사용량은 누가 내나</h3>
+<p>아티팩트 안에 <strong>Claude를 부르는 기능</strong>을 넣을 수도 있습니다. 예를 들어 <em>"고객 문의를 붙여넣으면 답변 초안을 만들어 주는 도구"</em> 같은 것.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>항목</strong></th><th><strong>내용</strong></th></tr></thead><tbody>
+<tr><td>사용량</td><td><strong>쓰는 사람의 사용량</strong>이 차감됩니다. 만든 사람 부담이 아니에요. API 키도 필요 없습니다</td></tr>
+<tr><td>쓰는 사람</td><td>자기 Claude 계정으로 로그인해야 하고, 처음 쓸 때 <strong>허락을 묻는 창</strong>이 뜹니다</td></tr>
+<tr><td>공유</td><td>AI를 부르거나 다른 앱과 연결된 도구는 <strong>링크로 공유할 수 없습니다</strong></td></tr>
+</tbody></table></div>
+<div class="callout callout--summary"><div class="callout-label">📌 4절 한 줄 요약</div><p>— 기본은 <strong>나만 보기.</strong> 링크로 열어도 <strong>받는 사람도 로그인</strong> 필요. 민감정보는 넣지 않는다. AI 기능 사용량은 <strong>쓰는 사람 부담.</strong></p></div>
+</section>
+
+<section class="lesson-section practice-block">
+<h3 class="sub-head first">PART 4 — 꺼내서 배포하기</h3>
+<div class="callout callout--scenario"><p><span class="co-icon">🎯</span> <strong>목표</strong>: 회의록을 <strong>파일로 꺼내</strong> 보고(실습 H), 매주 회의가 쌓이고 <strong>누구나 의견을 남기는</strong> 페이지를 Firebase로 배포합니다(실습 I).</p></div>
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 H — 회의록을 클릭형 HTML 리포트로</div>
+  <p>순서는 <b>① 표로 정리</b> → <b>② 같은 내용을 펼침형 리포트로</b> → <b>③ HTML 파일로 받기</b>.<br><b>새 대화</b>에서 시작합니다. 대화 이름을 <b>'11차시 실습 H — 회의록 리포트'</b>로 바꿔 두세요.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>회의록 원본</b>(<code>meeting_minutes_source.docx</code>) <span class="meta">· Word · 그린컵 영업팀 주간회의 메모 1건 (안건 4개, 두서없이 적힘)</span></li>
+    </ul>
+  </div>
+  <div class="term-note">📖 <b>HTML</b> : <strong>웹페이지를 이루는 파일.</strong> 오늘 만든 계산기도 속은 HTML 파일 한 장입니다. 더블클릭하면 인터넷 창으로 열려요</div>
+<p class="practice-step">① 먼저 표로 정리</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 회의록에서 안건 · 논의 내용 · 결정 사항 · 실행 항목을 표로 정리해줘."</em></p></div>
+  <p class="practice-step">② 같은 내용을 클릭형 리포트로</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"같은 내용을 안건별로 클릭하면 펼쳐지는 HTML 리포트로 만들어줘. 실행 항목은 체크박스로, 담당자별로 색을 다르게."</em></p></div>
+  <div class="term-note">📖 <b>아코디언</b> : 제목을 누르면 <strong>내용이 펼쳐지고 다시 누르면 접히는</strong> 화면 형태. 악기 아코디언처럼 접혔다 펴져서 붙은 이름</div>
+  <p class="practice-step">③ HTML 파일로 받기</p>
+  <p>아티팩트 창 오른쪽 위 <strong>공유 → 내보내기 → HTML</strong>(독립 실행형 웹 페이지)을 눌러 내려받습니다. 받은 파일의 이름을 <code>index.html</code>로 바꿉니다.</p>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 표와 비교해 뭐가 편한가? 파일이 열리나?</div><p>표는 위에서부터 다 읽어야 하지만, 펼침형은 <strong>필요한 안건만</strong> 열어 봅니다. 정보가 많을수록 차이가 커져요. 내려받은 파일을 <strong>더블클릭해서 인터넷 창으로 열리면</strong> 성공입니다.</p></div>
+</div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 10차시의 회의록 3층 구조(결정 / 액션 / 보류)를 기억하나요? ②에서 <em>"결정·액션·보류 세 덩어리로 나눠서"</em> 를 붙이면 지난 차시 결과물이 그대로 리포트가 됩니다.</p></div>
+
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 I — 주간회의 모음 페이지를 Firebase로 배포 ⭐</div>
+  <p>순서는 <b>① 화면 만들기</b> → <b>② Firebase 프로젝트와 데이터베이스 만들기</b> → <b>③ 웹 앱 등록하고 설정값 받기</b> → <b>④ 저장 기능 연결</b> → <b>⑤ CMD에서 배포</b> → <b>⑥ 함께 써 보기</b> → <b>⑦ 잠그기</b>.<br>①과 ④는 <b>새 대화</b> 하나에서 이어갑니다. 대화 이름을 <b>'11차시 실습 I — 주간회의 모음'</b>으로 바꿔 두세요. ②·③·⑦은 Firebase 콘솔, ⑤는 CMD에서 합니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>회의록 원본</b>(<code>meeting_minutes_source.docx</code>) <span class="meta">· 실습 H에서 쓴 파일 · 첫 회의로 넣어 볼 내용</span></li>
+      <li><b>Google 계정</b> <span class="meta">· Firebase 로그인용</span></li>
+      <li><b>Node.js</b> <span class="meta">· nodejs.org에서 LTS 버전 설치 (수업 전에 미리 — Firebase 명령어를 설치할 때 필요)</span></li>
+    </ul>
+  </div>
+  <div class="term-note">📖 <b>Firebase</b> : 구글이 주는 웹 서비스 도구 모음. 오늘은 둘만 씁니다 — <strong>Hosting</strong>(페이지를 주소로 보여 주기)과 <strong>Firestore</strong>(입력한 내용을 저장해 두는 데이터베이스)</div>
+
+  <p class="practice-step">① 화면 만들기</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"주간회의 기록을 모아 보는 페이지를 만들어줘.<br>- 위에는 회의를 추가하는 입력칸: 회의 날짜, 제목, 결정 / 액션(담당자·기한) / 보류<br>- 아래에는 저장된 회의를 주차별 목록으로, 최신 주가 위에 오게<br>- 목록에서 회의를 누르면 내용이 펼쳐지게<br>- 회의마다 누구나 의견이나 추가 메모를 적을 수 있는 칸<br>- 저장 기능은 나중에 Firebase로 붙일 거야. 지금은 화면만."</em></p></div>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 입력칸, 주차별 목록, 의견 칸이 다 있나?</div><p>아직 저장은 안 되는 게 정상입니다. 화면 구성만 보고, 빠진 칸이 있으면 이 대화에서 더 붙여 달라고 하세요.</p></div>
+
+  <p class="practice-step">② Firebase 프로젝트와 데이터베이스 만들기</p>
+  <ol class="steps"><li>firebase.google.com 에 Google 계정으로 로그인 → <strong>콘솔로 이동</strong></li><li><strong>새 프로젝트 만들기</strong> → 이름 입력 (예: <code>greencup-meeting</code>) → Google 애널리틱스는 꺼도 됩니다 → 만들기</li><li>왼쪽 메뉴 <strong>데이터베이스 및 스토리지 → Firestore</strong> → <strong>데이터베이스 만들기</strong></li><li>위치는 <strong>서울(asia-northeast3)</strong>, 보안 규칙은 <strong>테스트 모드로 시작</strong> → 만들기</li></ol>
+  <div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>테스트 모드</strong>는 주소만 알면 <strong>누구나 읽고 쓰고 지울 수 있는</strong> 상태입니다. 오늘은 반 전체가 같이 써 보려고 일부러 이렇게 엽니다. 그리고 <strong>만든 날부터 30일 뒤에 자동으로 닫힙니다.</strong> 이유는 수업 뒤 5-3절에서 봅니다.</p></div>
+
+  <p class="practice-step">③ 웹 앱 등록하고 설정값 받기</p>
+  <ol class="steps"><li>왼쪽 위 <strong>톱니바퀴 → 프로젝트 설정 → 일반</strong></li><li>아래 <strong>내 앱</strong>에서 <code>&lt;/&gt;</code>(웹) 아이콘 → 앱 닉네임 아무거나 (예: <code>meeting-web</code>) → <strong>앱 등록</strong></li><li>화면에 나오는 <code>const firebaseConfig = { … }</code> 부분을 <strong>통째로 복사</strong></li></ol>
+  <div class="term-note">📖 <b>firebaseConfig</b> : 이 페이지가 <strong>어느 Firebase 프로젝트에 저장할지</strong> 알려 주는 주소표. 비밀번호가 아니라서 페이지에 보여도 되지만, 그래서 <strong>누가 쓸 수 있는지는 ⑦의 규칙으로</strong> 지킵니다</div>
+
+  <p class="practice-step">④ 저장 기능 연결</p>
+  <p>①과 <strong>같은 대화</strong>로 돌아가 입력합니다. 마지막 줄에 ③에서 복사한 설정값을 붙여넣으세요.</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"아래 Firebase 설정으로 이 페이지를 Firestore에 연결해줘. 회의를 추가하면 Firestore에 저장되고, 페이지를 열면 주차별로 불러오게. 의견·메모도 저장되게. 다른 사람이 추가한 내용도 새로고침 없이 바로 보이게.<br>(여기에 firebaseConfig 붙여넣기)"</em></p></div>
+  <p>아티팩트 창 오른쪽 위 <strong>공유 → 내보내기 → HTML</strong>로 내려받습니다. 바탕화면에 <code>meeting-board</code> 폴더를 만들고, 그 안에 넣은 뒤 파일 이름을 <code>index.html</code>로 바꿉니다.</p>
+  <div class="callout callout--tip"><p><span class="co-icon">💡</span> 아티팩트 미리보기 창에서는 저장이 안 될 수 있어요. 아티팩트는 Claude 밖 서비스와 연결이 막혀 있기 때문입니다. <strong>⑤에서 배포한 뒤에</strong> 확인합니다.</p></div>
+
+  <p class="practice-step">⑤ CMD에서 배포</p>
+  <p>Windows 검색창에 <code>cmd</code>를 입력해 <strong>명령 프롬프트</strong>를 엽니다. 한 줄씩 입력하고 Enter.</p>
+<div class="prompt">node -v                              <span class="note">← 버전 숫자가 나오면 Node.js 설치 OK</span>
+npm install -g firebase-tools        <span class="note">← Firebase 명령어 설치 (처음 한 번)</span>
+firebase login                       <span class="note">← 브라우저가 열리면 Google 계정으로 허용</span>
+cd C:\Users\내이름\Desktop\meeting-board   <span class="note">← index.html이 있는 폴더로 이동</span>
+firebase init                        <span class="note">← 아래 표대로 답하기</span>
+firebase deploy                      <span class="note">← 배포. 끝에 Hosting URL이 나옵니다</span></div>
+  <p>중간에 나오는 질문은 이렇게 답합니다. 화면 문구는 버전에 따라 조금 다를 수 있어요.</p>
+  <div class="table-scroll"><table><thead><tr><th><strong>나오는 질문</strong></th><th><strong>뜻</strong></th><th><strong>답</strong></th></tr></thead><tbody>
+  <tr><td>Enable Gemini in Firebase features?</td><td>Firebase 안의 Gemini 부가 기능을 켤까요? (login 때)</td><td>Yes (켜도 지장 없음)</td></tr>
+  <tr><td>Allow Firebase to collect … usage and error reporting?</td><td>사용·오류 정보 수집을 허용할까요? (login 때)</td><td>Yes 또는 No</td></tr>
+  <tr><td>Are you ready to proceed?</td><td>이 폴더에 Firebase를 설정할까요?</td><td><strong>y</strong></td></tr>
+  <tr><td>Which Firebase features…?</td><td>쓸 기능 고르기 (스페이스로 선택, Enter로 확정)</td><td><strong>Hosting</strong> 하나만</td></tr>
+  <tr><td>Please select an option</td><td>프로젝트 고르기</td><td><strong>Use an existing project</strong> → ②에서 만든 프로젝트</td></tr>
+  <tr><td>What do you want to use as your public directory?</td><td>공개할 폴더는?</td><td><strong>.</strong> (마침표) — 지금 폴더 그대로. 기본값 public으로 하면 우리 index.html을 못 찾습니다</td></tr>
+  <tr><td>Configure as a single-page app?</td><td>모든 주소를 첫 화면으로 보낼까요?</td><td><strong>n</strong></td></tr>
+  <tr><td>Set up automatic builds and deploys with GitHub?</td><td>GitHub와 자동 배포를 연결할까요?</td><td><strong>n</strong> — 직접 배포로 충분</td></tr>
+  <tr><td>File index.html already exists. Overwrite?</td><td>index.html을 덮어쓸까요?</td><td><strong>N</strong> — Yes면 우리 페이지가 Firebase 견본으로 바뀝니다</td></tr>
+  <tr><td>Install agent skills for Firebase?</td><td>AI 코딩 도구용 부가 기능 설치?</td><td><strong>N</strong></td></tr>
+  </tbody></table></div>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 주소가 나오고 페이지가 열리나?</div><p><code>firebase deploy</code>가 끝나면 <code>Hosting URL: https://내프로젝트.web.app</code>이 나옵니다. 그 주소를 열어 ①에서 만든 화면이 보이면 배포 성공입니다.</p></div>
+
+  <p class="practice-step">⑥ 함께 써 보기</p>
+  <ol class="steps"><li>내 주소를 반 채팅방에 올립니다</li><li>내 페이지에 <code>meeting_minutes_source.docx</code>의 10/27 회의를 첫 회의로 추가합니다</li><li>옆 사람 주소로 들어가 그 회의에 <strong>의견이나 추가 메모</strong>를 하나 남깁니다</li><li>Firebase 콘솔 <strong>Firestore → 데이터</strong> 탭에서 회의와 의견이 쌓였는지 봅니다</li></ol>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 새로고침해도, 휴대폰으로 열어도 남아 있나?</div><p>내가 넣은 회의와 <strong>다른 사람이 남긴 의견</strong>이 새로고침 뒤에도, 휴대폰에서도 그대로 보이면 성공입니다. 내 컴퓨터가 아니라 <strong>Firestore에 저장</strong>됐다는 뜻이에요.</p></div>
+
+  <p class="practice-step">⑦ 잠그기 — 수업이 끝나면</p>
+  <p>Firebase 콘솔 <strong>Firestore → 규칙</strong> 탭을 열면 테스트 모드 규칙이 이렇게 보입니다. 날짜는 만든 날부터 30일 뒤입니다.</p>
+<div class="prompt">match /{document=**} {
+  allow read, write: if request.time &lt; timestamp.date(2026, 11, 29);
+}                                    <span class="note">← 이 날짜 전까지 누구나 읽기·쓰기 가능</span></div>
+  <p>아래처럼 바꾸고 <strong>게시</strong>를 누릅니다.</p>
+<div class="prompt">match /{document=**} {
+  allow read: if true;               <span class="note">← 보기는 누구나</span>
+  allow write: if false;             <span class="note">← 쓰기·지우기는 아무도</span>
+}</div>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 목록은 보이는데 새 회의는 저장이 안 되나?</div><p>게시하고 1분쯤 뒤, 내 페이지에서 회의를 하나 더 추가해 보세요. 기존 회의는 그대로 보이는데 <strong>새 회의가 저장되지 않으면</strong> 잠그기 성공입니다.</p></div>
+</div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 페이지를 고쳤다면 ④의 대화에서 수정 → HTML 다시 내려받기 → 같은 폴더에 <code>index.html</code>로 덮어쓰기 → CMD에서 <code>firebase deploy</code>만 다시 입력하면 됩니다. <code>firebase init</code>은 처음 한 번만 합니다.</p></div>
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">5</span><h2>배포 — 방금 한 일 정리</h2></div>
+<p>실습 I에서 만든 페이지는 지금까지와 다릅니다. 내 주소로 누구나 열 수 있고, <strong>여러 사람이 쓴 내용이 쌓여서 남습니다.</strong> 무엇이 달라서 그런지 정리합니다.</p>
+<h3 class="sub-head">5-1. Claude 공유 · GitHub Pages · Firebase — 뭐가 다른가</h3>
+<div class="table-scroll"><table><thead><tr><th></th><th><strong>Claude 공유 링크</strong></th><th><strong>GitHub Pages</strong></th><th><strong>Firebase</strong></th></tr></thead><tbody>
+<tr><td>여는 사람</td><td><strong>Claude 로그인 필요</strong></td><td>아무나</td><td>아무나</td></tr>
+<tr><td>Free 플랜</td><td>새 아티팩트는 링크 공유 ✗</td><td>됩니다</td><td>됩니다 (카드 등록 없이 무료)</td></tr>
+<tr><td>입력한 내용 저장</td><td>Pro 이상, Claude 안에서만</td><td><strong>안 됨</strong> — 새로고침하면 사라짐</td><td><strong>됨</strong> — Firestore에 남음</td></tr>
+<tr><td>여러 사람이 함께 쓰기</td><td>제한적</td><td>안 됨</td><td><strong>됨</strong> (규칙에 따라)</td></tr>
+<tr><td>고치면</td><td>바로 반영</td><td>파일을 다시 올림</td><td><code>firebase deploy</code> 다시</td></tr>
+</tbody></table></div>
+<h3 class="sub-head">5-2. Firebase는 두 부분으로 일합니다</h3>
+<p><strong>Hosting</strong>은 <code>index.html</code>을 주소로 보여 주는 일을 합니다. 여기까지는 GitHub Pages와 같아요. 다른 점은 <strong>Firestore</strong>입니다. 페이지에서 회의를 추가하면 그 내용이 내 컴퓨터가 아니라 <strong>Firestore에 저장</strong>되고, 누가 페이지를 열든 거기서 불러옵니다. 그래서 옆 사람이 단 의견이 내 화면에도 보이는 거예요.</p>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 폴더 안 파일 이름을 <code>index.html</code>로 바꾼 이유도 같습니다. 주소로 들어오면 Hosting이 <strong>index.html을 첫 화면으로 자동으로 엽니다.</strong></p></div>
+<h3 class="sub-head">5-3. 테스트 모드와 30일 — 실무라면 이렇게 엽니다</h3>
+<p>테스트 모드 규칙은 <em>"이 날짜 전까지 누구나 읽기·쓰기"</em>입니다. 날짜가 지나면 <strong>읽기·쓰기가 모두 막혀서</strong> 페이지가 회의를 불러오지도, 저장하지도 못하게 됩니다. 아무나 지울 수 있는 상태가 오래 열려 있지 않게 Firebase가 일부러 기한을 걸어 둔 거예요.</p>
+<p>계속 쓰려면 날짜 대신 <strong>누가 쓸 수 있는지</strong>를 규칙에 적습니다. 오늘은 실습하지 않고 개념만 봅니다.</p>
+<div class="table-scroll"><table><thead><tr><th><strong>방법</strong></th><th><strong>규칙 예</strong></th><th><strong>특징</strong></th></tr></thead><tbody>
+<tr><td><strong>① 날짜만 뒤로 미루기</strong></td><td><code>timestamp.date(2027, 12, 31)</code></td><td>가장 쉽지만 그동안 <strong>누구나 지울 수 있는 상태 그대로</strong>. 임시방편</td></tr>
+<tr><td><strong>② 로그인한 사람만 쓰기</strong></td><td><code>allow read: if true;</code><br><code>allow write: if request.auth != null;</code></td><td>Firebase <strong>Authentication</strong>에서 구글 로그인을 켜고, 페이지에 로그인 버튼을 붙여야 함. 보기는 누구나, 쓰기는 로그인한 사람만</td></tr>
+<tr><td><strong>③ 일부만 열기</strong></td><td>회의 기록은 쓰기 잠금,<br>의견은 로그인한 누구나</td><td>회의 내용은 담당자만 고치고, 의견만 함께 쓰는 실무형</td></tr>
+</tbody></table></div>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> 누구나 쓰기를 열어 둔 채 두면 <strong>모르는 사람이 내용을 지우거나 이상한 글을 올릴 수 있고</strong>, 무료 한도(하루 쓰기 2만 건)를 다른 사람이 써 버릴 수도 있습니다. 실제 회의 내용을 넣을 거라면 ②나 ③으로 바꾸고, 사내 정보 기준도 먼저 확인하세요.</p></div>
+<div class="callout callout--summary"><div class="callout-label">📌 5절 한 줄 요약</div><p>— Firebase는 <strong>Hosting(보여 주기) + Firestore(저장하기)</strong>. 그래서 여러 사람이 쓴 내용이 남는다. 테스트 모드는 <strong>30일 뒤 닫히고</strong>, 계속 쓰려면 <strong>누가 쓸 수 있는지</strong>를 규칙으로 정한다.</p></div>
+</section>
+
+<section class="lesson-section"><div class="section-head"><span class="section-mark">6</span><h2>못 하는 것 — 기대치를 여기 맞추세요</h2></div>
 <p>이 절을 안 읽으면 실습 중반에 실망합니다.</p>
 <div class="table-scroll"><table><thead><tr><th><strong>못 하는 것</strong></th><th><strong>무슨 뜻인가</strong></th></tr></thead><tbody>
 <tr><td><strong>아무 인터넷이나 불러오지 못한다</strong></td><td>실시간 환율, 사내 시스템 조회 ✗. (Pro 이상은 미리 연결해 둔 일부 앱을 쓸 수 있지만, 그런 도구는 링크 공유가 안 됩니다)</td></tr>
 <tr><td><strong>내가 안 넣은 데이터는 모른다</strong></td><td>우리 회사 재고·주문 내역을 알아서 못 가져옴</td></tr>
 <tr><td><strong>기록을 오래 저장하는 건 제한적이다</strong></td><td>입력한 내용을 남기는 저장 기능은 Pro 이상, 아티팩트 하나당 <strong>20MB · 글자만</strong></td></tr>
 <tr><td><strong>진짜 시스템이 아니다</strong></td><td>로그인·권한·감사 기록이 필요한 업무는 대상이 아님</td></tr>
-<tr><td><strong>Claude 밖으로 꺼내면 일부 기능이 멈춘다</strong></td><td>HTML로 내려받아 배포하면 <strong>AI 부르기·저장 기능은 안 됩니다</strong> (Claude 안에서만 도는 기능이라서). 계산·체크리스트·필터는 그대로 됩니다</td></tr>
+<tr><td><strong>Claude 밖으로 꺼내면 일부 기능이 멈춘다</strong></td><td>HTML로 내려받아 배포하면 Claude 안의 <strong>AI 부르기·저장 기능은 안 됩니다.</strong> 계산·체크리스트·필터는 그대로 되고, 저장이 필요하면 실습 I처럼 <strong>Firebase 같은 데이터베이스</strong>를 따로 붙입니다</td></tr>
 </tbody></table></div>
 <div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>첫 줄이 제일 자주 부딪히는 벽입니다.</strong> <em>"우리 재고 시스템이랑 연결해서…"</em> 는 오늘 범위가 아니에요. 그건 <strong>19~20차시 MCP 실전</strong>에서 다룹니다. 오늘 만드는 건 <strong>혼자 완결되는 도구</strong>입니다.</p></div>
 <h3 class="sub-head">그래서 언제 쓰나 — 판단표</h3>
@@ -823,10 +913,10 @@
 <tr><td>로그인·권한·기록이 필요함</td><td><strong>진짜 개발</strong></td></tr>
 </tbody></table></div>
 <div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>가운데 두 줄이 오늘의 자리입니다.</strong> 규칙은 정해져 있는데 매번 사람이 계산하고 있다 — 그게 아티팩트 자리예요.</p></div>
-<div class="callout callout--summary"><div class="callout-label">📌 5절 한 줄 요약</div><p>— 아티팩트는 <strong>혼자 완결되는 도구.</strong> 바깥과 연결이 필요하면 다른 방법을 본다.</p></div>
+<div class="callout callout--summary"><div class="callout-label">📌 6절 한 줄 요약</div><p>— 아티팩트는 <strong>혼자 완결되는 도구.</strong> 바깥과 연결이 필요하면 다른 방법을 본다.</p></div>
 </section>
 
-<section class="lesson-section"><div class="section-head"><span class="section-mark">6</span><h2>초보가 흔히 하는 실수 5가지</h2></div>
+<section class="lesson-section"><div class="section-head"><span class="section-mark">7</span><h2>초보가 흔히 하는 실수 5가지</h2></div>
 <div class="table-scroll"><table><thead><tr><th><strong>#</strong></th><th><strong>실수</strong></th><th><strong>대신</strong></th></tr></thead><tbody>
 <tr><td>1</td><td><strong>규칙을 말로 옮겨 적음</strong></td><td>규칙 문서를 <strong>그대로 첨부</strong> — 옮기면 빠뜨립니다</td></tr>
 <tr><td>2</td><td><strong>한 번에 다 만들라고 함</strong></td><td>뼈대 → 하나씩 (2-1절)</td></tr>
@@ -834,132 +924,7 @@
 <tr><td>4</td><td><strong>"이상해요"라고만 함</strong></td><td>어디가 어떻게 틀렸는지 <strong>숫자로</strong> 말하기</td></tr>
 <tr><td>5</td><td><strong>사내 단가·개인정보를 넣고 공유·배포</strong></td><td>공유 전에 <strong>뭐가 들어 있는지</strong> 확인 (실습 G)</td></tr>
 </tbody></table></div>
-<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>1번이 결과 품질을 가장 크게 좌우합니다.</strong> 오늘 견적 규칙에는 <em>"할인 중복 적용 불가"</em>, <em>"10원 단위 버림"</em>, <em>"배송비도 과세 대상"</em> 같은 조건이 숨어 있어요. 말로 옮기면 반드시 몇 개가 날아갑니다. <strong>파일을 붙이세요.</strong></p></div>
-</section>
-
-<section class="lesson-section"><div class="section-head"><span class="section-mark">7</span><h2>HTML로 꺼내서 배포하기</h2></div>
-<p>지금까지 만든 도구는 <strong>Claude 안</strong>에 있습니다. 그래서 여는 사람도 Claude 계정이 필요했죠(4절). 이번엔 도구를 <strong>파일 하나로 꺼내서</strong>, 계정 없이 <strong>누구나 주소로 여는 웹페이지</strong>로 올립니다. "만들 줄 안다"에서 <strong>"배포할 줄 안다"</strong>로 넘어가는 단계예요.</p>
-<h3 class="sub-head">7-1. 단어 셋만 알고 가면 됩니다</h3>
-<div class="term-note">📖 <b>HTML</b> : <strong>웹페이지를 이루는 파일.</strong> 오늘 만든 계산기도 속은 HTML 파일 한 장입니다. 더블클릭하면 인터넷 창으로 열려요</div>
-<div class="term-note">📖 <b>배포</b> : 내 컴퓨터에만 있던 파일을 <strong>인터넷 주소로 누구나 열 수 있게 올리는 것</strong></div>
-<div class="term-note">📖 <b>GitHub Pages</b> : GitHub(코드 보관 사이트)가 주는 <strong>무료 웹페이지 호스팅.</strong> 파일을 올리면 <code>내아이디.github.io/저장소이름/</code> 주소가 생깁니다</div>
-<h3 class="sub-head">7-2. Claude 공유 링크 vs 배포 — 뭐가 다른가</h3>
-<div class="table-scroll"><table><thead><tr><th></th><th><strong>Claude 공유 링크</strong></th><th><strong>GitHub Pages 배포</strong></th></tr></thead><tbody>
-<tr><td>여는 사람</td><td><strong>Claude 로그인 필요</strong></td><td><strong>아무나</strong> (계정 필요 없음)</td></tr>
-<tr><td>Free 플랜</td><td>새 아티팩트는 링크 공유 ✗</td><td><strong>됩니다</strong></td></tr>
-<tr><td>AI 부르기·저장 기능</td><td>됩니다</td><td><strong>안 됩니다</strong> (5절)</td></tr>
-<tr><td>고치면</td><td>바로 반영</td><td>파일을 <strong>다시 올려야</strong> 반영</td></tr>
-<tr><td>공개 범위</td><td>내가 고른 범위</td><td><strong>인터넷 전체 공개</strong> ⚠️</td></tr>
-</tbody></table></div>
-<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>배포는 공유보다 더 넓은 공개입니다.</strong> 주소만 알면 검색으로도 들어올 수 있고, 무료로 쓰려면 저장소를 <strong>Public(공개)</strong>으로 만들어야 해서 <strong>파일 내용까지 누구나 볼 수 있습니다.</strong> 실제 단가·고객 정보가 든 도구는 배포하지 마세요.</p></div>
-<h3 class="sub-head">7-3. 폴더를 이렇게 맞춥니다</h3>
-<p>결과물 여러 개를 <strong>사이트 하나</strong>로 묶습니다. 첫 화면(목차) 하나에, 실습마다 폴더 하나씩.</p>
-<div class="prompt">my-tools/              ← 저장소 하나
-├── index.html         ← 첫 화면: 카드형 목차
-├── practice1/
-│   └── index.html     ← 견적 계산기 (실습 B~D)
-├── practice2/
-│   └── index.html     ← 회의록 리포트 (실습 H)
-└── practice3/
-    └── index.html     ← 설문 대시보드 (실습 F)</div>
-<div class="callout callout--tip"><div class="callout-label">💡 왜 전부 이름이 index.html인가요?</div><p>웹 주소가 폴더에서 끝나면(<code>…/practice1/</code>) 그 폴더의 <strong>index.html을 자동으로 엽니다.</strong> 그래서 파일 이름을 <strong>index.html로 바꿔 두면</strong> 주소가 짧고 깔끔해져요. 이 과정 홈페이지(<code>aaaaxca.github.io/Ai_Agent/</code>)도 같은 방식입니다.</p></div>
-<div class="callout callout--summary"><div class="callout-label">📌 7절 한 줄 요약</div><p>— 도구를 <strong>HTML 파일로 꺼내 GitHub Pages에 올리면</strong>, 계정 없는 사람도 주소로 연다. 대신 <strong>인터넷 전체 공개</strong>다.</p></div>
-</section>
-
-<section class="lesson-section practice-block">
-<h3 class="sub-head first">PART 4 — 꺼내서 배포하기</h3>
-<div class="callout callout--scenario"><p><span class="co-icon">🎯</span> <strong>목표</strong>: 오늘 만든 결과물을 <strong>내 주소가 붙은 사이트 하나</strong>로 묶어서, 옆 사람이 휴대폰으로 열어 보게 하기.</p></div>
-<div class="practice-card">
-  <div class="practice-title">🛠 실습 H — 회의록을 클릭형 HTML 리포트로</div>
-  <p>순서는 <b>① 표로 정리</b> → <b>② 같은 내용을 펼침형 리포트로</b> → <b>③ HTML 파일로 받기</b>.<br><b>새 대화</b>에서 시작합니다.</p>
-  <div class="practice-prep">
-    <div class="prep-label">📎 준비물</div>
-    <ul>
-      <li><b>회의록 원본</b>(<code>meeting_minutes_source.docx</code>) <span class="meta">· Word · 두서없이 적힌 회의 메모 1건</span></li>
-    </ul>
-  </div>
-  <p class="practice-step">① 먼저 표로 정리</p>
-  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 회의록에서 안건 · 논의 내용 · 결정 사항 · 실행 항목을 표로 정리해줘."</em></p></div>
-  <p class="practice-step">② 같은 내용을 클릭형 리포트로</p>
-  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"같은 내용을 안건별로 클릭하면 펼쳐지는 HTML 리포트로 만들어줘. 실행 항목은 체크박스로, 담당자별로 색을 다르게."</em></p></div>
-  <div class="term-note">📖 <b>아코디언</b> : 제목을 누르면 <strong>내용이 펼쳐지고 다시 누르면 접히는</strong> 화면 형태. 악기 아코디언처럼 접혔다 펴져서 붙은 이름</div>
-  <p class="practice-step">③ HTML 파일로 받기</p>
-  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 리포트를 인터넷 없이도 열리는 HTML 파일 하나로 만들어서 내려받게 해줘. 파일 이름은 index.html로."</em></p></div>
-  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 표와 비교해 뭐가 편한가? 파일이 열리나?</div><p>표는 위에서부터 다 읽어야 하지만, 펼침형은 <strong>필요한 안건만</strong> 열어 봅니다. 정보가 많을수록 차이가 커져요. 내려받은 파일을 <strong>더블클릭해서 인터넷 창으로 열리면</strong> 성공입니다.</p></div>
-</div>
-<div class="callout callout--tip"><p><span class="co-icon">💡</span> 10차시의 회의록 3층 구조(결정 / 액션 / 보류)를 기억하나요? ②에서 <em>"결정·액션·보류 세 덩어리로 나눠서"</em> 를 붙이면 지난 차시 결과물이 그대로 리포트가 됩니다.</p></div>
-
-<div class="practice-card">
-  <div class="practice-title">🛠 실습 I — 사이트로 묶어 GitHub Pages에 배포 ⭐</div>
-  <p>순서는 <b>① HTML 파일 모으기</b> → <b>② 목차 페이지 만들기</b> → <b>③ 폴더 정리</b> → <b>④ 저장소 만들기</b> → <b>⑤ 파일 올리기</b> → <b>⑥ Pages 켜기</b> → <b>⑦ 고쳐서 다시 올리기</b>.<br>①은 각 실습의 대화로 돌아가서, ②는 <b>새 대화</b>에서 합니다. ④부터는 GitHub 사이트에서 진행합니다.</p>
-  <div class="practice-prep">
-    <div class="prep-label">📎 준비물</div>
-    <ul>
-      <li><b>실습 D의 견적 계산기</b> <span class="meta">· 그 대화에 있음 → practice1</span></li>
-      <li><b>실습 H의 회의록 리포트 HTML</b> <span class="meta">· 내려받은 파일 → practice2</span></li>
-      <li><b>실습 F의 설문 대시보드</b> <span class="meta">· 그 대화에 있음 → practice3 (안 만들었으면 빼도 됨)</span></li>
-      <li><b>GitHub 계정</b> <span class="meta">· 로그인된 상태</span></li>
-    </ul>
-  </div>
-  <p class="practice-step">① HTML 파일 모으기</p>
-  <p>사이드바 '아티팩트'에서 견적 계산기를 열고, <strong>그 대화에</strong> 아래를 입력합니다. 설문 대시보드도 똑같이 합니다.</p>
-  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 도구를 인터넷 없이도 열리는 HTML 파일 하나로 만들어서 내려받게 해줘. 파일 이름은 index.html로."</em></p></div>
-  <p class="practice-step">② 목차 페이지 만들기</p>
-  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"실습 결과 3개로 가는 카드형 목차 페이지를 index.html 파일로 만들어줘. 카드는 '견적 계산기', '회의록 리포트', '설문 대시보드' 세 개이고, 누르면 각각 practice1/, practice2/, practice3/ 폴더로 이동하게. 맨 위에 내 이름과 '11차시 결과물'이라고 적어줘."</em></p></div>
-  <p class="practice-step">③ 폴더 정리</p>
-  <p>바탕화면에 <code>my-tools</code> 폴더를 만들고, 7-3절 그림처럼 <code>practice1</code> · <code>practice2</code> · <code>practice3</code> 폴더를 만들어 파일을 넣습니다. <strong>폴더 이름은 영어 소문자</strong>로, 목차 index.html은 <code>my-tools</code> 바로 안에 둡니다.</p>
-  <p class="practice-step">④ GitHub에서 저장소 만들기</p>
-  <ol class="steps"><li>github.com 오른쪽 위 <strong>＋ → New repository</strong></li><li><strong>Repository name</strong>: <code>my-tools</code> (영어·숫자·하이픈만)</li><li><strong>Public</strong> 그대로 · <strong>Add README</strong> 켜기</li><li>맨 아래 <strong>Create repository</strong></li></ol>
-  <p class="practice-step">⑤ 파일 올리기</p>
-  <ol class="steps"><li>저장소 화면에서 <strong>Add file → Upload files</strong></li><li><code>my-tools</code> 폴더 <strong>안의 것들</strong>(index.html + practice 폴더 3개)을 <strong>한꺼번에 끌어다 놓기</strong> — 폴더 구조가 그대로 올라갑니다</li><li><strong>Commit directly to the main branch</strong> 선택된 상태로 <strong>Commit changes</strong></li></ol>
-  <p class="practice-step">⑥ Pages 켜기</p>
-  <ol class="steps"><li>저장소 위쪽 <strong>Settings → 왼쪽 메뉴 Pages</strong></li><li><strong>Source</strong>: Deploy from a branch</li><li><strong>Branch</strong>: main · 폴더 <strong>/(root)</strong> → <strong>Save</strong></li><li>1~2분 뒤 새로고침하면 위쪽에 <strong>사이트 주소</strong>가 뜹니다 → <strong>Visit site</strong></li></ol>
-  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 휴대폰으로 주소를 열어 카드 3개가 다 들어가지나?</div><p>주소는 <code>내아이디.github.io/my-tools/</code> 모양입니다. 카드를 눌렀는데 404가 뜨면 <strong>폴더 이름과 목차 링크의 철자</strong>(대소문자 포함)가 같은지 보세요. 계산기에 케이스 1을 넣어 <strong>1,903,170원</strong>이 나오면 배포된 도구도 정상입니다.</p></div>
-  <p class="practice-step">⑦ 고쳐서 다시 올리기 — 실무 재현</p>
-  <p>강사가 피드백을 줍니다: <em>"목차의 이름이 잘못됐어요. 그리고 계산기 사용법에 담당자 연락처를 넣어 주세요."</em> 해당 대화로 돌아가 고치고 → HTML을 다시 받고 → 같은 자리에 <strong>Upload files로 덮어 올리기</strong> → 1~2분 뒤 주소에서 바뀌었는지 확인합니다.</p>
-  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 고친 내용이 주소에 반영됐나?</div><p>안 바뀌어 보이면 <strong>Ctrl + F5</strong>(강력 새로고침)를 누르고 1~2분 더 기다리세요. 그래도 그대로면 파일 이름이 index.html인지, 같은 폴더에 올렸는지 확인합니다.</p></div>
-</div>
-<div class="callout callout--tip"><div class="callout-label">💡 한 걸음 더 — "화면에서 글을 고칠 수 있게" 하면?</div><p><em>"이 페이지의 글을 화면에서 바로 고칠 수 있게 해줘"</em> 라고 하면 글자를 고칠 수는 있게 됩니다. 그런데 <strong>새로고침하면 원래대로 돌아가요.</strong> 고친 내용을 <strong>저장해 둘 곳(서버)</strong>이 없어서입니다. GitHub Pages는 파일을 보여 주기만 하는 곳이거든요. 방문자가 고친 내용까지 남기려면 데이터베이스가 붙은 배포(예: Firebase)가 필요합니다 — 아래 강사용 자료 참고.</p></div>
-<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> 배포한 사이트를 내리려면 저장소 <strong>Settings → Pages</strong>에서 끄거나, 저장소 자체를 지우면 됩니다. <strong>실습이 끝나고 실제 업무 정보를 넣었다면</strong> 꼭 내리세요.</p></div>
-
-<details class="toggle"><summary>🧑‍🏫 강사용 · 선택 — Firebase로 "저장되는 페이지" 배포하기</summary><div class="toggle-body">
-<p>GitHub Pages 다음 단계로, 방문자가 고친 내용이 남는 페이지가 필요할 때만 진행합니다. 터미널(CMD)을 쓰기 때문에 시간이 크게 늘어나니 <strong>시간이 남는 반이나 희망자만</strong> 권합니다. 화면 문구는 Firebase CLI 버전에 따라 조금씩 다릅니다.</p>
-<div class="callout callout--tip"><p><span class="co-icon">💡</span> 학생에게 정답을 외우게 하지 말고, 아래 해석을 같이 읽으며 <strong>"왜 이 답을 골랐는지"</strong> 말하게 하면 이해도가 훨씬 올라갑니다.</p></div>
-<h4 class="mini-head">0. Firebase 콘솔에서 준비</h4>
-<p>firebase.google.com 로그인 → 콘솔 → <strong>새 프로젝트 만들기</strong> → 왼쪽 메뉴 데이터베이스에서 <strong>Firestore</strong> 만들기. (Node.js가 설치돼 있어야 다음 단계가 됩니다)</p>
-<h4 class="mini-head">1. CMD에서 설치·로그인</h4>
-<div class="prompt">npm install -g firebase-tools     <span class="note">← Firebase 명령어 설치 (처음 한 번)</span>
-firebase login                    <span class="note">← 브라우저가 열리면 Google 계정으로 허용</span></div>
-<div class="table-scroll"><table><thead><tr><th><strong>나오는 질문</strong></th><th><strong>뜻</strong></th><th><strong>답</strong></th></tr></thead><tbody>
-<tr><td>Enable Gemini in Firebase features?</td><td>Firebase 안의 Gemini 부가 기능을 켤까요?</td><td>Yes (켜도 지장 없음)</td></tr>
-<tr><td>Allow Firebase to collect … usage and error reporting?</td><td>사용·오류 정보 수집을 허용할까요?</td><td>Yes 또는 No (어느 쪽이든 무관)</td></tr>
-<tr><td>Success! Logged in as …</td><td>로그인 완료</td><td>—</td></tr>
-</tbody></table></div>
-<h4 class="mini-head">2. 작업 폴더에서 초기화</h4>
-<div class="prompt">cd C:\Users\내이름\Desktop\my-tools   <span class="note">← HTML이 있는 폴더로 이동</span>
-firebase init</div>
-<div class="table-scroll"><table><thead><tr><th><strong>나오는 질문</strong></th><th><strong>뜻</strong></th><th><strong>답</strong></th></tr></thead><tbody>
-<tr><td>Are you ready to proceed?</td><td>이 폴더에 Firebase를 설정할까요?</td><td><strong>y</strong></td></tr>
-<tr><td>Which Firebase features…?</td><td>쓸 기능 고르기 (스페이스로 선택, Enter로 확정)</td><td><strong>Firestore</strong>와 <strong>Hosting</strong> 두 개</td></tr>
-<tr><td>Please select an option</td><td>프로젝트 고르기</td><td><strong>Use an existing project</strong> → 0단계에서 만든 프로젝트</td></tr>
-<tr><td>Firestore Rules / indexes 파일 이름</td><td>규칙·색인 파일 이름 (괄호 안이 기본값)</td><td>둘 다 <strong>Enter</strong>만</td></tr>
-<tr><td>What do you want to use as your public directory?</td><td>공개할 폴더는?</td><td><strong>.</strong> (마침표) — 지금 폴더 그대로. 기본값 public으로 하면 우리 파일을 못 찾습니다</td></tr>
-<tr><td>Configure as a single-page app?</td><td>모든 주소를 첫 화면으로 보낼까요?</td><td><strong>n</strong> — Yes면 practice1/ 같은 하위 페이지로 못 들어갑니다</td></tr>
-<tr><td>Set up automatic builds and deploys with GitHub?</td><td>GitHub와 자동 배포를 연결할까요?</td><td><strong>n</strong> — 직접 배포로 충분</td></tr>
-<tr><td>File index.html already exists. Overwrite?</td><td>index.html을 덮어쓸까요?</td><td><strong>N</strong> — Yes면 목차가 Firebase 견본으로 바뀝니다</td></tr>
-<tr><td>Install agent skills for Firebase?</td><td>AI 코딩 도구용 부가 기능 설치?</td><td><strong>N</strong></td></tr>
-</tbody></table></div>
-<h4 class="mini-head">3. 저장 기능 붙이고 배포</h4>
-<p>Firebase 콘솔 → 프로젝트 설정 → 일반 → 내 앱 → <code>&lt;/&gt;</code>(웹 앱 추가) → 이름 아무거나 → 앱 등록. 화면에 나오는 <code>firebaseConfig</code> 코드를 복사해, Claude에게 <em>"이 설정으로 이 페이지에서 고친 글이 Firestore에 저장되고 다시 열면 불러오게 해줘"</em> 라고 붙여 줍니다.</p>
-<div class="prompt">const firebaseConfig = {
-  apiKey: "내-프로젝트-값",
-  authDomain: "내-프로젝트.firebaseapp.com",
-  projectId: "내-프로젝트",
-  …
-};                                <span class="note">← 콘솔에 나온 내 값을 그대로 사용</span>
-firebase deploy                   <span class="note">← 배포. 끝나면 https://내-프로젝트.web.app 주소가 나옵니다</span></div>
-<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>저장이 안 되면 Firestore 보안 규칙</strong>부터 보세요. 기본 규칙은 쓰기를 막아 두거나, 테스트 모드는 일정 기간 뒤 자동으로 닫힙니다. 실습이 끝나면 아무나 쓰지 못하게 규칙을 다시 잠그는 것까지가 수업입니다.</p></div>
-</div></details>
+<div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>1번이 결과 품질을 가장 크게 좌우합니다.</strong> 오늘 견적 규칙에는 <em>"할인 중복 적용 불가"</em>, <em>"10원 단위에서 버림"</em>, <em>"배송비도 과세 대상"</em> 같은 조건이 숨어 있어요. 말로 옮기면 반드시 몇 개가 날아갑니다. <strong>파일을 붙이세요.</strong></p></div>
 </section>
 
 <section class="lesson-section"><div class="section-head"><span class="section-mark">8</span><h2>마스터 프롬프트 — 붙여넣기용 3종</h2></div>
@@ -976,44 +941,45 @@ firebase deploy                   <span class="note">← 배포. 끝나면 https
 <div class="prompt">[검산 케이스]에서 [어느 칸]이 [맞는 값]이어야 하는데 [나온 값]이 나와.
 [내가 짐작하는 원인]인 것 같아. 다른 부분은 건드리지 말고 이것만 고쳐줘.
 고친 뒤 이 케이스를 다시 계산한 과정도 보여줘.</div>
-<h3 class="sub-head">8-3. 꺼내서 배포 준비</h3>
-<div class="prompt">이 도구를 인터넷 없이도 열리는 HTML 파일 하나로 만들어서 내려받게 해줘.
-파일 이름은 index.html.
-맨 위에 사용법 3줄과 [담당자/문의처]를 넣고,
-외부에 공개되면 곤란한 정보가 들어 있으면 먼저 알려줘.</div>
+<h3 class="sub-head">8-3. 배포한 페이지에 저장 붙이기</h3>
+<div class="prompt">아래 Firebase 설정으로 이 페이지를 Firestore에 연결해줘.
+[무엇]을 추가하면 Firestore에 저장되고, 페이지를 열면 불러오게.
+다른 사람이 추가한 내용도 새로고침 없이 바로 보이게.
+(여기에 firebaseConfig 붙여넣기)</div>
 <div class="callout callout--tip"><p><span class="co-icon">💡</span> 8-1의 마지막 줄이 숨은 핵심입니다. Claude가 <strong>모호한 조건을 먼저 물어보게</strong> 하면, 실습 B의 '100개에서 5%' 같은 사고가 만들기 전에 걸러집니다.</p></div>
 </section>
 
 <section class="lesson-section"><div class="section-head"><span class="section-mark">9</span><h2>안 될 때 — 트러블슈팅</h2></div>
 <div class="table-scroll"><table><thead><tr><th><strong>증상</strong></th><th><strong>원인</strong></th><th><strong>대응</strong></th></tr></thead><tbody>
-<tr><td><strong>아티팩트 창이 안 열림</strong></td><td>기능이 꺼져 있음</td><td>설정 → 기능 → "코드 실행 및 파일 생성" (1-3절)</td></tr>
+<tr><td><strong>아티팩트 창이 안 열림</strong></td><td>기능이 꺼져 있음</td><td>설정 → 기능 → "코드 실행 및 파일 생성" (실습 A ①)</td></tr>
 <tr><td><strong>글로만 답함</strong></td><td>도구로 만들 만큼이라고 판단 안 함</td><td><em>"아티팩트로 만들어줘"</em> 라고 명시</td></tr>
-<tr><td><strong>엑셀·워드 파일이 안 올라감</strong></td><td>같은 설정이 꺼져 있음</td><td>1-3절 설정 확인</td></tr>
+<tr><td><strong>엑셀·워드 파일이 안 올라감</strong></td><td>같은 설정이 꺼져 있음</td><td>실습 A ① 설정 확인</td></tr>
 <tr><td><strong>숫자가 안 맞음</strong></td><td>규칙을 말로 옮겨서 누락</td><td>규칙 <strong>파일을 첨부</strong>하고 몇 번 항목인지 지목</td></tr>
 <tr><td><strong>할인이 겹쳐 적용됨</strong></td><td>조건을 안 짚어 줌</td><td><em>"둘 이상이면 유리한 쪽 하나만"</em> 명시</td></tr>
 <tr><td><strong>경계값에서 틀림</strong></td><td>이상/초과를 안 지정</td><td><em>"100개 이상"</em> 처럼 명확히</td></tr>
 <tr><td><strong>고쳤더니 다른 게 망가짐</strong></td><td>전체를 다시 만들게 함</td><td>되돌린 뒤(2-3절) <strong>부분만</strong> 수정 요청 (8-2)</td></tr>
-<tr><td><strong>공유 버튼에 링크 옵션이 없음</strong></td><td>Free 플랜 / 회사 계정 정책</td><td>7절 <strong>HTML 배포</strong>로 공유</td></tr>
+<tr><td><strong>공유 버튼에 링크 옵션이 없음</strong></td><td>Free 플랜 / 회사 계정 정책</td><td>실습 I의 <strong>HTML 배포</strong>로 공유</td></tr>
 <tr><td><strong>받은 사람이 "로그인하래요"</strong></td><td>정상 — 새 아티팩트는 여는 사람도 로그인 필요</td><td>계정이 없는 사람이면 <strong>배포 주소</strong>를 주기</td></tr>
 <tr><td><strong>휴대폰 앱에서 공유 설정이 안 보임</strong></td><td>앱에서는 공유 설정 변경 불가</td><td>웹이나 데스크톱 앱에서</td></tr>
-<tr><td><strong>배포 주소가 404</strong></td><td>아직 준비 중 / 이름 규칙</td><td>1~2분 대기 → 첫 파일 이름이 <strong>index.html</strong>인지, Pages가 main · /(root)인지 확인</td></tr>
-<tr><td><strong>목차 카드를 누르면 404</strong></td><td>폴더 이름과 링크 철자가 다름</td><td>대소문자까지 같게. 폴더 이름은 영어 소문자로</td></tr>
-<tr><td><strong>다시 올렸는데 안 바뀜</strong></td><td>브라우저가 예전 화면을 기억함</td><td><strong>Ctrl + F5</strong>, 1~2분 후 다시</td></tr>
-<tr><td><strong>폴더째 끌어다 놓기가 안 됨</strong></td><td>브라우저가 폴더 업로드를 지원 안 함</td><td>크롬으로 하거나, 폴더별로 파일을 나눠 올리기</td></tr>
-<tr><td><strong>배포한 도구에서 AI 기능이 안 됨</strong></td><td>Claude 밖에서는 동작 안 함</td><td>정상 (5절). AI 기능이 필요하면 Claude 안에서 공유</td></tr>
+<tr><td><strong>CMD에서 "'firebase'은(는) 내부 또는 외부 명령… 이 아닙니다"</strong></td><td>Node.js가 없거나, 설치 후 CMD를 다시 안 엶</td><td>nodejs.org에서 LTS 설치 → CMD를 <strong>새로 열고</strong> <code>npm install -g firebase-tools</code> 다시</td></tr>
+<tr><td><strong>PowerShell에서 "스크립트를 실행할 수 없으므로…" 오류</strong></td><td>PowerShell의 실행 정책</td><td>PowerShell 대신 <strong>명령 프롬프트(cmd)</strong>에서 입력</td></tr>
+<tr><td><strong>배포했는데 Firebase 기본 안내 화면이 나옴</strong></td><td>init에서 index.html을 덮어썼거나, 공개 폴더를 public으로 정함</td><td>HTML을 다시 내려받아 <code>index.html</code>로 넣고, <code>firebase.json</code>의 <code>"public"</code>이 <code>"."</code>인지 확인 → <code>firebase deploy</code></td></tr>
+<tr><td><strong>회의를 추가해도 저장이 안 됨</strong></td><td>Firestore 규칙이 잠겼거나 테스트 모드 30일이 지남 / 아티팩트 미리보기에서 시험함</td><td>콘솔 <strong>Firestore → 규칙</strong> 확인 (5-3절). 저장은 <strong>배포한 주소</strong>에서 확인</td></tr>
+<tr><td><strong>고쳐서 다시 배포했는데 그대로임</strong></td><td>새 HTML을 안 넣었거나 브라우저가 예전 화면을 기억함</td><td>폴더의 index.html을 새 파일로 바꿨는지 확인 → <code>firebase deploy</code> → <strong>Ctrl + F5</strong></td></tr>
+<tr><td><strong>배포한 도구에서 AI 기능이 안 됨</strong></td><td>Claude 밖에서는 동작 안 함</td><td>정상 (6절). AI 기능이 필요하면 Claude 안에서 공유</td></tr>
 </tbody></table></div>
 </section>
 
 <section class="lesson-section"><div class="section-head"><span class="section-mark">10</span><h2>자주 묻는 질문 (FAQ)</h2></div>
 <p><strong>Q. 코드를 몰라도 정말 되나요?</strong> A. 됩니다. 오늘 코드를 한 줄도 안 씁니다. 다만 <strong>규칙을 정확히 말할 수 있어야</strong> 해요. 필요한 건 코딩 능력이 아니라 <strong>업무를 정확히 설명하는 능력</strong> — 2차시에서 배운 그것입니다.</p>
 <p><strong>Q. 만든 도구가 사라지지 않나요?</strong> A. 사이드바 <strong>'아티팩트'</strong> 탭에 남습니다. 중요한 도구는 <strong>HTML 파일로도 받아 두면</strong>(8-3) 더 안전해요.</p>
-<p><strong>Q. 무료 플랜에서도 되나요?</strong> A. <strong>만드는 건 됩니다</strong> (실습 A~F, H). 다만 새 아티팩트를 <strong>링크로 공유하는 건 Pro 이상</strong>이라, 무료 플랜은 실습 I의 <strong>GitHub Pages 배포</strong>로 공유하면 됩니다. 입력한 기록을 저장하는 기능도 Pro 이상입니다.</p>
+<p><strong>Q. 무료 플랜에서도 되나요?</strong> A. <strong>만드는 건 됩니다</strong> (실습 A~F, H). 다만 새 아티팩트를 <strong>링크로 공유하는 건 Pro 이상</strong>이라, 무료 플랜은 실습 I의 <strong>Firebase 배포</strong>로 공유하면 됩니다. 입력한 기록을 저장하는 기능도 Pro 이상입니다.</p>
 <p><strong>Q. 예전에는 '게시(Publish)'하면 로그인 없이 볼 수 있었다던데요?</strong> A. 2026년 9월 16일 전에 만든 <strong>예전 방식 아티팩트</strong> 이야기입니다. 예전 것은 지금도 게시할 수 있지만, <strong>새로 만드는 아티팩트는 오늘 배운 방식</strong>(나만 → 공유 범위 선택)을 따릅니다.</p>
 <p><strong>Q. 엑셀로 하면 되는 걸 왜 아티팩트로 하나요?</strong> A. 갈리는 지점은 <strong>누가 쓰느냐</strong>입니다. 나만 쓰면 엑셀이 편해요. <strong>남에게 넘겨야 하면</strong> 아티팩트가 낫습니다 — 엑셀은 남이 열면 수식을 건드리거나 깨뜨리거든요. 데이터가 매일 바뀌면 엑셀(23차시), 규칙이 고정이면 아티팩트입니다.</p>
-<p><strong>Q. 회사 데이터를 넣어도 되나요?</strong> A. <strong>나만 보는 상태라면</strong> 일반 대화와 같은 수준입니다. 회사 AI 사용 정책을 따르세요. 다만 <strong>공유·배포하는 순간</strong> 범위가 넓어집니다. 특히 GitHub Pages는 <strong>인터넷 전체 공개</strong>예요.</p>
+<p><strong>Q. 회사 데이터를 넣어도 되나요?</strong> A. <strong>나만 보는 상태라면</strong> 일반 대화와 같은 수준입니다. 회사 AI 사용 정책을 따르세요. 다만 <strong>공유·배포하는 순간</strong> 범위가 넓어집니다. 특히 배포한 페이지는 <strong>주소만 알면 누구나</strong> 열 수 있어요.</p>
 <p><strong>Q. 결과가 그럴듯한데 맞는지 어떻게 알죠?</strong> A. <strong>손으로 낸 결과와 대조하는 것 말고는 없습니다.</strong> 실습 D가 그래서 있어요. 화면이 깔끔한 것과 숫자가 맞는 건 전혀 다른 얘기입니다.</p>
-<p><strong>Q. GitHub에 올린 파일, 다른 사람이 고칠 수 있나요?</strong> A. 못 고칩니다. 보거나 내려받을 수는 있지만, 저장소를 고칠 수 있는 건 <strong>나(와 내가 초대한 사람)</strong>뿐입니다. 대신 <strong>내용은 누구나 볼 수 있으니</strong> 민감한 건 올리지 마세요.</p>
-<p><strong>Q. Private(비공개) 저장소로 하면 안 되나요?</strong> A. 무료 계정에서는 <strong>Public 저장소만 Pages가 무료</strong>입니다. 비공개 저장소로 Pages를 쓰려면 유료 플랜이 필요해요.</p>
+<p><strong>Q. Firebase는 돈이 드나요?</strong> A. 무료 요금제(Spark)로 충분하고, <strong>카드 등록도 필요 없습니다.</strong> 무료 한도는 페이지 저장 공간 10GB·하루 전송량 360MB, Firestore는 하루 쓰기 2만 건·읽기 5만 건 정도라 수업과 소규모 팀에는 넉넉합니다.</p>
+<p><strong>Q. 페이지 안에 firebaseConfig 설정값이 그대로 보이는데 괜찮나요?</strong> A. 괜찮습니다. 비밀번호가 아니라 <strong>어느 프로젝트인지 알려 주는 주소표</strong>예요. 대신 누가 쓰고 지울 수 있는지는 <strong>Firestore 규칙</strong>이 지킵니다. 그래서 테스트 모드를 그대로 두지 말고 잠그거나 로그인 규칙으로 바꿔야 합니다(5-3절).</p>
 </section>
 
 <section class="lesson-section"><div class="section-head"><span class="section-mark">11</span><h2>내 업무라면? — 직무별 후보</h2></div>
@@ -1026,42 +992,20 @@ firebase deploy                   <span class="note">← 배포. 끝나면 https
 <tr><td><strong>1인 기업·대표</strong></td><td>상품 가격 계산기, 고객 안내 페이지, 주문 확인 체크리스트 — 배포해서 고객에게 주소로</td></tr>
 </tbody></table></div>
 <div class="callout callout--tip"><div class="callout-label">💡 공통 판별법</div><p><em>"규칙은 정해져 있는데 매번 사람이 계산하거나 판단하고 있다"</em> → 오늘의 대상. 특히 <strong>팀원이 나에게 자꾸 물어보는 기준</strong>이 최고의 후보예요. 그게 곧 <strong>내가 병목</strong>이라는 뜻이거든요.</p></div>
-<h3 class="sub-head">🎯 오늘의 숙제 (한 개만)</h3>
-<p>내 업무에서 <strong>사람들이 자주 물어보는 기준</strong> 하나를 골라 도구로 만들고, <strong>검산 케이스 2개</strong>로 확인한 뒤, 실습 I 사이트에 <code>practice4/</code>로 추가해 보세요.</p>
-<h3 class="sub-head">🎓 도전 과제</h3>
-<ul>
-<li><strong>오답 만들어 보기</strong>: 일부러 <em>"수량 할인을 옵션 빼고 계산해줘"</em> 라고 시킨 뒤 케이스 1로 <strong>얼마나 차이 나는지</strong> 보기 → 실무에서 이 실수가 얼마짜리인지 체감</li>
-<li><strong>규칙이 바뀌면</strong>: <em>"수량 할인 구간을 50/150/300/600으로 바꿔줘"</em> → 몇 초 만에 반영되는 걸 확인. 문서를 고치고 사람에게 다시 공지하는 것과 비교</li>
-<li><strong>견적서로 뽑기</strong>: 계산 결과를 <strong>견적서 문서 형태</strong>로 보여 주는 화면 추가</li>
-<li><strong>인포그래픽 한 장</strong>: 설문 결과를 <em>"외부 라이브러리 없이 순수 SVG로, 막대·원그래프가 들어간 인포그래픽 HTML 한 장"</em> 으로 → 인터넷이 없어도 열리는 파일. 이어서 <em>"3번 문항만 다른 색으로 강조해줘"</em></li>
-<li><strong>AI 넣기</strong>: <em>"고객 문의 문장을 붙여넣으면 제품·수량·옵션을 알아서 채워 주는 기능을 추가해줘"</em> → 아티팩트 안에서 Claude를 부르는 형태 (쓰는 사람 사용량, 링크 공유 불가 — 4-3절)</li>
-<li><strong>10차시와 잇기</strong>: 액션아이템 4요소(무엇·누가·언제·끝난 기준)를 입력 양식으로. <em>"네 칸을 다 안 채우면 '아직 액션아이템이 아닙니다'라고 표시해줘"</em> → 규칙을 사람이 기억하는 대신 <strong>도구가 지키게</strong> 하는 첫 경험</li>
-</ul>
 </section>
 
 <section class="lesson-section"><div class="section-head"><span class="section-mark">✅</span><h2>오늘 자가진단</h2></div>
 <p>답을 떠올린 뒤 <strong>정답 보기</strong>를 눌러 확인하세요.</p>
 <div class="quiz-item"><p class="q">1. 대화로 받은 답과 아티팩트의 가장 큰 차이를 한 줄로 말하면?</p><details><summary>정답 보기</summary><div class="ans"><p>대화는 <strong>답 하나</strong>, 아티팩트는 <strong>도구 자체(물건)</strong>. 남고, 넘길 수 있고, 고쳐 쓸 수 있다. (1-1절)</p></div></details></div>
-<div class="quiz-item"><p class="q">2. 아티팩트 창이 안 열릴 때 켜야 하는 설정은?</p><details><summary>정답 보기</summary><div class="ans"><p>설정 → 기능(Capabilities) → <strong>"코드 실행 및 파일 생성"</strong>. 회사 계정은 관리자가 조직 설정에서 켠다. (1-3절)</p></div></details></div>
+<div class="quiz-item"><p class="q">2. 아티팩트 창이 안 열릴 때 켜야 하는 설정은?</p><details><summary>정답 보기</summary><div class="ans"><p>설정 → 기능(Capabilities) → <strong>"코드 실행 및 파일 생성"</strong>. 회사 계정은 관리자가 조직 설정에서 켠다. (실습 A ①)</p></div></details></div>
 <div class="quiz-item"><p class="q">3. 규칙을 다섯 개 한꺼번에 붙이지 않고 하나씩 붙이는 이유는?</p><details><summary>정답 보기</summary><div class="ans"><p>틀렸을 때 <strong>범인이 항상 방금 붙인 것</strong>이라 바로 찾을 수 있어서. 한꺼번에 붙이면 다섯 개를 다 뒤져야 한다. (2-1절)</p></div></details></div>
-<div class="quiz-item"><p class="q">4. 검산 케이스 2에서 합계가 1,484,340원이 나왔다. 어떤 함정에 걸렸나?</p><details><summary>정답 보기</summary><div class="ans"><p>추가 할인을 <strong>둘 다 적용</strong>(공공 5% + 신규 4%)했다. 중복 불가라 유리한 쪽 하나(공공 5%)만 적용해야 한다 → 정답 1,552,100원. (실습 D)</p></div></details></div>
+<div class="quiz-item"><p class="q">4. 검산 케이스 2에서 합계가 1,484,300원이 나왔다. 어떤 함정에 걸렸나?</p><details><summary>정답 보기</summary><div class="ans"><p>추가 할인을 <strong>둘 다 적용</strong>(공공 5% + 신규 4%)했다. 중복 불가라 유리한 쪽 하나(공공 5%)만 적용해야 한다 → 정답 1,552,100원. (실습 D)</p></div></details></div>
 <div class="quiz-item"><p class="q">5. 다음 중 고치는 요청으로 가장 좋은 것은? ㉠ "좀 이상한데 다시 만들어줘" ㉡ "더 예쁘게" ㉢ "120개에서 수량 할인이 155,520원이어야 하는데 144,000원이 나와. 소계 기준으로 고쳐줘"</p><details><summary>정답 보기</summary><div class="ans"><p><strong>㉢</strong> — 어느 칸이 얼마여야 하는데 얼마가 나왔는지 <strong>숫자로</strong> 짚었다. (2-2절)</p></div></details></div>
-<div class="quiz-item"><p class="q">6. Pro 플랜에서 '링크가 있는 모든 사람'으로 공유했다. Claude 계정이 없는 거래처가 열 수 있나?</p><details><summary>정답 보기</summary><div class="ans"><p><strong>못 연다.</strong> 새 아티팩트는 링크로 열어도 <strong>Claude 로그인</strong>이 필요하다. 계정 없는 사람에게는 <strong>GitHub Pages 배포 주소</strong>를 준다. (4-1절 · 7절)</p></div></details></div>
+<div class="quiz-item"><p class="q">6. Pro 플랜에서 '링크가 있는 모든 사람'으로 공유했다. Claude 계정이 없는 거래처가 열 수 있나?</p><details><summary>정답 보기</summary><div class="ans"><p><strong>못 연다.</strong> 새 아티팩트는 링크로 열어도 <strong>Claude 로그인</strong>이 필요하다. 계정 없는 사람에게는 <strong>Firebase 배포 주소</strong>를 준다. (4-1절 · 5절)</p></div></details></div>
 <div class="quiz-item"><p class="q">7. AI 기능이 들어간 도구를 동료 10명이 쓰면, 사용량은 누가 부담하나?</p><details><summary>정답 보기</summary><div class="ans"><p><strong>쓰는 각자</strong>의 사용량에서 차감된다. 만든 사람 부담이 아니다. (4-3절)</p></div></details></div>
-<div class="quiz-item"><p class="q">8. "우리 재고 시스템이랑 연결된 계산기"를 만들고 싶다. 오늘 배운 아티팩트가 맞나?</p><details><summary>정답 보기</summary><div class="ans"><p>아니다. 아티팩트는 <strong>혼자 완결되는 도구</strong>. 사내 시스템 연결은 <strong>MCP(19~20차시)</strong>나 진짜 개발의 일이다. (5절)</p></div></details></div>
-<div class="quiz-item"><p class="q">9. GitHub Pages에서 폴더마다 파일 이름을 index.html로 바꾸는 이유는?</p><details><summary>정답 보기</summary><div class="ans"><p>주소가 폴더로 끝나면 그 폴더의 <strong>index.html을 자동으로 열기</strong> 때문. 그래서 <code>…/practice1/</code>만으로 들어갈 수 있다. (7-3절)</p></div></details></div>
-<div class="quiz-item"><p class="q">10. 배포한 페이지에서 글을 고쳤는데 새로고침하니 원래대로 돌아갔다. 왜일까?</p><details><summary>정답 보기</summary><div class="ans"><p>고친 내용을 <strong>저장해 둘 곳(서버·데이터베이스)</strong>이 없어서. GitHub Pages는 파일을 보여 주기만 한다. 남기려면 Firebase 같은 저장소가 필요하다. (실습 I)</p></div></details></div>
-<h3 class="sub-head">오늘의 결과물 체크리스트</h3>
-<div class="table-scroll"><table><thead><tr><th><strong>결과물</strong></th><th><strong>어느 실습</strong></th></tr></thead><tbody>
-<tr><td>[ ] 회의 비용 계산기</td><td>A</td></tr>
-<tr><td>[ ] 견적 계산기 (규칙 6개 전부 반영)</td><td>B·C ⭐</td></tr>
-<tr><td>[ ] 검산 결과 3케이스 모두 일치</td><td>D ⭐</td></tr>
-<tr><td>[ ] 온보딩 체크리스트 생성기</td><td>E</td></tr>
-<tr><td>[ ] 설문 대시보드 (필터 + 전체 대비)</td><td>F</td></tr>
-<tr><td>[ ] 사용법 3줄 + 공유 전 점검</td><td>G</td></tr>
-<tr><td>[ ] 클릭형 회의록 리포트 HTML</td><td>H</td></tr>
-<tr><td>[ ] <strong>내 주소의 사이트</strong> (목차 + 결과물) · 수정 후 재배포까지</td><td>I ⭐</td></tr>
-</tbody></table></div>
+<div class="quiz-item"><p class="q">8. "우리 재고 시스템이랑 연결된 계산기"를 만들고 싶다. 오늘 배운 아티팩트가 맞나?</p><details><summary>정답 보기</summary><div class="ans"><p>아니다. 아티팩트는 <strong>혼자 완결되는 도구</strong>. 사내 시스템 연결은 <strong>MCP(19~20차시)</strong>나 진짜 개발의 일이다. (6절)</p></div></details></div>
+<div class="quiz-item"><p class="q">9. Firebase에서 Hosting과 Firestore는 각각 무슨 일을 하나?</p><details><summary>정답 보기</summary><div class="ans"><p><strong>Hosting</strong>은 페이지(index.html)를 주소로 보여 주고, <strong>Firestore</strong>는 페이지에서 입력한 내용을 저장한다. 그래서 다른 사람이 쓴 의견도 남는다. (5-2절)</p></div></details></div>
+<div class="quiz-item"><p class="q">10. 테스트 모드로 만든 주간회의 페이지가 한 달 뒤 갑자기 회의를 불러오지도, 저장하지도 못한다. 왜일까?</p><details><summary>정답 보기</summary><div class="ans"><p>테스트 모드 규칙은 <strong>만든 날부터 30일까지만</strong> 읽기·쓰기를 허용한다. 계속 쓰려면 날짜 대신 <strong>누가 쓸 수 있는지</strong>(예: 로그인한 사람만)를 규칙에 적는다. (5-3절)</p></div></details></div>
 </section>
 
 <section class="lesson-section"><div class="section-head"><span class="section-mark">＊</span><h2>오늘 정리</h2></div>
@@ -1080,8 +1024,8 @@ firebase deploy                   <span class="note">← 배포. 끝나면 https
 <li>새 아티팩트는 <strong>처음엔 나만</strong> 본다. 링크로 공유해도 <strong>여는 사람도 Claude 로그인</strong>이 필요하다 (Free는 새 아티팩트 링크 공유 불가)</li>
 <li>AI 기능이 든 도구는 <strong>쓰는 사람의 사용량</strong>이 차감되고, 링크로는 공유할 수 없다</li>
 <li>아티팩트는 <strong>혼자 완결되는 도구.</strong> 사내 시스템 연결은 MCP나 개발의 일이다</li>
-<li>도구를 <strong>HTML 파일로 꺼내 GitHub Pages에 올리면</strong> 계정 없는 사람도 주소로 연다. 대신 <strong>인터넷 전체 공개</strong>이고 AI·저장 기능은 멈춘다</li>
-<li>배포한 페이지는 <strong>고치면 다시 올려야</strong> 바뀐다. 방문자가 고친 내용을 남기려면 서버(데이터베이스)가 필요하다</li>
+<li>Firebase는 <strong>Hosting(보여 주기) + Firestore(저장하기)</strong>. 배포한 페이지는 계정 없는 사람도 주소로 열고, <strong>여러 사람이 쓴 내용이 남는다</strong></li>
+<li>테스트 모드는 <strong>누구나 읽고 쓰고 지울 수 있고, 30일 뒤 닫힌다.</strong> 수업이 끝나면 잠그고, 실무라면 <strong>누가 쓸 수 있는지</strong>를 규칙으로 정한다</li>
 <li><strong>팀원이 나에게 자꾸 물어보는 기준</strong>이 있다면, 그건 내가 병목이라는 뜻이고 도구로 만들 신호다</li>
 </ul>
 <h3 class="sub-head">📖 오늘의 용어 사전</h3>
@@ -1094,25 +1038,15 @@ firebase deploy                   <span class="note">← 배포. 끝나면 https
 <tr><td><strong>접근 권한</strong></td><td>공유할 때 누가 볼 수 있는지(나만·초대한 사람·링크 가진 사람)와 무엇을 할 수 있는지(보기·댓글·편집)</td></tr>
 <tr><td><strong>HTML</strong></td><td>웹페이지를 이루는 파일</td></tr>
 <tr><td><strong>배포</strong></td><td>파일을 인터넷 주소로 누구나 열 수 있게 올리는 것</td></tr>
-<tr><td><strong>저장소(Repository)</strong></td><td>GitHub에서 파일을 모아 두는 폴더 하나</td></tr>
-<tr><td><strong>커밋(Commit)</strong></td><td>올린 파일을 저장소에 "확정 저장"하는 것</td></tr>
-<tr><td><strong>GitHub Pages</strong></td><td>저장소 파일을 웹페이지로 보여 주는 GitHub의 무료 기능</td></tr>
+<tr><td><strong>CMD(명령 프롬프트)</strong></td><td>글자로 명령을 입력해 컴퓨터를 다루는 창</td></tr>
+<tr><td><strong>Node.js · npm</strong></td><td>Firebase 명령어(firebase-tools)를 설치하는 데 필요한 프로그램과 그 설치 도구</td></tr>
+<tr><td><strong>Firebase Hosting</strong></td><td>내 페이지를 <code>프로젝트이름.web.app</code> 주소로 보여 주는 기능</td></tr>
+<tr><td><strong>Firestore</strong></td><td>페이지에서 입력한 내용을 저장해 두는 Firebase의 데이터베이스</td></tr>
+<tr><td><strong>보안 규칙 · 테스트 모드</strong></td><td>누가 읽고 쓸 수 있는지 정하는 규칙. 테스트 모드는 30일 동안 누구나 가능</td></tr>
 <tr><td><strong>index.html</strong></td><td>폴더 주소로 들어갔을 때 자동으로 열리는 첫 페이지 파일</td></tr>
-<tr><td><strong>Firebase</strong></td><td>구글의 배포·데이터베이스 서비스. 고친 내용을 저장하는 페이지에 쓴다</td></tr>
+<tr><td><strong>Firebase</strong></td><td>구글의 웹 서비스 도구 모음. 오늘은 Hosting과 Firestore를 썼다</td></tr>
 </tbody></table></div>
 </section>
-
-<details class="toggle"><summary>🧑‍🏫 강사용 — 수업 전 체크리스트</summary><div class="toggle-body">
-<ul class="checklist">
-<li>학생 전원 <strong>GitHub 계정</strong> 보유 여부 사전 확인 (없으면 전날 가입 안내 — 이메일 인증 필요)</li>
-<li>실습 파일 4종(<code>quote_rules</code> · <code>onboarding_rules</code> · <code>team_pulse</code> · <code>meeting_minutes_source</code>) 자료 드라이브에 업로드</li>
-<li>학생 플랜 확인 — <strong>Free 학생은 4절 링크 공유가 안 되므로</strong> 실습 G ③은 건너뛰고 실습 I로 공유</li>
-<li>"Public 저장소여야 Pages가 무료"라는 점 강조 (Private는 유료)</li>
-<li>폴더째 업로드가 안 되는 브라우저 대비 — 크롬 권장, 안 되면 폴더별 개별 업로드</li>
-<li>마무리에 학생 배포 주소를 <strong>공용 채팅방</strong>에 모아 서로 열어 보게 하기 (동기부여 효과 큼)</li>
-<li>수업 후 실제 업무 정보를 넣은 학생이 있으면 <strong>Pages 끄기</strong> 안내</li>
-</ul>
-</div></details>
 
 <a class="next-lesson" href="lesson12.html"><div><span class="label">다음 차시</span><h3><strong>12차시 — 방학 프로젝트: 결정 하나를 끝까지</strong></h3></div><span class="arrow">→</span></a>
   </main>
