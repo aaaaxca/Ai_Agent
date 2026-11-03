@@ -828,7 +828,7 @@
 <div class="callout callout--scenario"><p><span class="co-icon">🎯</span> <strong>목표</strong>: 오늘 만든 도구를 <strong>한 사이트로 묶어</strong>, Claude 계정이 없는 사람도 주소로 열고 주간회의록은 <strong>누구나 고칠 수 있게</strong> Firebase로 배포합니다.</p></div>
 <div class="practice-card">
   <div class="practice-title">🛠 실습 H — 한 사이트로 묶어 Firebase로 배포 ⭐</div>
-  <p>순서는 <b>① Node.js 설치</b> → <b>② Firebase 프로젝트와 데이터베이스 만들기</b> → <b>③ 웹 앱 등록하고 설정값 받기</b> → <b>④ 주간회의록을 Firestore 저장으로 바꾸기</b> → <b>⑤ 계산기·대시보드 받고 목차 만들기</b> → <b>⑥ 폴더 정리</b> → <b>⑦ CMD에서 배포</b> → <b>⑧ 함께 써 보기</b> → <b>⑨ 잠그기</b>.<br>④는 <b>'11차시 실습 G — 주간회의록'</b> 대화에서, ⑤의 목차는 <b>새 대화</b>에서 합니다(대화 이름은 <b>'11차시 실습 H — 목차 페이지'</b>). ②·③·⑨는 Firebase 콘솔, ⑦은 CMD에서 합니다.</p>
+  <p>순서는 <b>① Node.js 설치</b> → <b>② Firebase 프로젝트와 데이터베이스 만들기</b> → <b>③ 웹 앱 등록하고 설정값 받기</b> → <b>④ 주간회의록을 Firestore 저장으로 바꾸기</b> → <b>⑤ 계산기·대시보드 받고 목차 만들기</b> → <b>⑥ 폴더 정리</b> → <b>⑦ CMD에서 배포</b> → <b>⑧ 함께 써 보기</b> → <b>⑨ 규칙 정하기</b>.<br>④는 <b>'11차시 실습 G — 주간회의록'</b> 대화에서, ⑤의 목차는 <b>새 대화</b>에서 합니다(대화 이름은 <b>'11차시 실습 H — 목차 페이지'</b>). ②·③·⑨는 Firebase 콘솔, ⑦은 CMD에서 합니다.</p>
   <div class="practice-prep">
     <div class="prep-label">📎 준비물</div>
     <ul>
@@ -901,17 +901,36 @@ firebase deploy                      <span class="note">← 배포. 끝에 Hosti
   <ol class="steps"><li>내 주소를 반 채팅방에 올립니다</li><li>옆 사람 주소로 들어가 <strong>주간회의록</strong>의 10월 4주차 회의에 메모를 하나 남깁니다 — 이번엔 <strong>Claude 로그인도, 초대도 없이</strong></li><li>Firebase 콘솔 <strong>Firestore → 데이터</strong> 탭에서 메모가 쌓였는지 봅니다</li></ol>
   <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 새로고침해도, 휴대폰으로 열어도 남아 있나?</div><p>다른 사람이 남긴 메모가 새로고침 뒤에도, 휴대폰에서도 그대로 보이면 성공입니다. 내 컴퓨터가 아니라 <strong>Firestore에 저장</strong>됐다는 뜻이에요.</p></div>
 
-  <p class="practice-step">⑨ 잠그기 — 수업이 끝나면</p>
+  <p class="practice-step">⑨ 규칙 정하기 — 수업이 끝나면</p>
   <p>Firebase 콘솔 <strong>Firestore → 규칙</strong> 탭을 열면 테스트 모드 규칙이 이렇게 보입니다. 날짜는 데이터베이스를 만든 날부터 30일 뒤입니다.</p>
 <div class="prompt">match /{document=**} {
   allow read, write: if request.time &lt; timestamp.date(2026, 11, 29);
 }                                    <span class="note">← 이 날짜 전까지 누구나 읽기·쓰기 가능</span></div>
-  <p>아래처럼 바꾸고 <strong>게시</strong>를 누릅니다.</p>
+  <p>수업이 끝나면 둘 중 하나로 바꾸고 <strong>게시</strong>를 누릅니다.</p>
+  <p><strong>1. 기한 없이 계속 함께 쓰기</strong> — 날짜 조건을 빼고 아래처럼 바꿉니다.</p>
 <div class="prompt">match /{document=**} {
   allow read: if true;               <span class="note">← 보기는 누구나</span>
-  allow write: if false;             <span class="note">← 쓰기·지우기는 아무도</span>
+  allow write: if true;              <span class="note">← 쓰기·지우기도 누구나, 기한 없음</span>
 }</div>
-  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 회의록은 보이는데 새 메모는 저장이 안 되나?</div><p>게시하고 1분쯤 뒤, 주간회의록에 메모를 하나 더 남겨 보세요. 기존 내용은 그대로 보이는데 <strong>새 메모가 저장되지 않으면</strong> 잠그기 성공입니다.</p></div>
+  <div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>주소를 아는 사람이면 누구나, 언제까지나</strong> 쓰고 지울 수 있습니다. 반 안에서 연습용으로만 쓰고, 회사 자료는 넣지 마세요.</p></div>
+  <p><strong>2. 기한 없이 보기만 하기 (잠그기)</strong> — 규칙 탭의 내용을 전부 지우고 아래를 붙여넣습니다.</p>
+<div class="prompt">rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /meetings/{weekId} {
+      allow read: if true;           <span class="note">← 보기는 누구나</span>
+      allow write: if false;         <span class="note">← 쓰기·지우기는 아무도</span>
+    }
+
+    match /notes/{noteId} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}</div>
+  <div class="callout callout--tip"><p><span class="co-icon">💡</span> <code>meetings</code>(회의 내용), <code>notes</code>(메모)는 저장 칸(컬렉션)의 이름입니다. Claude가 다른 이름(예: <code>memos</code>)으로 만들었을 수 있으니, <strong>Firestore → 데이터</strong> 탭 왼쪽에 보이는 이름과 같은지 먼저 확인하고 다르면 그 이름으로 바꿔 쓰세요. 여기 적지 않은 칸은 저절로 막힙니다.</p></div>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 고른 규칙대로 되나?</div><p>게시하고 1분쯤 뒤, 주간회의록에 메모를 하나 더 남겨 보세요. <strong>1번</strong>이면 저장되고, <strong>2번</strong>이면 기존 내용은 그대로 보이는데 <strong>새 메모가 저장되지 않아야</strong> 합니다.</p></div>
 </div>
 <div class="callout callout--tip"><p><span class="co-icon">💡</span> 페이지를 고쳤다면 해당 대화에서 수정 → HTML 다시 내려받기 → 같은 폴더에 <code>index.html</code>로 덮어쓰기 → <code>greencup-tools</code> 폴더에서 CMD를 열고 <code>firebase deploy</code>만 다시 입력하면 됩니다. <code>firebase init</code>은 처음 한 번만 합니다. 바뀐 게 안 보이면 <strong>Ctrl + F5</strong>.</p></div>
 </section>
