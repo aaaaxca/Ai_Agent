@@ -480,10 +480,10 @@
 <li><strong>파일 뭉치를 통째로 맡기고 결과만 받고 싶나?</strong> → <strong>Cowork</strong> (한 번 시키고 기다림)</li>
 <li><strong>매주 똑같은 계산·변환을 정확히 돌려야 하나?</strong> → <strong>Claude Code</strong> (한 번 만들어 계속 실행)</li>
 </ol>
-<div class="callout callout--warning"><div class="callout-label">⚠️ "반복되니까 Code"는 오해입니다</div><p>반복 여부만으로는 Cowork와 Code가 안 갈립니다. 진짜 갈림길은 <strong>반복되는 게 무엇이냐</strong>입니다.</p><div class="table-scroll"><table><thead><tr><th><strong>매주 반복되는 게…</strong></th><th><strong>도구</strong></th></tr></thead><tbody>
+<div class="callout callout--tip"><div class="callout-label">💡 매주 하는 일이라도 둘로 갈립니다</div><p>"매주 한다"는 것만으로는 Cowork와 Code가 갈리지 않습니다. 갈림길은 <strong>매주 반복되는 게 무엇이냐</strong>입니다.</p><div class="table-scroll"><table><thead><tr><th><strong>매주 반복되는 게…</strong></th><th><strong>도구</strong></th></tr></thead><tbody>
 <tr><td>문서 작성 · 파일 정리 · 자료 취합</td><td><strong>Cowork</strong> (안내 파일로 규칙을 굳혀 두고 맡김)</td></tr>
 <tr><td>숫자 집계 · 형식 변환 (정확성이 생명)</td><td><strong>Claude Code</strong> (계산 도구를 만들어 실행)</td></tr>
-</tbody></table></div><p>왜 숫자는 Code일까요? AI는 같은 질문에도 매번 조금씩 다르게 답할 수 있습니다. 반면 Claude Code로 <strong>계산 프로그램을 만들어 두면, 그 프로그램은 같은 파일에 늘 같은 결과</strong>를 냅니다.</p></div>
+</tbody></table></div><p>왜 숫자는 따로 볼까요? Claude에게 매번 계산을 시키면 같은 질문에도 조금씩 다르게 답할 수 있습니다. 계산을 <strong>프로그램으로 만들어 두면</strong> 같은 파일에 늘 같은 결과가 나옵니다. 아티팩트 계산기도 같은 원리입니다. <strong>Claude Code</strong>는 그 프로그램을 <strong>내 폴더에 파일로 남겨서</strong>, 다음 주에 새 엑셀만 넣고 다시 돌리기 가장 편한 도구입니다.</p></div>
 <h3 class="sub-head">도구를 잘못 고르면</h3>
 <div class="table-scroll"><table><thead><tr><th><strong>이렇게 고르면</strong></th><th><strong>생기는 일</strong></th></tr></thead><tbody>
 <tr><td>판단이 핵심인데 Cowork에 통째로</td><td>사람이 정할 것(승인 여부 등)까지 AI가 임의로 정할 위험 — 판단 지점은 사람에게 남긴다</td></tr>
@@ -504,39 +504,30 @@
 
 <section class="lesson-section practice-block">
 <div class="practice-card">
-  <div class="practice-title">🛠 실습 A — 업무 하나를 단계로 나눠 도구 배정하기</div>
-  <p>순서는 <b>① 업무 고르기</b> → <b>② 단계마다 도구 배정</b>.<br><b>새 대화</b>에서 시작합니다.</p>
+  <div class="practice-title">🛠 실습 A — 주간보고를 단계로 나눠 도구 배정하기</div>
+  <p>순서는 <b>① 업무 확인</b> → <b>② 단계마다 도구 배정</b>.<br><b>새 대화</b>에서 시작합니다.</p>
   <div class="practice-prep">
     <div class="prep-label">📎 준비물</div>
     <ul>
       <li><b>없음</b> <span class="meta">· 대화창만 있으면 됩니다</span></li>
     </ul>
   </div>
-  <p class="practice-step">① 업무 고르기 — 셋 중 하나, 또는 내 업무</p>
-  <p>처음이니 <strong>오늘 실습에서 실제로 해 볼 업무</strong> 중 하나를 고릅니다. 잘 모르겠으면 <strong>주간보고 작성</strong>으로 하세요 — 아래 프롬프트에 이미 들어 있습니다.</p>
-  <div class="table-scroll"><table><thead><tr><th><strong>업무 이름</strong></th><th><strong>업무 설명 (프롬프트에 그대로 넣기)</strong></th><th><strong>오늘 이어지는 실습</strong></th></tr></thead><tbody>
-  <tr><td><strong>주간보고 작성</strong></td><td>매주 금요일, 팀원들의 회의메모·메신저·메일을 모아 팀장님께 올릴 주간보고를 쓴다. 채널별 실적 숫자도 넣는다.</td><td>실습 B</td></tr>
-  <tr><td><strong>행사 경비 정산</strong></td><td>행사가 끝나면 영수증 수십 장을 모아 계정별로 나누고 합계를 내서 경비 보고서를 만든다. 애매한 건 팀장님께 확인한다.</td><td>실습 C·D</td></tr>
-  <tr><td><strong>회의자료 관리</strong></td><td>회의 때마다 쌓이는 자료 파일을 날짜·회의 종류별로 이름을 통일해 정리한다.</td><td>실습 E</td></tr>
-  </tbody></table></div>
-  <div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>내 업무로 해도 됩니다.</strong> 매주 반복하고, 판단보다 <strong>모으고 정리하는 일이 많은</strong> 업무 하나를 골라 위 표처럼 <strong>업무 이름 + 설명 두 줄</strong>을 직접 써 보세요. AI는 내 업무를 모르니 설명이 있어야 단계를 제대로 나눕니다.</p></div>
+  <p class="practice-step">① 업무 확인 — 오늘은 다 같이 주간보고로</p>
+  <p>처음이니 모두 같은 업무 <strong>주간보고 작성</strong>으로 해 봅니다. 업무 설명은 아래 프롬프트에 이미 들어 있습니다.</p>
+  <div class="callout callout--tip"><p><span class="co-icon">💡</span> AI는 내 업무를 모르니 <strong>업무 이름 + 설명 두 줄</strong>이 있어야 단계를 제대로 나눕니다. 내 업무로는 맨 끝 <strong>'내 업무라면?'</strong>에서 같은 프롬프트로 해 봅니다.</p></div>
   <p class="practice-step">② 단계마다 도구 배정</p>
-  <p>아래 프롬프트를 그대로 입력합니다. 다른 업무를 골랐다면 <strong>첫 두 줄(업무 이름·설명)만</strong> 바꾸세요.</p>
+  <p>아래 프롬프트를 그대로 입력합니다.</p>
   <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"내 업무는 '주간보고 작성'이야.<br>업무 설명: 매주 금요일, 팀원들의 회의메모·메신저·메일을 모아 팀장님께 올릴 주간보고를 쓴다. 채널별 실적 숫자도 넣는다.<br>이 업무를 4~6개 단계로 나누고, 각 단계를 [사람 / Claude 앱 / Cowork / Claude Code] 중 무엇으로 하면 좋을지 표로 정리해줘.<br>배정 기준:<br>- 판단·대화가 핵심 → Claude 앱<br>- 파일 뭉치를 통째로 맡기고 결과만 받기 → Cowork<br>- 매주 똑같은 숫자 계산·형식 변환 → Claude Code<br>- 최종 판단·승인·외부 발송 → 사람<br>'매주 반복된다'는 이유만으로 Claude Code에 넣지 말고, 반복되는 게 문서·파일 정리인지 숫자 계산인지로 갈라줘.<br>열: 단계 / 담당 / 배정 이유 한 줄<br>설명에 없는 부분은 지어내지 말고 나에게 물어봐."</em></p></div>
-  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 이런 모양이면 잘 된 겁니다 (주간보고 예)</div><div class="table-scroll"><table><thead><tr><th><strong>단계</strong></th><th><strong>담당</strong></th></tr></thead><tbody>
-  <tr><td>이번 주 메모·메일 모으기</td><td>Cowork</td></tr>
-  <tr><td>채널별 실적 집계</td><td>Claude Code (매주 같은 계산)</td></tr>
-  <tr><td>초안 작성</td><td>Claude 앱 + Project (팀 보고 톤)</td></tr>
-  <tr><td><strong>숫자·해석 최종 확인</strong></td><td><strong>사람</strong></td></tr>
-  </tbody></table></div><p>단계 이름은 조금 달라도 괜찮습니다. 마지막에 <strong>사람 확인 단계</strong>가 있는지, 숫자 계산이 <strong>Claude Code</strong>로 갔는지만 보세요. Claude가 되물으면 아는 만큼 답하면 됩니다. 표는 따로 저장하지 않아도 됩니다 — 오늘 배정은 <strong>첫 추정</strong>이고, 아래 실습들이 이 단계를 하나씩 직접 해 보는 순서입니다.</p></div>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 이런 모양이면 잘 된 겁니다 (실제 실행 예)</div><div class="table-scroll"><table><thead><tr><th><strong>단계</strong></th><th><strong>담당</strong></th><th><strong>배정 이유</strong></th></tr></thead><tbody>
+  <tr><td>1. 원자료 모으기 (회의메모·메신저·메일)</td><td>사람</td><td>자료가 어디에 어떤 형태로 있는지 아직 모름 — 파일로 모을 수 있으면 2단계와 합쳐 Cowork로</td></tr>
+  <tr><td>2. 원자료 정리·요약 (팀원별·업무별)</td><td>Cowork</td><td>매주 반복되지만 반복되는 게 <strong>문서 정리</strong></td></tr>
+  <tr><td>3. 채널별 실적 숫자 계산·표 변환</td><td>Claude Code</td><td>매주 <strong>같은 규칙의 숫자 계산</strong> — 한 번 만든 도구를 다시 씀</td></tr>
+  <tr><td>4. 보고할 내용 고르기·강조점 정하기</td><td>Claude 앱</td><td>무엇을 어떤 톤으로 올릴지는 <strong>판단과 대화</strong></td></tr>
+  <tr><td>5. 양식에 맞춰 초안 조립</td><td>Cowork</td><td>정리본·실적 표·결정 사항을 넘기면 완성 문서로 받음</td></tr>
+  <tr><td><strong>6. 최종 검토·승인·제출</strong></td><td><strong>사람</strong></td><td>최종 판단과 외부 발송은 사람</td></tr>
+  </tbody></table></div><p>단계 수와 이름은 매번 조금씩 달라도 괜찮습니다. 세 가지만 보세요 — <strong>마지막이 사람</strong>인가, <strong>숫자 계산만 Claude Code</strong>로 갔나, <strong>정리·조립은 Cowork, 판단은 Claude 앱</strong>으로 갈렸나. Claude가 되물으면 아는 만큼 답하면 됩니다. 표는 따로 저장하지 않아도 됩니다 — 오늘 배정은 <strong>첫 추정</strong>이고, 아래 실습들이 이 단계를 직접 해 보는 순서입니다.</p></div>
 </div>
-<div class="callout callout--tip"><div class="callout-label">🧭 오늘 실습은 이 표대로 갑니다</div><p>실습 A에서 Cowork로 배정한 단계를 직접 맡겨 봅니다. 내 업무엔 실습 파일이 없으니, <strong>같은 성격의 업무를 준비된 예제로</strong> 먼저 해 봅니다.</p><div class="table-scroll"><table><thead><tr><th><strong>실습</strong></th><th><strong>업무 · 단계</strong></th><th><strong>도구</strong></th></tr></thead><tbody>
-<tr><td>실습 B</td><td>주간보고 — 메모 취합·초안 단계</td><td>Cowork</td></tr>
-<tr><td>실습 C·D</td><td>경비 정산 — 영수증 분류·집계 단계</td><td>Cowork</td></tr>
-<tr><td>실습 E</td><td>회의자료 관리 — 파일명 정리 단계</td><td>Cowork</td></tr>
-<tr><td>내 업무라면?</td><td>내 업무에서 <strong>Cowork</strong>로 맡길 단계 하나</td><td>Cowork</td></tr>
-<tr><td>(오늘 범위 밖)</td><td>실적 집계처럼 <strong>매주 같은 계산</strong> 단계 — Claude Code는 다음 차시에 배웁니다</td><td>Claude Code</td></tr>
-</tbody></table></div></div>
+<div class="callout callout--tip"><div class="callout-label">🧭 오늘 실습은 이렇게 이어집니다</div><p><strong>실습 B</strong>는 방금 만든 표를 <strong>순서대로 그대로</strong> 해 봅니다 — 사람이 모으고, Cowork가 정리하고, 대화로 강조점을 정하고, Cowork가 초안을 조립하고, 사람이 확인합니다. <strong>실습 C~E</strong>는 다른 업무로 <strong>Cowork 맡기기</strong>를 더 연습합니다. 표의 <strong>Claude Code</strong> 단계(실적 계산)는 다음 차시에 배웁니다.</p></div>
 <div class="callout callout--summary"><div class="callout-label">📌 1절 한 줄 요약</div><p>판단·대화 → <strong>앱</strong> / 폴더째 맡기기 → <strong>Cowork</strong> / 매주 같은 계산 → <strong>Code</strong>. 갈림길은 '반복 여부'가 아니라 <strong>반복되는 게 무엇이냐</strong>.</p></div>
 </section>
 
@@ -554,50 +545,72 @@
 <h3 class="sub-head">시작하기 — 3단계</h3>
 <ol class="steps">
 <li><strong>데스크톱 앱 설치</strong> — <code>claude.ai/download</code>에서 내려받아 설치 → 1과정에서 쓰던 계정으로 로그인. (Windows·macOS 지원, Linux는 베타)</li>
-<li><strong>폴더 연결</strong> — 대화창 입력칸 옆 <strong><code>+</code> 메뉴 → 폴더 추가</strong>로 맡길 폴더를 고릅니다. 한 번 허락한 폴더는 앱 설정의 <strong>신뢰한 폴더</strong> 목록에 남습니다.</li>
+<li><strong>폴더 연결</strong> — 대화창 입력칸 옆 <strong><code>+</code> 메뉴 → 폴더 추가</strong>로 맡길 폴더를 고릅니다. <strong>Folder access request</strong>(폴더 접근 허락) 창이 뜨면 <strong>Allow</strong>를 누릅니다. 창 아래 <em>Don't ask again for this folder on this device</em>에 체크하면 다음부터 묻지 않습니다.</li>
 <li><strong>결과물을 말하며 맡기기</strong> — <em>"이 폴더를 보고 ○○ 파일을 만들어줘"</em>처럼 <strong>무엇을 만들지</strong>를 말합니다. 질문형("이거 어떻게 정리해?")으로 물으면 대화로 답만 하는 경우가 많습니다.</li>
 </ol>
 <div class="callout callout--tip"><p><span class="co-icon">💡</span> 화면 구성은 업데이트마다 계속 바뀝니다. 버튼을 못 찾겠으면 <strong>앱 안에서 Claude에게 직접</strong> <em>"내 컴퓨터 폴더를 연결해서 작업하려면 어디서 시작해?"</em>라고 물어보세요. 화면이 또 바뀌어도 이 방법은 계속 통합니다.</p></div>
 <div class="callout callout--tip"><p><span class="co-icon">🔐</span> <strong>폴더 권한은 내가 정합니다.</strong> Claude는 아무 폴더나 뒤지는 게 아니라 <strong>내가 연결한 폴더</strong>에서만 움직입니다. 그래서 "실습용 복사본 폴더만 연결"이 실제로 강력한 안전장치가 됩니다.</p></div>
-<h3 class="sub-head">분업이 실제로 어떻게 생겼나 — 주간보고 하나에 도구 셋</h3>
-<div class="table-scroll"><table><thead><tr><th><strong>단계</strong></th><th><strong>도구</strong></th><th><strong>맡기는 말</strong></th><th><strong>왜 이 도구</strong></th></tr></thead><tbody>
-<tr><td>1. 메모 취합</td><td>Cowork</td><td>"이번 주 메모 폴더를 보고 항목별로 정리해줘."</td><td>파일 4개(회의메모·카톡 캡처·메일)가 뒤섞임 → 폴더째 맡김</td></tr>
-<tr><td>2. 실적 집계</td><td>Claude Code</td><td>"매주 이 형식의 엑셀에서 채널별 성과를 집계하는 도구를 만들어줘."</td><td>매주 같은 계산 → 한 번 만들면 다음 주엔 파일만 바꿔 실행 (다음 차시)</td></tr>
-<tr><td>3. 초안 작성</td><td>Claude 앱 + Project</td><td>"1·2단계 결과를 합쳐 우리 팀 보고 톤으로 초안 써줘."</td><td>판단과 문체가 섞임 → 대화하며 다듬기</td></tr>
-<tr><td>4. 확인·공유</td><td>사람</td><td>—</td><td>숫자가 맞는지, 해석이 어색하지 않은지는 사람이 본다</td></tr>
-</tbody></table></div>
 </section>
 
 <section class="lesson-section practice-block">
 <div class="practice-card">
-  <div class="practice-title">🛠 실습 B — [주간보고 · 메모 취합 단계 → Cowork] 앱 설치하고 첫 폴더 맡기기</div>
-  <p>순서는 <b>① 앱 설치·폴더 연결</b> → <b>② 메모 취합 맡기기</b> → <b>③ 초안 작성</b> → <b>④ 사람 확인</b>.<br><b>새 대화</b>에서 시작해 <b>한 대화</b>에서 이어갑니다. 강사 화면을 보며 다 같이 진행합니다.</p>
+  <div class="practice-title">🛠 실습 B — 실습 A 표대로 주간보고 만들기</div>
+  <p>순서는 <b>① 자료 모으기</b> → <b>② 정리·요약</b> → <b>③ 강조점 정하기</b> → <b>④ 초안 조립</b> → <b>⑤ 사람 확인</b>.<br><b>새 대화</b>에서 시작해 <b>한 대화</b>에서 이어갑니다. 강사 화면을 보며 다 같이 진행합니다.</p>
   <div class="practice-prep">
     <div class="prep-label">📎 준비물</div>
     <ul>
       <li><b>이번 주 메모 폴더</b>(<code>weekly_report_memos.zip</code>) <span class="meta">· zip · 회의메모·카톡 캡처·메일 등 4개</span></li>
     </ul>
   </div>
-  <p class="practice-step">① 앱 설치·폴더 연결</p>
+  <p style="margin-top:14px;">실습 A 표(✅ 확인할 것의 예시 기준)를 이 순서로 따라갑니다. 표는 이 페이지에 있으니 <strong>실습 A 대화를 가져올 필요는 없습니다.</strong></p>
+  <div class="practice-flow"><div class="table-scroll"><table><thead><tr><th><strong>실습 B 단계</strong></th><th><strong>실습 A 표</strong></th><th><strong>담당</strong></th></tr></thead><tbody>
+  <tr><td>① 자료 모으기</td><td>1. 원자료 모으기</td><td>사람</td></tr>
+  <tr><td>② 정리·요약</td><td>2. 원자료 정리·요약</td><td>Cowork</td></tr>
+  <tr><td>—</td><td>3. 실적 계산</td><td>Claude Code (다음 차시)</td></tr>
+  <tr><td>③ 강조점 정하기</td><td>4. 강조점 정하기</td><td>Claude 앱 (대화)</td></tr>
+  <tr><td>④ 초안 조립</td><td>5. 초안 조립</td><td>Cowork</td></tr>
+  <tr><td>⑤ 사람 확인</td><td>6. 최종 검토</td><td>사람</td></tr>
+  </tbody></table></div></div>
+
+  <p class="practice-step">① 자료 모으기 — 표의 1단계 · 사람</p>
   <ol class="steps">
-  <li>zip을 바탕화면에 새 폴더(예: <code>주간보고연습</code>)로 풉니다.</li>
+  <li>zip을 바탕화면에 새 폴더(예: <code>주간보고연습</code>)로 풉니다. <strong>자료를 한 폴더에 모으는 것</strong>까지가 사람 몫입니다.</li>
   <li>데스크톱 앱을 열고 새 대화 → 입력칸 옆 <code>+</code> → <strong>폴더 추가</strong>로 <code>주간보고연습</code>을 연결합니다.</li>
+  <li><strong>폴더 접근 허락 창</strong>이 뜨면 경로 끝이 <code>Desktop\주간보고연습</code>인지 확인하고 <strong>Allow</strong>. 아래 체크박스는 <strong>체크하지 않습니다</strong> — 어떤 폴더를 여는지 매번 확인하는 습관을 들입니다.</li>
   </ol>
-  <p class="practice-step">② 메모 취합 — '맡기는' 말투로</p>
-  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"연결한 폴더의 이번 주 메모들(회의록·메신저 캡처·메일)을 보고 항목별로 정리해서 <code>메모정리.md</code> 파일로 저장해줘. 각 항목은 '결정됨 / 미정'으로 구분하고, 어느 파일에서 나온 내용인지 출처를 붙여줘. 내용이 서로 다르면 하나를 고르지 말고 둘 다 적어줘. 이 폴더 안에서만 작업해."</em></p></div>
-  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 파일이 내 폴더에 생겼나?</div><p>탐색기로 <code>주간보고연습</code> 폴더를 열어 <code>메모정리.md</code>가 <strong>실제로 생겼는지</strong> 보세요. 대화창이 아니라 내 폴더에 결과가 생긴 것 — 이게 첨부와 폴더 연결의 차이입니다.</p></div>
-  <p class="practice-step">③ 초안 작성 — 실적 칸은 비워 두기</p>
-  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"메모 정리를 바탕으로 팀장님께 올릴 주간보고 초안을 <code>주간보고_초안.md</code>로 저장해줘. 첫 줄에 이번 주 핵심 한 문장, 그다음 '실적 / 진행 중 / 결정 필요' 순서로. '실적' 칸은 내용을 쓰지 말고 [실적 집계 예정]이라고만 남겨. '미정' 항목은 '결정 필요'에만 넣어."</em></p></div>
-  <div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>오늘은 [실적 집계 예정] 칸을 비워 둔 채로 끝냅니다.</strong> 실적 숫자는 매주 같은 계산이라 실습 A 기준으로 <strong>Claude Code</strong> 몫이고, Claude Code는 다음 차시에 배웁니다. 오늘은 Cowork가 맡을 <strong>메모 취합·초안</strong>까지만 합니다.</p></div>
-  <p class="practice-step">④ 사람 확인</p>
-  <p><code>메모정리.md</code>의 항목 <strong>2개</strong>를 골라 출처로 적힌 원본 파일을 직접 열어 맞는지 봅니다.</p>
-  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — '미정'이 '결정'으로 바뀌지 않았나?</div><p>메모 정리에서 '미정'이던 항목이 초안에서 결정된 것처럼 쓰였다면, 그게 <strong>사람 확인 단계</strong>가 잡아낸 실수입니다. 출처가 원본과 다른 항목도 표시해 두세요.</p></div>
+  <div class="callout callout--tip"><p><span class="co-icon">💡</span> 허락 창의 마지막 문장 <em>"files Claude uses leave your device and are processed on Anthropic's servers"</em>는 <strong>Claude가 쓰는 파일은 내 컴퓨터를 떠나 Anthropic 서버에서 처리된다</strong>는 뜻입니다. 2절의 "작업은 클라우드에서" 그대로입니다. 그래서 회사 자료는 회사 정책을 먼저 확인합니다.</p></div>
+
+  <p class="practice-step">② 정리·요약 — 표의 2단계 · Cowork</p>
+  <p><strong>먼저 무엇이 있는지 파악합니다.</strong> 다른 사람에게 받은 자료는 뭐가 들었는지 모르니, 바로 정리시키지 말고 목록부터 받습니다.</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 폴더에 뭐가 들어 있는지 알려줘. 아직 정리하거나 파일을 만들지는 마."</em></p></div>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 4개가 다 나왔나?</div><p>준비물에 적힌 대로 파일이 <strong>4개</strong> 나오면 됩니다. 빠진 게 있으면 정리를 시키기 전에 여기서 바로잡습니다.</p></div>
+  <p>목록이 맞으면 이제 <strong>'맡기는' 말투</strong>로 정리를 시킵니다.</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이번 주 메모들을 항목별로 정리해서 <code>메모정리.md</code>로 저장해줘. 각 항목은 결정됨 / 미정으로 나누고, 어느 파일에서 나온 내용인지 출처를 붙여줘. 내용이 서로 다르면 하나를 고르지 말고 둘 다 적어줘."</em></p></div>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 파일이 내 폴더에 생겼나?</div><p>탐색기로 <code>주간보고연습</code> 폴더를 열어 <code>메모정리.md</code>가 <strong>실제로 생겼는지</strong> 보세요. 대화창이 아니라 내 폴더에 결과가 생긴 것 — 이게 첨부와 폴더 연결의 차이입니다.</p><p style="color:var(--ink-soft);font-size:.9rem;"><code>.md</code>(마크다운) = 메모장으로 열리는 텍스트 파일. <code>#</code>은 제목, <code>**</code>는 굵게 표시입니다.</p></div>
+  <p>파일이 생겼으면 <strong>초안을 만들기 전에</strong> 재료부터 확인합니다. <code>메모정리.md</code>에서 항목 <strong>2개</strong>를 골라, 옆에 적힌 <strong>출처</strong> 파일을 열어 내용과 결정됨/미정 구분이 맞는지 봅니다.</p>
+  <div class="callout callout--tip"><p><span class="co-icon">💡</span> 재료가 틀리면 그걸로 만든 초안도 틀립니다. 여기서 잡으면 정리만 다시 시키면 되지만, 초안을 만든 뒤에 찾으면 초안까지 다시 만들어야 합니다.</p></div>
+
+  <p class="practice-step">③ 강조점 정하기 — 표의 4단계 · Claude 앱 (대화)</p>
+  <p>이번엔 파일을 만들라고 하지 않고 <strong>묻고 답하며</strong> 정합니다. 같은 대화창 그대로입니다.</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"메모 정리 중에서 팀장님이 이번 주에 꼭 아셔야 할 것 3가지만 골라 줘. 왜 그게 중요한지 한 줄씩. 아직 파일로 만들지 마."</em></p></div>
+  <p>마음에 안 드는 게 있으면 <em>"2번 대신 ○○가 더 중요해"</em>처럼 바꿔 말합니다. 3가지가 정해질 때까지 주고받으세요.</p>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 이번엔 파일이 안 생겼나?</div><p>폴더에 새 파일이 없고 대화로만 답했다면 정상입니다. <strong>결과물을 말하면 맡기기, 질문하면 대화</strong> — 같은 창에서 일하는 방식만 바뀐 겁니다. 무엇을 강조할지는 판단이라 이렇게 주고받는 게 맞습니다.</p></div>
+
+  <p class="practice-step">④ 초안 조립 — 표의 5단계 · Cowork</p>
+  <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"메모 정리와 방금 정한 3가지로 팀장님께 올릴 주간보고 초안을 <code>주간보고_초안.md</code>로 저장해줘. 첫 줄은 3가지를 한 문장으로, 그다음은 실적 / 진행 중 / 결정 필요 순서로. 실적 칸은 비워 두고 [실적 집계 예정]이라고만 써. 미정 항목은 결정 필요에만 넣고, 항목마다 출처 파일을 붙여줘."</em></p></div>
+  <div class="callout callout--tip"><p><span class="co-icon">💡</span> <strong>[실적 집계 예정] 칸은 비워 둔 채로 끝냅니다.</strong> 표의 3단계(실적 계산)는 매주 같은 숫자 계산이라 <strong>Claude Code</strong> 몫이고, Claude Code는 다음 차시에 배웁니다.</p></div>
+
+  <p class="practice-step">⑤ 사람 확인 — 표의 6단계 · 사람</p>
+  <p>원본은 ②에서 이미 확인했으니, 이번엔 <strong>메모정리와 초안</strong>을 나란히 놓고 봅니다. 초안을 만들며 합치고 다듬는 사이에 생긴 실수를 찾는 단계입니다.</p>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 이대로 팀장님께 올려도 되나?</div><p>메모정리의 <strong>미정 항목이 초안의 '결정 필요'에 다 들어갔는지</strong>, 초안에서 <strong>결정된 것처럼 쓰인 것</strong>은 없는지 봅니다. 미정이 결정처럼 쓰였거나 빠진 항목이 있다면, 그게 사람 확인 단계가 잡아낸 실수입니다.</p></div>
+  <div class="callout callout--tip"><div class="callout-label">💡 찾았다면 — 그 부분만 고쳐 달라고 합니다</div><p>초안을 처음부터 다시 만들지 말고, 같은 대화에서 <strong>고칠 곳만 콕 집어</strong> 말합니다. 표의 칸만 보지 말고 <strong>첫 줄과 문장 속 날짜</strong>까지 읽어야 이런 실수가 보입니다.</p><p><em>예) 기간이 미정인데 초안 첫 줄에 "7/7 프로모션 전에"처럼 시작일을 단정했다면 → "초안에서 7/7을 프로모션 시작일로 단정했는데 기간은 아직 미정이야. '7/7 시작 예정(기간 미확정)'으로 고치고 나머지는 그대로 둬."</em></p><p style="color:var(--ink-soft);font-size:.9rem;">결과는 사람마다 다르게 나오니, 실수가 없으면 넘어가도 됩니다.</p></div>
 </div>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 방금 한 일을 돌아보면 — 한 대화창 안에서 <strong>맡기기(②④)</strong>와 <strong>대화(③)</strong>를 오갔고, 앞뒤는 <strong>사람(①⑤)</strong>이 맡았습니다. 실습 A에서 담당을 나눈 이유가 이것입니다. 일을 통째로 한 도구에 넣지 않고, 단계마다 맞는 방식으로 맡깁니다.</p></div>
 <div class="callout callout--summary"><div class="callout-label">📌 2절 한 줄 요약</div><p>앱을 깔고 폴더를 연결하면 <strong>결과물이 내 폴더에 바로</strong> 생긴다. 대신 <strong>앱을 켜 둬야</strong> 하고, 파일을 바꿀 수 있게 된 만큼 조심해야 한다.</p></div>
 </section>
 
 <section class="lesson-section"><div class="section-head"><span class="section-mark">3</span><h2>맡기는 법 — 과제 정의가 90%</h2></div>
-<p>대화형은 중간에 고칠 수 있지만, 맡기는 방식은 <strong>한 번 시키면 한참을 알아서 갑니다.</strong> 그래서 처음 지시가 훨씬 중요합니다. 어렵게 생각할 필요는 없어요 — <strong>사람에게 일을 잘 맡기던 방식 그대로</strong>입니다.</p>
+<p>실습 B ③(강조점)은 <strong>대화</strong>라서 한 번 답을 보고 바로 고칠 수 있었습니다. 하지만 ②처럼 <strong>맡기면</strong> Claude가 파일을 다 읽고, 정리하고, 저장까지 혼자 끝낸 뒤에야 결과를 보여 줍니다. 중간에 고칠 틈이 적으니 <strong>처음에 말할 때 필요한 걸 다 담아야</strong> 합니다. 후배에게 일을 맡기고 외근 나갈 때처럼요.</p>
 <div class="table-scroll"><table><thead><tr><th><strong>사람에게 맡길 때</strong></th><th><strong>Claude에게 맡길 때</strong></th></tr></thead><tbody>
 <tr><td>"이거 정리해줘" 하고 던지면 엉뚱한 게 옴</td><td>부실한 과제문 → 엉뚱한 결과</td></tr>
 <tr><td>어떤 형태로 달라고 말해줌 ("표로, 팀장 보고용")</td><td><strong>결과물 명시</strong></td></tr>
@@ -606,26 +619,13 @@
 <tr><td>받아서 확인하고 돌려보냄</td><td><strong>결과 검수</strong> (4절)</td></tr>
 </tbody></table></div>
 <div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>딱 하나 다른 점</strong>: 사람은 "이건 좀 이상한데요?"라고 알아서 되묻습니다. AI는 <strong>명시하지 않은 건 그냥 진행</strong>할 수 있습니다. 그래서 <strong>"애매하면 멈춰"</strong>를 더 분명하게 넣어야 합니다.</p></div>
-<h3 class="sub-head">일하는 흐름 — 계획 → 실행 → 보고</h3>
-<div class="table-scroll"><table><thead><tr><th><strong>단계</strong></th><th><strong>Claude가 하는 일</strong></th><th><strong>이때 내가 할 일</strong></th></tr></thead><tbody>
-<tr><td><strong>① 계획</strong></td><td>폴더를 훑고 "이렇게 하겠습니다"를 밝힘</td><td><strong>가장 중요한 개입 지점</strong> — 계획이 틀렸으면 여기서 멈춘다</td></tr>
-<tr><td><strong>② 실행</strong></td><td>파일을 읽고 분류·계산·작성. 애매하면 질문</td><td>질문이 오면 답한다</td></tr>
-<tr><td><strong>③ 보고</strong></td><td>만든 파일 목록과 처리 내용을 설명</td><td><strong>결과 검수</strong> (4절)</td></tr>
-</tbody></table></div>
-<p>계획을 확실히 보려면 과제문 끝에 <em>"시작 전에 계획을 먼저 보여주고 내 확인을 받아"</em>를 붙이세요. 계획에서 볼 것은 셋입니다.</p>
-<ol class="steps">
-<li><strong>읽겠다는 파일 목록이 내 예상과 맞나</strong> — 빠진 파일이 있으면 못 찾은 것</li>
-<li><strong>규칙 확인 단계가 있나</strong> — "정산 규정을 먼저 확인" 같은 단계가 보이나</li>
-<li><strong>만들겠다는 결과물이 요청과 같나</strong> — 이름·개수·형식</li>
-</ol>
-<div class="callout callout--tip"><p><span class="co-icon">💡</span> 초보와 능숙한 사용자를 가르는 건 <strong>계획 단계에서 멈출 줄 아는가</strong>입니다. 어긋난 계획을 그냥 진행시키면 10분 뒤 잘못된 파일 뭉치를 받고 처음부터 다시 해야 합니다.</p></div>
 <h3 class="sub-head">맡기기 3요소 &amp; 과제문 공식</h3>
 <ol class="steps">
 <li><strong>결과물 명시</strong> — "정리해줘" ❌ → "계정별로 분류한 <code>경비정리.csv</code>와, 애매한 항목 목록 <code>확인필요.txt</code>를 만들어줘" ✅</li>
 <li><strong>규칙 명시</strong> — 분류 기준, 한도, 예외 처리를 미리. 길면 폴더 안에 <code>안내_읽어주세요.txt</code>로 넣어 둔다</li>
 <li><strong>애매하면 표시</strong> — "확실하지 않은 건 임의로 처리하지 말고 '확인필요'로 분리해줘"</li>
 </ol>
-<div class="callout callout--tip"><div class="callout-label">📝 예시 — 과제문 공식</div><p><em>"[폴더 안 자료]를 보고 [결과물 형태]를 만들어줘. 분류·처리 기준은 [규칙]. 확실하지 않으면 [애매할 때 대응]으로 표시해줘. 이 폴더 안에서만 작업해."</em></p><p style="color:var(--ink-soft)">지금 입력하지 않아도 돼요. 아래 실습 C에서 직접 해봅니다.</p></div>
+<div class="callout callout--tip"><div class="callout-label">📝 예시 — 과제문 공식</div><p><em>"[폴더 안 자료]를 보고 [결과물 형태]를 만들어줘. 분류·처리 기준은 [규칙]. 확실하지 않으면 [애매할 때 대응]으로 표시해줘. 이 폴더 안에서만 작업해."</em></p><p style="color:var(--ink-soft)">지금 입력하지 않아도 돼요. 바로 아래 실습 C에서 직접 써 봅니다.</p></div>
 <h3 class="sub-head">맡기기 전 폴더 5분 정리</h3>
 <div class="table-scroll"><table><thead><tr><th><strong>정리 항목</strong></th><th><strong>안 하면</strong></th></tr></thead><tbody>
 <tr><td><strong>관련 없는 파일 빼기</strong></td><td>옛 프로젝트 내용이 결과에 섞임</td></tr>
@@ -633,37 +633,84 @@
 <tr><td><strong>규칙은 안내 파일로</strong></td><td>매번 긴 과제문을 다시 씀</td></tr>
 <tr><td><strong>결과물 놓을 빈 폴더 만들기</strong> (예: <code>결과/</code>)</td><td>어느 게 원본인지 헷갈림</td></tr>
 </tbody></table></div>
-<div class="callout callout--warning"><div class="callout-label">⚠️ 안전 수칙 — 파일을 직접 다루니 더 엄격하게</div><ol style="margin-bottom:0;"><li><strong>복사본 폴더</strong>에서 연습 — 실제로 파일을 만들고 옮깁니다.</li><li><strong>"이 폴더 안에서만 작업해"</strong>를 습관처럼.</li><li><strong>결과물 이름을 정해 주기</strong> — 안 정하면 기존 파일과 이름이 겹칠 수 있습니다.</li><li><strong>결과 검수</strong> — 특히 숫자는 원본 대조.</li></ol></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 안전 수칙 — 파일을 직접 다루니 더 엄격하게</div><ol style="margin-bottom:0;"><li><strong>복사본 폴더</strong>에서 연습 — 실제로 파일을 만들고 옮깁니다.</li><li><strong>"이 폴더 안에서만 작업해"</strong> — 연결한 폴더가 <strong>여러 개</strong>일 때, 또는 <strong>원본을 바꾸는</strong> 작업일 때 범위를 못 박아 둡니다.</li><li><strong>결과물 이름을 정해 주기</strong> — 안 정하면 기존 파일과 이름이 겹칠 수 있습니다.</li><li><strong>결과 검수</strong> — 특히 숫자는 원본 대조.</li></ol></div>
 </section>
 
 <section class="lesson-section practice-block">
 <div class="practice-card">
-  <div class="practice-title">🛠 실습 C — [경비 정산 · 영수증 분류·집계 단계 → Cowork] 영수증 뭉치 → 경비 보고서</div>
-  <p>순서는 <b>① 과제문 초안 직접 써보기</b> → <b>② 계획 먼저 받기</b> → <b>③ 진행시키고 질문에 답하기</b>.<br><b>새 대화</b>에서 시작해 실습 D까지 <b>한 대화</b>에서 이어갑니다.</p>
+  <div class="practice-title">🛠 실습 C — 영수증 뭉치 → 경비 보고서</div>
+  <div class="callout callout--scenario"><div class="callout-label">🧭 상황</div><p>성수 팝업스토어 행사가 끝났습니다. 영수증 17장을 정리해 <strong>경비 보고서</strong>를 만들어 팀장님께 정산을 올려야 합니다. 회사 정산 규정은 폴더 안 <code>안내_읽어주세요.txt</code>에 있습니다.</p></div>
+  <p>순서는 <b>① 폴더 준비</b> → <b>② 과제문 초안 직접 써보기</b> → <b>③ 과제문 넣고 계획 받기</b>.<br><b>새 대화</b>에서 시작해 실습 D까지 <b>한 대화</b>에서 이어갑니다.</p>
   <div class="practice-prep">
     <div class="prep-label">📎 준비물</div>
     <ul>
-      <li><b>팝업스토어 영수증 뭉치</b>(<code>popup_receipts.zip</code>) <span class="meta">· zip · 19개 파일 (영수증 + 정산 규정 + 이미정산 메모)</span></li>
+      <li><b>팝업스토어 영수증 뭉치</b>(<code>popup_receipts.zip</code>) <span class="meta">· zip · 19개 파일 (영수증 17 + 정산 규정 + 이미정산 메모)</span></li>
     </ul>
   </div>
+  <p class="practice-step">① 폴더 준비</p>
   <p>zip을 새 폴더(예: <code>경비정리연습</code>)에 풀고, 새 대화에서 그 폴더를 연결합니다.</p>
-  <p class="practice-step">① 과제문 초안 직접 써보기 (3분)</p>
-  <p>바로 시키기 전에 공식의 빈칸을 메모장에 채워 보세요.</p>
-  <div class="prompt">[폴더 안 자료] = 팝업스토어 영수증들 + 안내_읽어주세요.txt의 정산 규정
-[결과물 형태] = ?
-[규칙] = ?
-[애매할 때 대응] = ?</div>
-  <p class="practice-step">② 계획 먼저 받기</p>
+  <p class="practice-step">② 과제문 초안 직접 써보기 (3분)</p>
+  <p>Claude에게 시키기 전에, 내가 맡긴다면 뭐라고 할지 먼저 써 봅니다.</p>
+  <ol class="steps">
+  <li>탐색기에서 <code>안내_읽어주세요.txt</code>와 <code>이미정산_메모.txt</code>를 열어 <strong>1분만 훑어봅니다.</strong> (영수증은 안 열어도 됩니다)</li>
+  <li><strong>새 메모장</strong>(시작 → 메모장)을 열고 아래 세 줄의 답을 씁니다.</li>
+  </ol>
+  <div class="prompt">받고 싶은 결과물 = 팀장님께 정산을 올리려면 어떤 파일이 필요한가?
+규칙 = 무엇을 기준으로 나누고, 무엇은 빼야 하나?
+애매할 때 = 규정에 안 맞거나 금액이 안 읽히는 영수증은 어떻게 하나?</div>
+  <div class="callout callout--warning"><p><span class="co-icon">⚠️</span> 쓴 메모는 <strong>경비정리연습 폴더에 저장하지 마세요.</strong> 연결한 폴더에 넣으면 Claude가 영수증 자료로 읽어 버릴 수 있습니다. 저장하지 않거나 바탕화면에 둡니다.</p></div>
+  <details class="toggle"><summary>예시 답 보기 — 다 쓴 뒤에 열어 보세요</summary><div class="toggle-body">
+  <div class="table-scroll"><table><thead><tr><th><strong>질문</strong></th><th><strong>이 정도면 충분</strong></th></tr></thead><tbody>
+  <tr><td>받고 싶은 결과물</td><td>계정별로 정리한 <strong>경비 표</strong>, <strong>확인이 필요한 영수증 목록</strong>, 계정별 <strong>합계</strong></td></tr>
+  <tr><td>규칙</td><td>안내 파일의 정산 규정대로 계정(행사비품·접대비·식비·교통비)을 나눈다. <strong>이미 정산된 건 뺀다.</strong> 같은 영수증이 두 번 있으면 한 번만 넣는다.</td></tr>
+  <tr><td>애매할 때</td><td>마음대로 넣지 말고 <strong>'확인필요'로 따로 모아</strong> 이유를 적는다.</td></tr>
+  </tbody></table></div>
+  <p>이 세 줄에 <strong>파일 이름</strong>(<code>경비정리.csv</code>, <code>확인필요.txt</code>)과 <strong>"계획 먼저 보여줘"</strong>를 붙이면 아래 ③의 과제문이 됩니다. 처음부터 그렇게 길게 쓸 필요는 없어요.</p>
+  </div></details>
+  <p class="practice-step">③ 과제문 넣고 계획 받기</p>
+  <p>내 초안 대신 아래 과제문을 입력합니다. 3요소가 다 들어 있고, 끝에 <strong>계획을 먼저 보여 달라는 문장</strong>을 붙였습니다.</p>
   <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이 폴더의 영수증들을 정리해서 경비 보고서를 만들어줘. <code>안내_읽어주세요.txt</code>의 정산 규정을 따라. 결과물: ① 날짜·항목·금액·계정(행사비품/접대비/식비/교통비)별로 정리한 <code>경비정리.csv</code> ② 규정상 애매하거나 확인이 필요한 항목을 사유와 함께 모은 <code>확인필요.txt</code> ③ 계정별 합계 요약. 중복 영수증은 하나만 반영하고 어떤 걸 중복 처리했는지 알려줘. 이미 정산된 건 확인필요가 아니라 아예 제외해. 확실하지 않은 건 임의로 판단하지 말고 확인필요로 분리해줘. 이 폴더 안에서만 작업해. 시작 전에 계획을 먼저 보여주고 내 확인을 받아."</em></p></div>
+  <div class="callout callout--tip"><p><span class="co-icon">💡</span> 내가 쓴 초안과 이 과제문을 비교해 보세요. 빠뜨린 게 있었나요? 특히 <strong>"이미 정산된 건 아예 제외"</strong>와 <strong>"확인필요로 분리"</strong>를 구분했는지가 결과를 가릅니다. 이 비교가 "과제 정의가 90%"를 체감하는 가장 빠른 방법입니다.</p></div>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 계획을 보여주고 멈췄나?</div><p>Claude가 "이렇게 하겠습니다" 하고 <strong>내 확인을 기다리면</strong> 정상입니다. 아직 <strong>진행시키지 말고</strong> 그대로 두세요. 이 계획을 어떻게 읽는지 바로 아래에서 보고 이어갑니다.</p></div>
+</div>
+</section>
+
+<section class="lesson-section">
+<h3 class="sub-head first">일하는 흐름 — 계획 → 실행 → 보고</h3>
+<div class="table-scroll"><table><thead><tr><th><strong>단계</strong></th><th><strong>Claude가 하는 일</strong></th><th><strong>이때 내가 할 일</strong></th></tr></thead><tbody>
+<tr><td><strong>① 계획</strong></td><td>폴더를 훑고 "이렇게 하겠습니다"를 밝힘</td><td><strong>가장 중요한 개입 지점</strong> — 계획이 틀렸으면 여기서 멈춘다</td></tr>
+<tr><td><strong>② 실행</strong></td><td>파일을 읽고 분류·계산·작성. 애매하면 질문</td><td>질문이 오면 답한다</td></tr>
+<tr><td><strong>③ 보고</strong></td><td>만든 파일 목록과 처리 내용을 설명</td><td><strong>결과 검수</strong> (4절)</td></tr>
+</tbody></table></div>
+<p>실습 C 과제문 끝의 <em>"시작 전에 계획을 먼저 보여주고 내 확인을 받아"</em>가 ① 계획에서 Claude를 멈춰 세우는 문장입니다. 지금 화면에 떠 있는 계획에서 볼 것은 셋입니다.</p>
+<ol class="steps">
+<li><strong>읽겠다는 파일 목록이 내 예상과 맞나</strong> — 빠진 파일이 있으면 못 찾은 것</li>
+<li><strong>규칙 확인 단계가 있나</strong> — "정산 규정을 먼저 확인" 같은 단계가 보이나</li>
+<li><strong>만들겠다는 결과물이 요청과 같나</strong> — 이름·개수·형식</li>
+</ol>
+<div class="callout callout--tip"><p><span class="co-icon">💡</span> 초보와 능숙한 사용자를 가르는 건 <strong>계획 단계에서 멈출 줄 아는가</strong>입니다. 어긋난 계획을 그냥 진행시키면 10분 뒤 잘못된 파일 뭉치를 받고 처음부터 다시 해야 합니다.</p></div>
+</section>
+
+<section class="lesson-section practice-block">
+<div class="practice-card">
+  <div class="practice-title">🛠 실습 C 이어서 — ④ 계획 확인 → ⑤ 진행하고 질문에 답하기</div>
+  <p>순서는 <b>④ 계획 확인</b> → <b>⑤ 진행하고 질문에 답하기</b>.<br>실습 C와 <b>같은 대화</b>에서 이어갑니다.</p>
+  <div class="practice-prep">
+    <div class="prep-label">📎 준비물</div>
+    <ul>
+      <li><b>실습 C ③의 계획</b> <span class="meta">· 같은 대화에 있음</span></li>
+    </ul>
+  </div>
+  <p class="practice-step">④ 계획 확인</p>
+  <p>화면의 계획을 위의 세 가지(파일 목록 · 규칙 확인 단계 · 결과물)로 읽습니다.</p>
   <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 계획에 '규정 확인'이 있나?</div><p>계획에 <code>안내_읽어주세요.txt</code>를 먼저 읽는 단계, 그리고 <code>이미정산_메모.txt</code>를 확인하는 단계가 있으면 진행시키세요. 없으면 진행하지 말고 과제문을 고쳐 다시 시킵니다.</p></div>
-  <p class="practice-step">③ 진행시키고 질문에 답하기</p>
+  <p class="practice-step">⑤ 진행하고 질문에 답하기</p>
   <p>계획이 맞으면 <em>"좋아, 진행해"</em>라고 답합니다. 도중에 Claude가 물어보면 <strong>'이번 건'이 아니라 '규칙'으로</strong> 답하세요.</p>
   <div class="table-scroll"><table><thead><tr><th><strong>질문</strong></th><th><strong>❌ 나쁜 답</strong></th><th><strong>✅ 좋은 답</strong></th></tr></thead><tbody>
   <tr><td>"이 항목은 어느 계정으로 할까요?"</td><td>"알아서 해줘"</td><td>"방문 고객용 다과는 다 접대비."</td></tr>
   <tr><td>"금액이 안 읽히는 영수증이 있습니다"</td><td>"대충 넣어줘"</td><td>"추정하지 말고 확인필요로 빼줘."</td></tr>
   </tbody></table></div>
 </div>
-<div class="callout callout--tip"><p><span class="co-icon">💡</span> 내가 쓴 초안과 위 과제문을 비교해 보세요. 빠뜨린 게 있었나요? 특히 <strong>"이미 정산된 건 아예 제외"</strong>와 <strong>"확인필요로 분리"</strong>를 구분했는지가 결과를 가릅니다. 이 비교가 "과제 정의가 90%"를 체감하는 가장 빠른 방법입니다.</p></div>
 </section>
 
 <section class="lesson-section"><div class="section-head"><span class="section-mark">4</span><h2>결과 검수 — 맡긴 만큼 확인해야 한다</h2></div>
@@ -685,7 +732,7 @@
 
 <section class="lesson-section practice-block">
 <div class="practice-card">
-  <div class="practice-title">🛠 실습 D — [경비 정산 · 검수 단계 → 사람 + Cowork] 경비 보고서 검수하고 이어서 부탁하기</div>
+  <div class="practice-title">🛠 실습 D — 경비 보고서 검수하고 이어서 부탁하기</div>
   <p>순서는 <b>① 3층위로 직접 검수</b> → <b>② 검수표 시키기</b> → <b>③ 후속 과제 얹기</b>.<br>실습 C와 <b>같은 대화</b>에서 이어갑니다.</p>
   <div class="practice-prep">
     <div class="prep-label">📎 준비물</div>
@@ -695,7 +742,8 @@
   </div>
   <p class="practice-step">① 3층위로 직접 검수</p>
   <p>탐색기에서 결과 파일을 직접 열어 봅니다.</p>
-  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 정답과 비교</div><ul class="checklist"><li><strong>형식</strong>: 파일 3개가 요청한 이름으로 생겼나?</li><li><strong>누락</strong>: <code>확인필요.txt</code>에 회식비·개인차량 주유·개인계정 쿠팡 주문·스태프 감사 선물·금액이 흐린 영수증, <strong>5개</strong>가 들어 있나?</li><li><strong>제외</strong>: <code>0615_택시영수증.txt</code>(15,800원)가 확인필요가 아니라 <strong>아예 빠졌나?</strong></li><li><strong>숫자</strong>: 중복(GS25 생수)이 한 번만 들어갔나? 식비 1인 15,000원 한도 처리가 맞나?</li></ul></div>
+  <p style="color:var(--ink-soft);font-size:.9rem;"><code>.csv</code> = 칸을 쉼표로 구분한 표 파일. 엑셀로 열면 표로 보입니다. 날짜가 <code>######</code>로 보이면 열 경계선을 더블클릭하세요.</p>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 정답과 비교</div><ul class="checklist"><li><strong>형식</strong>: 파일 3개가 요청한 이름으로 생겼나?</li><li><strong>누락</strong>: <code>확인필요.txt</code>에 회식비·개인차량 주유·개인계정 쿠팡 주문·스태프 감사 선물·금액이 흐린 영수증, 이 <strong>5개가 빠짐없이</strong> 들어 있나? (실습 C ⑤에서 질문에 어떻게 답했느냐에 따라 더 있을 수 있습니다 — 늘어난 항목은 사유가 내 답과 맞으면 괜찮습니다)</li><li><strong>맞물림</strong>: 확인필요로 뺀 항목이 <code>경비정리.csv</code> 합계에서도 빠졌나?</li><li><strong>제외</strong>: <code>0615_택시영수증.txt</code>(15,800원)가 확인필요가 아니라 <strong>아예 빠졌나?</strong></li><li><strong>숫자</strong>: 중복(GS25 생수)이 한 번만 들어갔나? 식비 1인 15,000원 한도 처리가 맞나?</li></ul></div>
   <p class="practice-step">② 검수표 시키기</p>
   <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"방금 작업의 처리 내역표를 <code>처리내역.csv</code>로 만들어줘. 열: 원본 파일명 | 처리 결과 | 판단 근거. 제외한 건 제외 사유도."</em></p></div>
   <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 판단 근거가 빈 행이 있나?</div><p>표만 보고 ①의 검수를 다시 해 보세요. 얼마나 빨라졌나요? 판단 근거가 비었거나 애매한 행이 있다면, 거기가 과제문이 부실했던 지점입니다.</p></div>
@@ -724,12 +772,12 @@
 
 <section class="lesson-section practice-block">
 <div class="practice-card">
-  <div class="practice-title">🛠 실습 E — [회의자료 관리 · 파일명 정리 단계 → Cowork] 엉망인 회의자료 파일명 정리</div>
+  <div class="practice-title">🛠 실습 E — 엉망인 회의자료 파일명 정리</div>
   <p>순서는 <b>① 백업 만들고 연결</b> → <b>② 안전장치 넣어 맡기기</b> → <b>③ 결과 검수</b>.<br><b>새 대화</b>에서 시작합니다.</p>
   <div class="practice-prep">
     <div class="prep-label">📎 준비물</div>
     <ul>
-      <li><b>회의자료 폴더</b>(<code>messy_meeting_files.zip</code>) <span class="meta">· zip · 15개 파일 (날짜 형식 제각각, 날짜 없는 파일 3개, 중복 1쌍)</span></li>
+      <li><b>회의자료 폴더</b>(<code>messy_meeting_files.zip</code>) <span class="meta">· zip · 15개 파일 (날짜 형식 제각각, 이름·내용 모두 날짜 없는 파일 3개, 중복 1쌍)</span></li>
     </ul>
   </div>
   <p class="practice-step">① 백업 만들고 연결</p>
@@ -764,11 +812,15 @@
 <tr><td><strong>폴더 추가 메뉴가 없음</strong></td><td>웹 브라우저에서 하고 있음</td><td><strong>데스크톱 앱</strong>으로 옮겨서 진행</td></tr>
 <tr><td><strong>"폴더에 접근할 수 없다"고 함</strong></td><td>데스크톱 앱이 꺼졌거나 연결이 끊김</td><td>앱을 다시 열고 폴더를 다시 연결</td></tr>
 <tr><td><strong>파일을 안 만들고 대화로만 답함</strong></td><td>질문형으로 물어봄</td><td>"○○.csv로 저장해줘"처럼 <strong>결과 파일 이름</strong>을 말하기</td></tr>
+<tr><td><strong>대화로 정하려는데 파일부터 만들어 버림</strong></td><td>결과물처럼 말함</td><td>"아직 파일로 만들지 마"를 붙이기 (실습 B ③처럼)</td></tr>
 <tr><td><strong>결과가 기대와 많이 다름</strong></td><td>결과물·규칙이 불분명</td><td>맡기기 3요소로 다시 작성</td></tr>
 <tr><td><strong>애매한 항목을 임의로 처리함</strong></td><td>"확인필요로 표시해"가 없음</td><td>그 문구를 과제문에 필수로</td></tr>
 <tr><td><strong>옛날 버전 자료를 씀</strong></td><td>폴더에 신구 버전이 섞임</td><td>폴더 5분 정리 + "최신만 쓰고 출처 남겨줘"</td></tr>
 <tr><td><strong>기존 파일을 덮어씀</strong></td><td>결과물 이름을 안 정해 줌</td><td>결과 파일명 명시 + 복사본 폴더</td></tr>
 <tr><td><strong>계속 되물으며 멈춤</strong></td><td>규칙이 너무 많거나 기준이 모호</td><td>규칙을 3~4개로 줄이거나 예시 하나 들기</td></tr>
+<tr><td><strong>"Folder access request" 창이 뜸</strong></td><td>정상 — 폴더 접근 허락 확인</td><td>경로가 맞는지 보고 <strong>Allow</strong> (실습 B ①)</td></tr>
+<tr><td><strong>md 파일이 <code>#</code>·<code>|</code> 기호로 보임</strong></td><td>PC·메모장 버전에 따라 표시가 다름</td><td>정상 — 내용은 같음. Claude 앱의 파일 카드로 열면 표로 보임</td></tr>
+<tr><td><strong>csv 날짜가 <code>######</code>로 보임</strong></td><td>엑셀 열 너비가 좁음</td><td>열 경계선 더블클릭</td></tr>
 </tbody></table></div>
 </section>
 
@@ -777,6 +829,7 @@
 <p><strong>Q. 맡겨 놓고 다른 일 해도 되나요?</strong><br>A. 계획만 확인하고 나면 됩니다. 다만 <strong>질문이 오면 답해야</strong> 진행되니 가끔 확인하세요. 그리고 폴더 작업 중에는 데스크톱 앱을 끄지 마세요.</p>
 <p><strong>Q. 회사 자료를 맡겨도 되나요?</strong><br>A. <strong>회사 정책이 먼저</strong>입니다. 사내 규정을 확인하고, 필요하면 IT·보안팀에 문의하세요. 실제 업무에 쓸 때는 <strong>민감 자료가 없는 작업용 폴더만</strong> 연결하는 게 좋습니다. 작업에 쓰이는 파일은 사본이 클라우드로 전달된다는 점도 기억하세요.</p>
 <p><strong>Q. 파일이 수백 개면요?</strong><br>A. 시간이 더 걸립니다. 처음엔 오늘처럼 10~20개로 감을 잡고, 너무 크면 하위 폴더 단위로 나눠 맡기세요.</p>
+<p><strong>Q. 다른 사람에게 받은 자료라 뭐가 들었는지 모르겠어요.</strong><br>A. 바로 정리시키지 말고 먼저 <em>"이 폴더에 뭐가 들어 있는지 알려줘. 아직 정리하거나 파일을 만들지는 마"</em>라고 하세요. 목록을 보고 빠진 게 없을 때 맡깁니다. (실습 B ②)</p>
 <p><strong>Q. Claude Code도 폴더를 다룬다던데, 뭐가 달라요?</strong><br>A. 앱에 맡기면 <strong>결과물</strong>이 남고, Claude Code는 그 일을 하는 <strong>프로그램(도구)</strong>까지 남깁니다. 다음 차시에서 자세히 비교합니다.</p>
 </section>
 
@@ -785,20 +838,23 @@
 <li>실습 A 프롬프트의 첫 두 줄에 <strong>내 업무 이름과 설명</strong>을 넣어 다시 돌려 보고, <strong>Cowork</strong>로 나온 단계 하나를 고릅니다. 마땅한 업무가 없으면 내 컴퓨터에서 <strong>"정리해야 하는데 미루고 있는 폴더"</strong> 하나를 떠올립니다. (영수증? 시안? 회의 자료? 다운로드 폴더?)</li>
 <li>그게 <strong>분류형·조립형·정리형</strong> 중 무엇인지 판별합니다.</li>
 <li>마스터 프롬프트로 <strong>과제문 한 문단</strong>을 씁니다. 결과물 이름까지 정하는 게 핵심입니다.</li>
-<li><strong>폴더 5분 정리</strong>를 하고, <strong>복사본</strong>을 연결해 맡겨 봅니다.</li>
+<li><strong>폴더 5분 정리</strong>를 하고, <strong>복사본</strong>을 연결합니다. 받은 자료라면 <strong>뭐가 들었는지</strong>부터 묻고 맡깁니다.</li>
 </ol>
 <div class="callout callout--tip"><p><span class="co-icon">💡</span> 마음에 드는 과제문은 <strong>메모장에 저장</strong>해 두세요. 같은 일이 또 오면 그대로 다시 쓰면 됩니다. 규칙 부분은 아예 폴더의 <code>안내_읽어주세요.txt</code>로 넣어 두면 과제문이 한두 줄로 줄어듭니다.</p></div>
 </section>
 
 <section class="lesson-section"><div class="section-head"><span class="section-mark">+</span><h2>오늘 자가진단</h2></div>
 <div class="quiz-item"><p class="q">1. 도구 삼총사 판별 세 질문은?</p><details><summary>정답 보기</summary><div class="ans"><p>판단·대화가 핵심 → <strong>Claude 앱</strong> / 파일 뭉치를 통째로 맡김 → <strong>Cowork</strong> / 매주 같은 계산·변환 → <strong>Claude Code</strong>. (1절)</p></div></details></div>
-<div class="quiz-item"><p class="q">2. 매주 반복되는 '메모 취합'과 '실적 집계'. 둘 다 반복인데 도구가 다른 이유는?</p><details><summary>정답 보기</summary><div class="ans"><p>반복되는 게 다르기 때문. 문서·파일 정리 → <strong>Cowork</strong>, 정확한 숫자 계산 → <strong>Claude Code</strong>. (1절)</p></div></details></div>
+<div class="quiz-item"><p class="q">2. 매주 반복되는 '메모 정리'와 '실적 계산'. 둘 다 반복인데 도구가 다른 이유는?</p><details><summary>정답 보기</summary><div class="ans"><p>반복되는 게 다르기 때문. 문서·파일 정리 → <strong>Cowork</strong>, 정확한 숫자 계산 → <strong>Claude Code</strong>. (1절)</p></div></details></div>
 <div class="quiz-item"><p class="q">3. 앱에서 Cowork 메뉴가 안 보인다. 왜일까?</p><details><summary>정답 보기</summary><div class="ans"><p>2026년 9월부터 채팅과 Cowork가 <strong>같은 대화창으로 합쳐지는 중</strong>이라 따로 고르는 메뉴가 없다. 대화창에 폴더를 연결하고 결과물을 말하면 그게 Cowork. (1절)</p></div></details></div>
 <div class="quiz-item"><p class="q">4. 폴더를 맡겨 놓고 데스크톱 앱을 껐다. 어떻게 될까?</p><details><summary>정답 보기</summary><div class="ans"><p>작업은 클라우드에서 계속 돌 수 있지만 <strong>내 컴퓨터 폴더에는 닿지 못한다.</strong> 폴더 작업 중엔 앱을 켜 둔다. (2절)</p></div></details></div>
 <div class="quiz-item"><p class="q">5. 맡기기 3요소는?</p><details><summary>정답 보기</summary><div class="ans"><p><strong>결과물 명시 · 규칙 명시 · 애매하면 표시.</strong> (3절)</p></div></details></div>
 <div class="quiz-item"><p class="q">6. 맡기는 일에서 가장 중요한 개입 지점은 언제?</p><details><summary>정답 보기</summary><div class="ans"><p><strong>계획 단계.</strong> 실행이 끝난 뒤가 아니다. 어긋났으면 진행시키지 말고 과제문을 고친다. (3절)</p></div></details></div>
 <div class="quiz-item"><p class="q">7. 검수 3층위와, 가장 자주 생략되는 층은?</p><details><summary>정답 보기</summary><div class="ans"><p><strong>형식 → 누락 → 숫자·사실.</strong> 가장 자주 생략되고 사고가 나는 건 <strong>숫자·사실</strong>. (4절)</p></div></details></div>
 <div class="quiz-item"><p class="q">8. 파일명 정리 같은 작업에서 특히 지켜야 할 것은?</p><details><summary>정답 보기</summary><div class="ans"><p>원본이 바뀌므로 <strong>백업 복사본</strong>, <strong>바꿀 목록 먼저 확인</strong>, <strong>모르면 건드리지 않기</strong>, <strong>지우기 금지</strong>. (5절)</p></div></details></div>
+<div class="quiz-item"><p class="q">9. 실습 B에서 '강조점 정하기'만 파일 없이 대화로 한 이유는?</p><details><summary>정답 보기</summary><div class="ans"><p>무엇을 강조할지는 <strong>판단</strong>이라 주고받으며 정하는 게 맞기 때문. 같은 대화창이라도 <strong>결과물을 말하면 맡기기, 질문하면 대화</strong>가 된다. (실습 B)</p></div></details></div>
+<div class="quiz-item"><p class="q">10. 실습 B ⑤에서 초안을 원본이 아니라 메모정리와 비교한 이유는?</p><details><summary>정답 보기</summary><div class="ans"><p>원본은 ② 정리 직후에 이미 확인했기 때문. 초안 단계에선 <strong>합치고 다듬다가 생긴 실수</strong>(미정이 결정처럼 쓰임, 항목 누락)를 찾는다. (실습 B)</p></div></details></div>
+<div class="quiz-item"><p class="q">11. 이미 정산된 영수증을 확인필요가 아니라 아예 제외해야 하는 이유는?</p><details><summary>정답 보기</summary><div class="ans"><p>확인필요에 있으면 팀장님이 반영하자고 해서 <strong>이미 받은 돈을 또 결재</strong>할 수 있다. 애매한 건 확인필요, 끝난 건 제외. (실습 C·D)</p></div></details></div>
 </section>
 
 <section class="lesson-section"><div class="section-head"><span class="section-mark">+</span><h2>오늘 정리</h2></div>
@@ -806,9 +862,11 @@
 <h3 class="sub-head">전체 정리</h3>
 <ul>
 <li>프로그램은 <strong>Claude 데스크톱 앱 하나</strong>. 대화창(대화 · 폴더 연결하면 Cowork)과 <code>Code</code> 탭(Claude Code), <strong>들어가는 곳은 두 군데, 일하는 방식은 셋.</strong></li>
+<li>한 업무도 <strong>단계마다 담당을 나눈다</strong> — 같은 대화창에서 결과물을 말하면 맡기기, 질문하면 대화. 처음과 끝은 사람.</li>
 <li>데스크톱 앱에 폴더를 연결하면 <strong>결과물이 내 폴더에 바로</strong> 생긴다. 작업은 클라우드에서 돌아도 <strong>폴더는 앱이 켜져 있어야</strong> 읽힌다.</li>
 <li>흐름은 <strong>계획 → 실행 → 보고.</strong> 과제문 끝에 "계획 먼저 보여줘"를 붙인다.</li>
 <li>Claude가 되물으면 <strong>'이번 건'이 아니라 '규칙'으로</strong> 답한다.</li>
+<li>받은 자료는 <strong>뭐가 들었는지부터</strong>, 중간 결과물(재료)은 <strong>다음 단계 전에</strong> 확인한다 — 틀린 재료로 만든 결과는 전부 다시 해야 한다.</li>
 <li>맡기기 전 <strong>폴더 5분 정리</strong> — 관련 없는 파일 빼기, 구버전 정리, 규칙은 안내 파일로.</li>
 <li>조립형엔 <strong>출처 남기기</strong>, 검수엔 <strong>검수표</strong>, 정리형엔 <strong>백업과 바꿀 목록 확인</strong>.</li>
 </ul>
@@ -816,12 +874,15 @@
 <div class="table-scroll"><table><thead><tr><th><strong>용어</strong></th><th><strong>쉬운 뜻</strong></th></tr></thead><tbody>
 <tr><td><strong>Cowork</strong></td><td>폴더·파일을 맡기고 결과를 받는 작업 방식. 지금은 채팅과 합쳐져 대화창에서 바로 씀</td></tr>
 <tr><td><strong>데스크톱 앱</strong></td><td>컴퓨터에 설치하는 Claude 프로그램. 내 폴더를 연결하려면 필요</td></tr>
-<tr><td><strong>신뢰한 폴더</strong></td><td>Claude가 읽고 쓰도록 내가 허락한 폴더 목록</td></tr>
+<tr><td><strong>폴더 접근 허락</strong></td><td>폴더를 연결할 때 뜨는 허락 창(Folder access request). 체크하면 이 컴퓨터에서 다음부터 묻지 않음</td></tr>
 <tr><td><strong>클라우드에서 실행</strong></td><td>작업이 내 컴퓨터가 아니라 Anthropic 서버에서 돈다는 뜻. 노트북을 닫아도 이어짐 (Pro·Max는 2026년 10월 6일부터 항상 클라우드)</td></tr>
 <tr><td><strong>과제문</strong></td><td>맡길 일을 한 문단으로 정리한 지시. 결과물 · 규칙 · 애매할 때 대응이 들어감</td></tr>
 <tr><td><strong>안내 파일</strong></td><td>규칙을 적어 폴더 안에 넣어 둔 텍스트 파일 (예: <code>안내_읽어주세요.txt</code>)</td></tr>
-<tr><td><strong>검수표</strong></td><td>원본 파일명 | 처리 결과 | 판단 근거를 정리한 표. 검수를 빠르게 해 줌</td></tr>
+<tr><td><strong>검수표 (처리 내역표)</strong></td><td>원본 파일마다 처리 결과와 판단 근거를 적은 표. 몇 줄만 실제 파일과 맞춰 보면 검수가 빨라짐</td></tr>
+<tr><td><strong>확인필요 / 제외</strong></td><td>확인필요 = 애매해서 사람이 정할 것. 제외 = 이미 끝난 것이라 결과에서 아예 뺄 것</td></tr>
 <tr><td><strong>사람 확인 지점</strong></td><td>AI 결과를 사람이 확인하고 넘어가는 단계. 틀리면 피해가 큰 곳에 둔다</td></tr>
+<tr><td><strong>.md (마크다운)</strong></td><td>메모장으로 열리는 텍스트 파일. <code>#</code>은 제목, <code>**</code>는 굵게</td></tr>
+<tr><td><strong>.csv</strong></td><td>칸을 쉼표로 구분한 표 파일. 엑셀로 열면 표로 보임</td></tr>
 </tbody></table></div>
 </section>
 
