@@ -475,11 +475,11 @@
 <div class="term-note"><p><strong>📌 프로그램은 하나, 들어가는 곳은 두 군데</strong> — 위 세 가지 모두 <strong>Claude 데스크톱 앱 하나</strong>에서 합니다. 1·2줄은 <strong>같은 대화창</strong>이고, 차이는 <strong>폴더를 연결했느냐</strong>뿐입니다. 3줄 Claude Code만 사이드바의 <code>Code</code> 탭으로 따로 들어갑니다.</p>
 <p style="margin-bottom:0;"><strong>왜 Cowork 메뉴가 따로 없나요?</strong> 2026년 9월 16일부터 채팅과 Cowork를 <strong>하나의 대화창으로 합치는 중</strong>입니다. 새 화면이 적용된 계정은 채팅·Cowork를 고르는 메뉴 없이, 대화창에 <em>"이 폴더 정리해서 표로 만들어줘"</em>처럼 <strong>결과물을 말하면</strong> Claude가 짧게 답할지 길게 맡아 처리할지 스스로 정합니다. 적용 범위는 요금제마다 다릅니다 — <strong>Pro·Max·Ultra는 순서대로 적용 중</strong>, <strong>Team(베타)·Enterprise는 관리자가 켜야</strong> 적용되고, <strong>무료 요금제는 Cowork를 쓸 수 없습니다.</strong> 아직 바뀌지 않은 계정은 앱에 Cowork가 따로 보일 수 있는데, 하는 일은 같습니다.</p></div>
 <h3 class="sub-head">판별 세 질문</h3>
-<ol class="steps">
+<ul>
 <li><strong>판단·대화가 핵심인가?</strong> → <strong>Claude 앱</strong>에서 주고받으며 (사람이 중간중간 개입)</li>
 <li><strong>파일 뭉치를 통째로 맡기고 결과만 받고 싶나?</strong> → <strong>Cowork</strong> (한 번 시키고 기다림)</li>
 <li><strong>매주 똑같은 계산·변환을 정확히 돌려야 하나?</strong> → <strong>Claude Code</strong> (한 번 만들어 계속 실행)</li>
-</ol>
+</ul>
 <div class="callout callout--tip"><div class="callout-label">💡 매주 하는 일이라도 둘로 갈립니다</div><p>"매주 한다"는 것만으로는 Cowork와 Code가 갈리지 않습니다. 갈림길은 <strong>매주 반복되는 게 무엇이냐</strong>입니다.</p><div class="table-scroll"><table><thead><tr><th><strong>매주 반복되는 게…</strong></th><th><strong>도구</strong></th></tr></thead><tbody>
 <tr><td>문서 작성 · 파일 정리 · 자료 취합</td><td><strong>Cowork</strong> (안내 파일로 규칙을 굳혀 두고 맡김)</td></tr>
 <tr><td>숫자 집계 · 형식 변환 (정확성이 생명)</td><td><strong>Claude Code</strong> (계산 도구를 만들어 실행)</td></tr>
@@ -542,12 +542,13 @@
 <h3 class="sub-head">꼭 알아둘 것 — 일은 클라우드에서, 폴더는 앱을 통해서</h3>
 <p>2026년 10월 6일부터 Pro·Max 요금제에서 새로 맡긴 작업은 <strong>모두 Anthropic 서버(클라우드)에서</strong> 돕니다. 내 컴퓨터에서만 돌리게 바꾸는 설정은 없습니다. 그래서 노트북을 닫아도 작업 자체는 이어집니다. 하지만 <strong>내 컴퓨터의 폴더</strong>는 데스크톱 앱이 열려 있고 연결돼 있을 때만 읽을 수 있고, 작업에 필요한 파일이 있으면 <strong>그 파일의 사본만</strong> 클라우드로 가져가 씁니다.</p>
 <div class="callout callout--warning"><div class="callout-label">⚠️ 앱을 끄면 폴더를 못 읽습니다</div><p>데스크톱 앱이 꺼지면 클라우드 작업은 계속 돌아도 <strong>내 컴퓨터에는 닿지 못합니다.</strong> 폴더를 맡긴 동안에는 앱을 켜 두세요. 반대로, 폴더 접근을 바로 끊고 싶다면 <strong>앱을 닫는 것</strong>이 가장 빠른 방법입니다.</p></div>
-<h3 class="sub-head">시작하기 — 3단계</h3>
-<ol class="steps">
-<li><strong>데스크톱 앱 설치</strong> — <code>claude.ai/download</code>에서 내려받아 설치 → 1과정에서 쓰던 계정으로 로그인. (Windows·macOS 지원, Linux는 베타)</li>
-<li><strong>폴더 연결</strong> — 대화창 입력칸 옆 <strong><code>+</code> 메뉴 → 폴더 추가</strong>로 맡길 폴더를 고릅니다. <strong>Folder access request</strong>(폴더 접근 허락) 창이 뜨면 <strong>Allow</strong>를 누릅니다. 창 아래 <em>Don't ask again for this folder on this device</em>에 체크하면 다음부터 묻지 않습니다.</li>
-<li><strong>결과물을 말하며 맡기기</strong> — <em>"이 폴더를 보고 ○○ 파일을 만들어줘"</em>처럼 <strong>무엇을 만들지</strong>를 말합니다. 질문형("이거 어떻게 정리해?")으로 물으면 대화로 답만 하는 경우가 많습니다.</li>
-</ol>
+<h3 class="sub-head">폴더를 맡기려면 필요한 것 세 가지</h3>
+<div class="table-scroll"><table><thead><tr><th><strong>필요한 것</strong></th><th><strong>설명</strong></th></tr></thead><tbody>
+<tr><td><strong>데스크톱 앱</strong></td><td>폴더 연결은 <strong>데스크톱 앱에서만</strong> 됩니다. 웹(claude.ai)에서는 파일 첨부만 됩니다. (Windows·macOS 지원, Linux는 베타)</td></tr>
+<tr><td><strong>폴더 연결과 허락 창</strong></td><td>대화창 입력칸 옆 <code>+</code> 메뉴로 폴더를 추가하면 <strong>폴더 접근 허락 창</strong>(Folder access request)이 뜹니다. 허락한 폴더에서만 Claude가 움직입니다.</td></tr>
+<tr><td><strong>결과물을 말하기</strong></td><td><em>"○○ 파일을 만들어줘"</em>처럼 <strong>무엇을 만들지</strong> 말해야 맡기기가 됩니다. 질문형("이거 어떻게 정리해?")은 대화로 답만 하는 경우가 많습니다.</td></tr>
+</tbody></table></div>
+<p>직접 해 보는 건 <strong>실습 B ①</strong>에서 다 같이 합니다.</p>
 <div class="callout callout--tip"><p><span class="co-icon">💡</span> 화면 구성은 업데이트마다 계속 바뀝니다. 버튼을 못 찾겠으면 <strong>앱 안에서 Claude에게 직접</strong> <em>"내 컴퓨터 폴더를 연결해서 작업하려면 어디서 시작해?"</em>라고 물어보세요. 화면이 또 바뀌어도 이 방법은 계속 통합니다.</p></div>
 <div class="callout callout--tip"><p><span class="co-icon">🔐</span> <strong>폴더 권한은 내가 정합니다.</strong> Claude는 아무 폴더나 뒤지는 게 아니라 <strong>내가 연결한 폴더</strong>에서만 움직입니다. 그래서 "실습용 복사본 폴더만 연결"이 실제로 강력한 안전장치가 됩니다.</p></div>
 </section>
@@ -560,6 +561,7 @@
     <div class="prep-label">📎 준비물</div>
     <ul>
       <li><b>이번 주 메모 폴더</b>(<code>weekly_report_memos.zip</code>) <span class="meta">· zip · 회의메모·카톡 캡처·메일 등 4개</span></li>
+      <li><b>Claude 데스크톱 앱</b> <span class="meta">· 없으면 ①에서 설치</span></li>
     </ul>
   </div>
   <p style="margin-top:14px;">실습 A 표(✅ 확인할 것의 예시 기준)를 이 순서로 따라갑니다. 표는 이 페이지에 있으니 <strong>실습 A 대화를 가져올 필요는 없습니다.</strong></p>
@@ -574,6 +576,7 @@
 
   <p class="practice-step">① 자료 모으기 — 표의 1단계 · 사람</p>
   <ol class="steps">
+  <li>데스크톱 앱이 없으면 <code>claude.ai/download</code>에서 설치하고 <strong>1과정에서 쓰던 계정</strong>으로 로그인합니다.</li>
   <li>zip을 바탕화면에 새 폴더(예: <code>주간보고연습</code>)로 풉니다. <strong>자료를 한 폴더에 모으는 것</strong>까지가 사람 몫입니다.</li>
   <li>데스크톱 앱을 열고 새 대화 → 입력칸 옆 <code>+</code> → <strong>폴더 추가</strong>로 <code>주간보고연습</code>을 연결합니다.</li>
   <li><strong>폴더 접근 허락 창</strong>이 뜨면 경로 끝이 <code>Desktop\주간보고연습</code>인지 확인하고 <strong>Allow</strong>. 아래 체크박스는 <strong>체크하지 않습니다</strong> — 어떤 폴더를 여는지 매번 확인하는 습관을 들입니다.</li>
@@ -586,7 +589,7 @@
   <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 4개가 다 나왔나?</div><p>준비물에 적힌 대로 파일이 <strong>4개</strong> 나오면 됩니다. 빠진 게 있으면 정리를 시키기 전에 여기서 바로잡습니다.</p></div>
   <p>목록이 맞으면 이제 <strong>'맡기는' 말투</strong>로 정리를 시킵니다.</p>
   <div class="callout callout--summary"><p><span class="co-icon"></span> <em>"이번 주 메모들을 항목별로 정리해서 <code>메모정리.md</code>로 저장해줘. 각 항목은 결정됨 / 미정으로 나누고, 어느 파일에서 나온 내용인지 출처를 붙여줘. 내용이 서로 다르면 하나를 고르지 말고 둘 다 적어줘."</em></p></div>
-  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 파일이 내 폴더에 생겼나?</div><p>탐색기로 <code>주간보고연습</code> 폴더를 열어 <code>메모정리.md</code>가 <strong>실제로 생겼는지</strong> 보세요. 대화창이 아니라 내 폴더에 결과가 생긴 것 — 이게 첨부와 폴더 연결의 차이입니다.</p><p style="color:var(--ink-soft);font-size:.9rem;"><code>.md</code>(마크다운) = 메모장으로 열리는 텍스트 파일. <code>#</code>은 제목, <code>**</code>는 굵게 표시입니다.</p></div>
+  <div class="callout callout--question"><div class="callout-label">✅ 확인할 것 — 파일이 내 폴더에 생겼나?</div><p>탐색기로 <code>주간보고연습</code> 폴더를 열어 <code>메모정리.md</code>가 <strong>실제로 생겼는지</strong> 보세요. 대화창이 아니라 내 폴더에 결과가 생긴 것 — 이게 첨부와 폴더 연결의 차이입니다.</p><p style="color:var(--ink-soft);font-size:.9rem;"><code>.md</code>(마크다운) = 메모장으로 열리는 텍스트 파일. <code>#</code>은 제목, <code>**</code>는 굵게 표시입니다. 더블클릭해서 안 열리면 <strong>오른쪽 클릭 → 연결 프로그램 → 메모장</strong>.</p></div>
   <p>파일이 생겼으면 <strong>초안을 만들기 전에</strong> 재료부터 확인합니다. <code>메모정리.md</code>에서 항목 <strong>2개</strong>를 골라, 옆에 적힌 <strong>출처</strong> 파일을 열어 내용과 결정됨/미정 구분이 맞는지 봅니다.</p>
   <div class="callout callout--tip"><p><span class="co-icon">💡</span> 재료가 틀리면 그걸로 만든 초안도 틀립니다. 여기서 잡으면 정리만 다시 시키면 되지만, 초안을 만든 뒤에 찾으면 초안까지 다시 만들어야 합니다.</p></div>
 
@@ -620,12 +623,12 @@
 </tbody></table></div>
 <div class="callout callout--warning"><p><span class="co-icon">⚠️</span> <strong>딱 하나 다른 점</strong>: 사람은 "이건 좀 이상한데요?"라고 알아서 되묻습니다. AI는 <strong>명시하지 않은 건 그냥 진행</strong>할 수 있습니다. 그래서 <strong>"애매하면 멈춰"</strong>를 더 분명하게 넣어야 합니다.</p></div>
 <h3 class="sub-head">맡기기 3요소 &amp; 과제문 공식</h3>
-<ol class="steps">
+<ul>
 <li><strong>결과물 명시</strong> — "정리해줘" ❌ → "계정별로 분류한 <code>경비정리.csv</code>와, 애매한 항목 목록 <code>확인필요.txt</code>를 만들어줘" ✅</li>
 <li><strong>규칙 명시</strong> — 분류 기준, 한도, 예외 처리를 미리. 길면 폴더 안에 <code>안내_읽어주세요.txt</code>로 넣어 둔다</li>
 <li><strong>애매하면 표시</strong> — "확실하지 않은 건 임의로 처리하지 말고 '확인필요'로 분리해줘"</li>
-</ol>
-<div class="callout callout--tip"><div class="callout-label">📝 예시 — 과제문 공식</div><p><em>"[폴더 안 자료]를 보고 [결과물 형태]를 만들어줘. 분류·처리 기준은 [규칙]. 확실하지 않으면 [애매할 때 대응]으로 표시해줘. 이 폴더 안에서만 작업해."</em></p><p style="color:var(--ink-soft)">지금 입력하지 않아도 돼요. 바로 아래 실습 C에서 직접 써 봅니다.</p></div>
+</ul>
+<div class="callout callout--tip"><div class="callout-label">📝 예시 — 과제문 공식</div><p><em>"[자료]를 보고 [받고 싶은 결과물]을 만들어줘. 기준은 [규칙]. 확실하지 않은 건 [애매할 때 대응]으로 따로 모아줘."</em></p><p style="color:var(--ink-soft)">실습 C ②에서 이 세 칸(결과물 · 규칙 · 애매할 때)을 직접 채워 봅니다.</p></div>
 <h3 class="sub-head">맡기기 전 폴더 5분 정리</h3>
 <div class="table-scroll"><table><thead><tr><th><strong>정리 항목</strong></th><th><strong>안 하면</strong></th></tr></thead><tbody>
 <tr><td><strong>관련 없는 파일 빼기</strong></td><td>옛 프로젝트 내용이 결과에 섞임</td></tr>
@@ -633,7 +636,7 @@
 <tr><td><strong>규칙은 안내 파일로</strong></td><td>매번 긴 과제문을 다시 씀</td></tr>
 <tr><td><strong>결과물 놓을 빈 폴더 만들기</strong> (예: <code>결과/</code>)</td><td>어느 게 원본인지 헷갈림</td></tr>
 </tbody></table></div>
-<div class="callout callout--warning"><div class="callout-label">⚠️ 안전 수칙 — 파일을 직접 다루니 더 엄격하게</div><ol style="margin-bottom:0;"><li><strong>복사본 폴더</strong>에서 연습 — 실제로 파일을 만들고 옮깁니다.</li><li><strong>"이 폴더 안에서만 작업해"</strong> — 연결한 폴더가 <strong>여러 개</strong>일 때, 또는 <strong>원본을 바꾸는</strong> 작업일 때 범위를 못 박아 둡니다.</li><li><strong>결과물 이름을 정해 주기</strong> — 안 정하면 기존 파일과 이름이 겹칠 수 있습니다.</li><li><strong>결과 검수</strong> — 특히 숫자는 원본 대조.</li></ol></div>
+<div class="callout callout--warning"><div class="callout-label">⚠️ 안전 수칙 — 내 파일을 맡길 때 지킬 것</div><ul style="margin-bottom:0;"><li><strong>복사본 폴더로</strong> — 진짜 폴더 대신 복사한 폴더를 연결합니다. (오늘 실습은 zip을 풀어 쓰니 이미 복사본입니다)</li><li><strong>"이 폴더 안에서만 작업해"</strong> — 폴더가 여러 개이거나 원본을 바꾸는 작업일 때</li><li><strong>결과물 이름을 정해 주기</strong> — 안 정하면 기존 파일과 이름이 겹칠 수 있습니다</li><li><strong>결과 검수</strong> — 특히 숫자는 원본 대조</li></ul></div>
 </section>
 
 <section class="lesson-section practice-block">
@@ -683,11 +686,11 @@
 <tr><td><strong>③ 보고</strong></td><td>만든 파일 목록과 처리 내용을 설명</td><td><strong>결과 검수</strong> (4절)</td></tr>
 </tbody></table></div>
 <p>실습 C 과제문 끝의 <em>"시작 전에 계획을 먼저 보여주고 내 확인을 받아"</em>가 ① 계획에서 Claude를 멈춰 세우는 문장입니다. 지금 화면에 떠 있는 계획에서 볼 것은 셋입니다.</p>
-<ol class="steps">
+<ul>
 <li><strong>읽겠다는 파일 목록이 내 예상과 맞나</strong> — 빠진 파일이 있으면 못 찾은 것</li>
 <li><strong>규칙 확인 단계가 있나</strong> — "정산 규정을 먼저 확인" 같은 단계가 보이나</li>
 <li><strong>만들겠다는 결과물이 요청과 같나</strong> — 이름·개수·형식</li>
-</ol>
+</ul>
 <div class="callout callout--tip"><p><span class="co-icon">💡</span> 초보와 능숙한 사용자를 가르는 건 <strong>계획 단계에서 멈출 줄 아는가</strong>입니다. 어긋난 계획을 그냥 진행시키면 10분 뒤 잘못된 파일 뭉치를 받고 처음부터 다시 해야 합니다.</p></div>
 </section>
 
